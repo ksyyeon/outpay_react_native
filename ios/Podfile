@@ -12,6 +12,8 @@ target 'OutPay' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
   target 'OutPayTests' do
     inherit! :complete
     # Pods for testing
