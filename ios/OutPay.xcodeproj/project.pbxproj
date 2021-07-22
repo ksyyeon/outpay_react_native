@@ -11,7 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		661F99227DF0A097CC5F46C1 /* libPods-OutPay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 098FBC6E0CA459C2F7741F05 /* libPods-OutPay.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A6860E7CB6D15E8D27FAF114 /* libPods-OutPay-OutPayTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5EEE3C3EBDDCCB7A30643D /* libPods-OutPay-OutPayTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,13 +30,26 @@
 		00E356EE1AD99517003FC87E /* OutPayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OutPayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* OutPayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutPayTests.m; sourceTree = "<group>"; };
+<<<<<<< HEAD
+=======
+		098FBC6E0CA459C2F7741F05 /* libPods-OutPay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OutPay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 		13B07F961A680F5B00A75B9A /* OutPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OutPay/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OutPay/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OutPay/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OutPay/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OutPay/main.m; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OutPay/LaunchScreen.storyboard; sourceTree = "<group>"; };
+=======
+		2129471C7A71DF75A5CC086D /* Pods-OutPay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay.debug.xcconfig"; path = "Target Support Files/Pods-OutPay/Pods-OutPay.debug.xcconfig"; sourceTree = "<group>"; };
+		3F9898E1E52C00CFFDEA604E /* Pods-OutPay-OutPayTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay-OutPayTests.debug.xcconfig"; path = "Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests.debug.xcconfig"; sourceTree = "<group>"; };
+		61B934882027418161CF9D1E /* Pods-OutPay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay.release.xcconfig"; path = "Target Support Files/Pods-OutPay/Pods-OutPay.release.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OutPay/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		850F3817BFA5FD59B42C484E /* Pods-OutPay-OutPayTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay-OutPayTests.release.xcconfig"; path = "Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests.release.xcconfig"; sourceTree = "<group>"; };
+		EC5EEE3C3EBDDCCB7A30643D /* libPods-OutPay-OutPayTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OutPay-OutPayTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -43,6 +58,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
+=======
+				A6860E7CB6D15E8D27FAF114 /* libPods-OutPay-OutPayTests.a in Frameworks */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +69,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
+=======
+				661F99227DF0A097CC5F46C1 /* libPods-OutPay.a in Frameworks */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,10 +113,30 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+<<<<<<< HEAD
+=======
+				098FBC6E0CA459C2F7741F05 /* libPods-OutPay.a */,
+				EC5EEE3C3EBDDCCB7A30643D /* libPods-OutPay-OutPayTests.a */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
+=======
+		6E4D5D81C660B9C7D852F844 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2129471C7A71DF75A5CC086D /* Pods-OutPay.debug.xcconfig */,
+				61B934882027418161CF9D1E /* Pods-OutPay.release.xcconfig */,
+				3F9898E1E52C00CFFDEA604E /* Pods-OutPay-OutPayTests.debug.xcconfig */,
+				850F3817BFA5FD59B42C484E /* Pods-OutPay-OutPayTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +152,10 @@
 				00E356EF1AD99517003FC87E /* OutPayTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+<<<<<<< HEAD
+=======
+				6E4D5D81C660B9C7D852F844 /* Pods */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -131,9 +178,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OutPayTests" */;
 			buildPhases = (
+<<<<<<< HEAD
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+=======
+				A8E43CC84C23AFE60F40DAE1 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				AF752C2B35AEBA0BF80548F4 /* [CP] Embed Pods Frameworks */,
+				E506FB937D03BFC3256D5C65 /* [CP] Copy Pods Resources */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			buildRules = (
 			);
@@ -149,11 +205,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OutPay" */;
 			buildPhases = (
+<<<<<<< HEAD
+=======
+				1C5ED1509BD58790A18B6A84 /* [CP] Check Pods Manifest.lock */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+<<<<<<< HEAD
+=======
+				AAF8B88F23953DCE4067EDFF /* [CP] Embed Pods Frameworks */,
+				9D1F4040824AA2FBCAB4E39D /* [CP] Copy Pods Resources */,
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			);
 			buildRules = (
 			);
@@ -234,6 +299,121 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
+<<<<<<< HEAD
+=======
+		1C5ED1509BD58790A18B6A84 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OutPay-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9D1F4040824AA2FBCAB4E39D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A8E43CC84C23AFE60F40DAE1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OutPay-OutPayTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AAF8B88F23953DCE4067EDFF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OutPay/Pods-OutPay-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF752C2B35AEBA0BF80548F4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E506FB937D03BFC3256D5C65 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -286,6 +466,10 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
+=======
+			baseConfigurationReference = 3F9898E1E52C00CFFDEA604E /* Pods-OutPay-OutPayTests.debug.xcconfig */;
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -312,6 +496,10 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
+=======
+			baseConfigurationReference = 850F3817BFA5FD59B42C484E /* Pods-OutPay-OutPayTests.release.xcconfig */;
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -335,6 +523,10 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
+=======
+			baseConfigurationReference = 2129471C7A71DF75A5CC086D /* Pods-OutPay.debug.xcconfig */;
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -360,6 +552,10 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
+=======
+			baseConfigurationReference = 61B934882027418161CF9D1E /* Pods-OutPay.release.xcconfig */;
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -414,6 +610,10 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+<<<<<<< HEAD
+=======
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -478,6 +678,10 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+<<<<<<< HEAD
+=======
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+>>>>>>> cf40408bf1e26e4d07d15280d8e93251d710c80a
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
