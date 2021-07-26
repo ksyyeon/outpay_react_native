@@ -29,41 +29,50 @@ export default class App extends React.Component {
     onLoadWebView = () => {};
 
     onBackPress = () => {
-        // if (this.webView.canGoBack && this.webView.ref) {
-        //   this.webView.ref.goBack();
-        //   return true;
-        // }
-        // return false;
-
         const showBackView = `ifs.jsIF.showBackView()`;
         this.webView.injectJavaScript(showBackView);
+        return true;
+    };
 
-        if (this.exitApp === undefined || !this.exitApp) {
-            ToastAndroid.show(
-                '한번 더 누르시면 종료됩니다.',
-                ToastAndroid.SHORT,
-            );
-            this.exitApp = true;
+    exitApp = () => {
+        ToastAndroid.show('한번 더 누르시면 종료됩니다.', ToastAndroid.SHORT);
+        this.exitApp = true;
+        this.timeout = setTimeout(() => {
+            this.exitApp = false;
+        }, 2000);
 
-            this.timeout = setTimeout(() => {
-                this.exitApp = false;
-            }, 2000);
-        } else {
+        if (this.exitApp) {
             clearTimeout(this.timeout);
-
             BackHandler.exitApp();
         }
+
         return true;
+
+        // if (this.exitApp === undefined || !this.exitApp) {
+        //     ToastAndroid.show(
+        //         '한번 더 누르시면 종료됩니다.',
+        //         ToastAndroid.SHORT,
+        //     );
+        //     this.exitApp = true;
+        //     this.timeout = setTimeout(() => {
+        //         this.exitApp = false;
+        //     }, 2000);
+        // } else {
+        //     clearTimeout(this.timeout);
+        //     BackHandler.exitApp();
+        // }
+        // return true;
     };
 
     // 이벤트 동작
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+        this.invoke.define('exitApp', this.exitApp);
     }
 
     // 이벤트 해제
     componentWillUnmount() {
-        this.exitApp = false;
+        // this.exitApp = false;
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
 
