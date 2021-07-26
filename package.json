@@ -13,7 +13,8 @@
     "@react-native-community/cli": "5.0.1",
     "react": "17.0.1",
     "react-native": "0.64.2",
-    "react-native-webview": "^11.6.5"
+    "react-native-webview": "^11.6.5",
+    "react-native-webview-invoke": "0.6.2"
   },
   "devDependencies": {
     "@babel/core": "7.14.8",

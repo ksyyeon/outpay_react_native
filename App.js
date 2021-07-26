@@ -9,61 +9,75 @@
 import React from 'react';
 import {BackHandler, Platform, ToastAndroid} from 'react-native';
 import {WebView} from 'react-native-webview';
+import createInvoke from 'react-native-webview-invoke/native';
 
 export default class App extends React.Component {
-  webView = {
-    ref: null,
-  };
+    //   webView = {
+    //     ref: null,
+    //   };
 
-  onWebViewMessage = e => {};
-
-  onLoadWebView = () => {};
-
-  onBackPress = () => {
-    // if (this.webView.canGoBack && this.webView.ref) {
-    //   this.webView.ref.goBack();
-    //   return true;
-    // }
-    // return false;
-    if (this.exitApp === undefined || !this.exitApp) {
-      ToastAndroid.show('한번 더 누르시면 종료됩니다.', ToastAndroid.SHORT);
-      this.exitApp = true;
-
-      this.timeout = setTimeout(() => {
-        this.exitApp = false;
-      }, 2000);
-    } else {
-      clearTimeout(this.timeout);
-
-      BackHandler.exitApp();
+    // Todo 전화번호 파일에서 읽어와서 url에 이어붙이기
+    constructor(props) {
+        super(props);
+        this.state = {
+            webViewUrl:
+                'http://172.16.21.58/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+        };
+        this.invoke = createInvoke(() => this.webView);
     }
-    return true;
-  };
 
-  // 이벤트 동작
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-  }
+    onLoadWebView = () => {};
 
-  // 이벤트 해제
-  componentWillUnmount() {
-    this.exitApp = false;
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
-  }
+    onBackPress = () => {
+        // if (this.webView.canGoBack && this.webView.ref) {
+        //   this.webView.ref.goBack();
+        //   return true;
+        // }
+        // return false;
 
-  render() {
-    return (
-      <WebView
-        source={{
-          uri: 'http://172.16.21.58/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
-        }}
-        ref={webView => {
-          this.webView.ref = webView;
-        }}
-        javaScriptEnabled={true}
-        onLoad={this.onLoadWebView}
-        onMessage={this.onWebViewMessage}
-      />
-    );
-  }
+        const showBackView = `ifs.jsIF.showBackView()`;
+        this.webView.injectJavaScript(showBackView);
+
+        if (this.exitApp === undefined || !this.exitApp) {
+            ToastAndroid.show(
+                '한번 더 누르시면 종료됩니다.',
+                ToastAndroid.SHORT,
+            );
+            this.exitApp = true;
+
+            this.timeout = setTimeout(() => {
+                this.exitApp = false;
+            }, 2000);
+        } else {
+            clearTimeout(this.timeout);
+
+            BackHandler.exitApp();
+        }
+        return true;
+    };
+
+    // 이벤트 동작
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    }
+
+    // 이벤트 해제
+    componentWillUnmount() {
+        this.exitApp = false;
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    }
+
+    render() {
+        return (
+            <WebView
+                source={{uri: this.state.webViewUrl}}
+                ref={webView => {
+                    this.webView = webView;
+                }}
+                javaScriptEnabled={true}
+                onLoad={this.onLoadWebView}
+                onMessage={this.invoke.listener}
+            />
+        );
+    }
 }
