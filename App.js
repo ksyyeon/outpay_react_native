@@ -10,6 +10,8 @@ import React from 'react';
 import {BackHandler, Platform, ToastAndroid} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
+// import asUtils from './asyncStorageUtils.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends React.Component {
     //   webView = {
@@ -64,10 +66,21 @@ export default class App extends React.Component {
         // return true;
     };
 
+    getUserInfo = async () => {
+        const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        return userInfo;
+    };
+
+    setUserInfo = async item => {
+        await AsyncStorage.setItem('@OutpayCert', JSON.stringify(item));
+    };
+
     // 이벤트 동작
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
+        this.invoke.define('setUserInfo', this.setUserInfo);
+        this.invoke.define('getUserInfo', this.getUserInfo);
     }
 
     // 이벤트 해제
