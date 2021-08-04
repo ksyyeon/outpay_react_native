@@ -75,12 +75,27 @@ export default class App extends React.Component {
         await AsyncStorage.setItem('@OutpayCert', JSON.stringify(item));
     };
 
+    getUserInfoValue = async key => {
+        const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        const json = JSON.parse(userInfo);
+        return json[key];
+    };
+
+    setUserInfoValue = async (key, value) => {
+        const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        const json = JSON.parse(userInfo);
+        json[key] = value;
+        await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
+    };
+
     // 이벤트 동작
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
         this.invoke.define('setUserInfo', this.setUserInfo);
         this.invoke.define('getUserInfo', this.getUserInfo);
+        this.invoke.define('setUserInfoValue', this.setUserInfoValue);
+        this.invoke.define('getUserInfoValue', this.getUserInfoValue);
     }
 
     // 이벤트 해제
