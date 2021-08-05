@@ -13,6 +13,7 @@ import createInvoke from 'react-native-webview-invoke/native';
 // import asUtils from './asyncStorageUtils.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendIntentAndroid from 'react-native-send-intent';
+import Share from 'react-native-share';
 
 export default class App extends React.Component {
     //   webView = {
@@ -38,7 +39,7 @@ export default class App extends React.Component {
         this.invoke.define('setUserInfoValue', this.setUserInfoValue);
         this.invoke.define('getUserInfoValue', this.getUserInfoValue);
         this.invoke.define('openBrowser', this.openBrowser);
-        this.invoke.define('openShareChooser', this.openBrowser);
+        this.invoke.define('openShareChooser', this.openShareChooser);
     }
 
     // 이벤트 해제
@@ -139,6 +140,29 @@ export default class App extends React.Component {
                     '앱 실행이 실패했습니다. 설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
                 );
             });
+        }
+    };
+
+    openShareChooser = url => {
+        if (Platform.OS === 'android') {
+            SendIntentAndroid.openChooserWithOptions(
+                {
+                    subject: 'Story Title',
+                    text: url,
+                },
+                'Share Story',
+            );
+        } else {
+            // T0d0 ios 테스트 필요
+            Share.share({
+                message: url,
+            })
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     };
 }
