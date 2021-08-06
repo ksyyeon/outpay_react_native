@@ -55,14 +55,46 @@ export default class App extends React.Component {
                 ref={webView => {
                     this.webView = webView;
                 }}
+                originWhitelist={['*']}
                 javaScriptEnabled={true}
                 onLoad={this.onLoadWebView}
                 onMessage={this.invoke.listener}
+                onShouldStartLoadWithRequest={event => {
+                    return this.onShouldStartLoadWithRequest(event);
+                }}
             />
         );
     }
 
     onLoadWebView = () => {};
+
+    onShouldStartLoadWithRequest = event => {
+        if (
+            event.url.startsWith('http://') ||
+            event.url.startsWith('https://') ||
+            event.url.startsWith('about:blank')
+        ) {
+            return true;
+        }
+        if (Platform.OS === 'android') {
+            SendIntentAndroid.openAppwithUri(event.url)
+                .then(isOpened => {
+                    if (!isOpened) {
+                        alert('앱 실행이 실패했습니다');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            Linking.openURL(event.url).catch(err => {
+                alert(
+                    '앱 실행에 실패했습니다. 설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                );
+            });
+            return false;
+        }
+    };
 
     onBackPress = () => {
         const showBackView = `ifs.jsIF.showBackView()`;
