@@ -7,13 +7,13 @@
  */
 
 import React from 'react';
-import {BackHandler, Linking, Platform, ToastAndroid} from 'react-native';
+import {BackHandler, Linking, Platform, ToastAndroid, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
-// import asUtils from './asyncStorageUtils.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
+import SplashScreen from 'react-native-splash-screen';
 
 export default class App extends React.Component {
     //   webView = {
@@ -26,6 +26,7 @@ export default class App extends React.Component {
         this.state = {
             webViewUrl:
                 'http://172.16.21.58/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+            webViewLoaded: false,
         };
         this.invoke = createInvoke(() => this.webView);
     }
@@ -40,33 +41,44 @@ export default class App extends React.Component {
         this.invoke.define('getUserInfoValue', this.getUserInfoValue);
         this.invoke.define('openBrowser', this.openBrowser);
         this.invoke.define('openShareChooser', this.openShareChooser);
+        this.invoke.define('toast', this.toast);
     }
 
     // 이벤트 해제
     componentWillUnmount() {
-        // this.exitApp = false;
+        this.exitApp = false;
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
 
     render() {
         return (
-            <WebView
-                source={{uri: this.state.webViewUrl}}
-                ref={webView => {
-                    this.webView = webView;
-                }}
-                originWhitelist={['*']}
-                javaScriptEnabled={true}
-                onLoad={this.onLoadWebView}
-                onMessage={this.invoke.listener}
-                onShouldStartLoadWithRequest={event => {
-                    return this.onShouldStartLoadWithRequest(event);
-                }}
-            />
+            <View style={{flex: 1}}>
+                {/* {this.state.webViewLoaded ? null : <SplashScreen />} */}
+                <WebView
+                    sytle={{flex: 1}}
+                    source={{uri: this.state.webViewUrl}}
+                    ref={webView => {
+                        this.webView = webView;
+                    }}
+                    originWhitelist={['*']}
+                    javaScriptEnabled={true}
+                    onLoadEnd={this.onLoadWebViewEnd}
+                    onMessage={this.invoke.listener}
+                    onShouldStartLoadWithRequest={event => {
+                        return this.onShouldStartLoadWithRequest(event);
+                    }}
+                />
+            </View>
         );
     }
 
-    onLoadWebView = () => {};
+    onLoadWebViewEnd = () => {
+        this.setState({webViewLoaded: true});
+        //TODO View 선택해서 로드하기
+        const selectView = ``;
+        this.webView.injectJavaScript(selectView);
+        return true;
+    };
 
     onShouldStartLoadWithRequest = event => {
         if (
@@ -103,33 +115,11 @@ export default class App extends React.Component {
     };
 
     exitApp = () => {
-        ToastAndroid.show('한번 더 누르시면 종료됩니다.', ToastAndroid.SHORT);
-        this.exitApp = true;
-        this.timeout = setTimeout(() => {
-            this.exitApp = false;
-        }, 2000);
+        BackHandler.exitApp();
+    };
 
-        if (this.exitApp) {
-            clearTimeout(this.timeout);
-            BackHandler.exitApp();
-        }
-
-        return true;
-
-        // if (this.exitApp === undefined || !this.exitApp) {
-        //     ToastAndroid.show(
-        //         '한번 더 누르시면 종료됩니다.',
-        //         ToastAndroid.SHORT,
-        //     );
-        //     this.exitApp = true;
-        //     this.timeout = setTimeout(() => {
-        //         this.exitApp = false;
-        //     }, 2000);
-        // } else {
-        //     clearTimeout(this.timeout);
-        //     BackHandler.exitApp();
-        // }
-        // return true;
+    toast = msg => {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
     };
 
     getUserInfo = async () => {
@@ -166,7 +156,7 @@ export default class App extends React.Component {
                     console.log(err);
                 });
         } else {
-            // T0d0 ios 테스트 필요
+            // TODO ios 테스트 필요
             Linking.openURL(url).catch(err => {
                 alert(
                     '앱 실행이 실패했습니다. 설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
@@ -185,7 +175,7 @@ export default class App extends React.Component {
                 'Share Story',
             );
         } else {
-            // T0d0 ios 테스트 필요
+            // TODO ios 테스트 필요
             Share.share({
                 message: url,
             })
