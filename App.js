@@ -7,19 +7,24 @@
  */
 
 import React from 'react';
-import {BackHandler, Linking, Platform, ToastAndroid, View} from 'react-native';
+import {
+    ActivityIndicator,
+    Alert,
+    BackHandler,
+    Linking,
+    Platform,
+    ToastAndroid,
+    View,
+} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import SplashScreen from 'react-native-splash-screen';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export default class App extends React.Component {
-    //   webView = {
-    //     ref: null,
-    //   };
-
     // Todo 전화번호 파일에서 읽어와서 url에 이어붙이기
     constructor(props) {
         super(props);
@@ -33,6 +38,7 @@ export default class App extends React.Component {
 
     // 이벤트 동작
     componentDidMount() {
+        setTimeout(() => SplashScreen.hide(), 2000);
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
         this.invoke.define('setUserInfo', this.setUserInfo);
@@ -42,6 +48,7 @@ export default class App extends React.Component {
         this.invoke.define('openBrowser', this.openBrowser);
         this.invoke.define('openShareChooser', this.openShareChooser);
         this.invoke.define('toast', this.toast);
+        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
     }
 
     // 이벤트 해제
@@ -109,6 +116,7 @@ export default class App extends React.Component {
     };
 
     onBackPress = () => {
+        //TODO OS별 showBackView 호출
         const showBackView = `ifs.jsIF.showBackView()`;
         this.webView.injectJavaScript(showBackView);
         return true;
@@ -185,6 +193,47 @@ export default class App extends React.Component {
                 .catch(err => {
                     console.log(err);
                 });
+        }
+    };
+
+    openInAppBrowser = url => {
+        try {
+            if (InAppBrowser.isAvailable()) {
+                const result = InAppBrowser.open(url, {
+                    // iOS Properties
+                    dismissButtonStyle: 'cancel',
+                    preferredBarTintColor: '#453AA4',
+                    preferredControlTintColor: 'white',
+                    readerMode: false,
+                    animated: true,
+                    modalPresentationStyle: 'fullScreen',
+                    modalTransitionStyle: 'coverVertical',
+                    modalEnabled: true,
+                    enableBarCollapsing: false,
+                    // Android Properties
+                    showTitle: false,
+                    toolbarColor: 'white',
+                    secondaryToolbarColor: 'black',
+                    navigationBarColor: 'black',
+                    navigationBarDividerColor: 'white',
+                    enableUrlBarHiding: false,
+                    enableDefaultShare: false,
+                    forceCloseOnRedirection: false,
+                    // Specify full animation resource identifier(package:anim/name)
+                    // or only resource name(in case of animation bundled with app).
+                    animations: {
+                        startEnter: 'slide_in_right',
+                        startExit: 'slide_out_left',
+                        endEnter: 'slide_in_left',
+                        endExit: 'slide_out_right',
+                    },
+                });
+                console.log(JSON.stringify(result));
+            } else {
+                Linking.openURL(url);
+            }
+        } catch (error) {
+            console.log(error.message);
         }
     };
 }
