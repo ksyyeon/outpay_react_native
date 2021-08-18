@@ -23,6 +23,7 @@ import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import SplashScreen from 'react-native-splash-screen';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class App extends React.Component {
     // Todo 전화번호 파일에서 읽어와서 url에 이어붙이기
@@ -32,6 +33,8 @@ export default class App extends React.Component {
             webViewUrl:
                 'http://172.16.21.58/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
             webViewLoaded: false,
+            visible: false,
+            text: '',
         };
         this.invoke = createInvoke(() => this.webView);
     }
@@ -49,6 +52,8 @@ export default class App extends React.Component {
         this.invoke.define('openShareChooser', this.openShareChooser);
         this.invoke.define('toast', this.toast);
         this.invoke.define('openInAppBrowser', this.openInAppBrowser);
+        this.invoke.define('showSpinner', this.showSpinner);
+        this.invoke.define('hideSpinner', this.hideSpinner);
     }
 
     // 이벤트 해제
@@ -60,7 +65,11 @@ export default class App extends React.Component {
     render() {
         return (
             <View style={{flex: 1}}>
-                {/* {this.state.webViewLoaded ? null : <SplashScreen />} */}
+                <Spinner
+                    visible={this.state.visible}
+                    color={'#ff6801'}
+                    textContent={this.state.text}
+                />
                 <WebView
                     sytle={{flex: 1}}
                     source={{uri: this.state.webViewUrl}}
@@ -120,6 +129,14 @@ export default class App extends React.Component {
         const showBackView = `ifs.jsIF.showBackView()`;
         this.webView.injectJavaScript(showBackView);
         return true;
+    };
+
+    showSpinner = msg => {
+        this.setState({visible: true, text: msg});
+    };
+
+    hideSpinner = () => {
+        this.setState({visible: false});
     };
 
     exitApp = () => {
