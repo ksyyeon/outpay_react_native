@@ -7,13 +7,16 @@ import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Snackbar from 'react-native-snackbar';
+import SplashScreen from 'react-native-splash-screen';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             webViewUrl:
-                'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+                // 'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+                'http://172.16.21.133:8080/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
             webViewLoaded: false,
             visible: false,
             text: '',
@@ -126,7 +129,11 @@ export default class MainWebView extends React.Component {
     };
 
     toast = msg => {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
+        if (Platform.OS === 'android' ){
+            ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else{
+            Snackbar.show({text:msg, duration:Snackbar.LENGTH_SHORT});
+        }
     };
 
     getUserInfo = async () => {
