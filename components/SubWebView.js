@@ -28,6 +28,7 @@ export default class SubWebView extends React.Component {
                     ref={webView => {
                         this.webView = webView;
                     }}
+                    cacheEnabled={false}
                     originWhitelist={['*']}
                     javaScriptEnabled={true}
                 />
