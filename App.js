@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -45,7 +37,12 @@ export default class App extends React.Component {
                         name="SubWebView"
                         component={SubWebView}
                         options={() => ({
-                            headerShown: false,
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            headerTitleStyle: {
+                                fontFamily: 'NanumSquareB',
+                                fontSize: 18,
+                            },
                         })}
                     />
                 </Stack.Navigator>
