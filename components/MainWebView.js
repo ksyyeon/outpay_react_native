@@ -194,15 +194,12 @@ export default class MainWebView extends React.Component {
             );
         } else {
             // TODO ios 테스트 필요
-            Share.share({
-                message: url,
+            Share.open({
+                title: 'Welcome',
+                // message: 'get your first tickest here',
+                url: url
             })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            .catch((err) => console.log('user did not share or ' + err));
         }
     };
 
