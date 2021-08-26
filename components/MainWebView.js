@@ -14,15 +14,15 @@ import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {selectContact, selectContactPhone} from 'react-native-select-contact';
-import {select} from 'async';
+import {selectContactPhone} from 'react-native-select-contact';
+import * as LocalStorage from './LocalStorage';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             webViewUrl:
-                'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+                'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=',
             webViewLoaded: false,
             visible: false,
             text: '',
@@ -33,10 +33,10 @@ export default class MainWebView extends React.Component {
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
-        this.invoke.define('setUserInfo', this.setUserInfo);
-        this.invoke.define('getUserInfo', this.getUserInfo);
-        this.invoke.define('setUserInfoValue', this.setUserInfoValue);
-        this.invoke.define('getUserInfoValue', this.getUserInfoValue);
+        this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
+        this.invoke.define('getUserInfo', LocalStorage.getUserInfo);
+        this.invoke.define('setUserInfoValue', LocalStorage.setUserInfoValue);
+        this.invoke.define('getUserInfoValue', LocalStorage.getUserInfoValue);
         this.invoke.define('openBrowser', this.openBrowser);
         this.invoke.define('openShareChooser', this.openShareChooser);
         this.invoke.define('toast', this.toast);
@@ -63,7 +63,9 @@ export default class MainWebView extends React.Component {
                 <WebView
                     sytle={{flex: 1}}
                     source={{
-                        uri: this.state.webViewUrl,
+                        uri:
+                            this.state.webViewUrl +
+                            this.props.route.params.telNum,
                     }}
                     ref={webView => {
                         this.webView = webView;
@@ -140,27 +142,27 @@ export default class MainWebView extends React.Component {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
     };
 
-    getUserInfo = async () => {
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
-        return userInfo;
-    };
+    // getUserInfo = async () => {
+    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
+    //     return userInfo;
+    // };
 
-    setUserInfo = async item => {
-        await AsyncStorage.setItem('@OutpayCert', JSON.stringify(item));
-    };
+    // setUserInfo = async item => {
+    //     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(item));
+    // };
 
-    getUserInfoValue = async key => {
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
-        const json = JSON.parse(userInfo);
-        return json[key];
-    };
+    // getUserInfoValue = async key => {
+    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
+    //     const json = JSON.parse(userInfo);
+    //     return json[key];
+    // };
 
-    setUserInfoValue = async (key, value) => {
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
-        const json = JSON.parse(userInfo);
-        json[key] = value;
-        await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
-    };
+    // setUserInfoValue = async (key, value) => {
+    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
+    //     const json = JSON.parse(userInfo);
+    //     json[key] = value;
+    //     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
+    // };
 
     openSubWebView = url => {
         this.props.navigation.navigate('SubWebView', {uri: url});
@@ -260,6 +262,7 @@ export default class MainWebView extends React.Component {
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 return this.getContact();
             } else {
+                //TODO 안내창 커스터마이징
                 alert(
                     '주소록 접근 권한을 거부하셨습니다. [설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
                 );
