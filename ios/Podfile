@@ -13,6 +13,7 @@ target 'OutPay' do
   )
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
   target 'OutPayTests' do
     inherit! :complete

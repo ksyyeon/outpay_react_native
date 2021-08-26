@@ -37,10 +37,9 @@ static void InitializeFlipper(UIApplication *application) {
                                             initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
-       self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-    //   rootView.backgroundColor = [UIColor systemBackgroundColor];
+      rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
   } else {
-      rootView.backgroundColor = [UIColor whiteColor];
+//      rootView.backgroundColor = [UIColor whiteColor];
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

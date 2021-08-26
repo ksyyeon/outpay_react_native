@@ -1,5 +1,12 @@
 import React from 'react';
-import {BackHandler, Linking, Platform, ToastAndroid, View} from 'react-native';
+import {
+    BackHandler,
+    Linking,
+    PermissionsAndroid,
+    Platform,
+    ToastAndroid,
+    View,
+} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,14 +16,16 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Snackbar from 'react-native-snackbar';
 import SplashScreen from 'react-native-splash-screen';
+import {selectContact, selectContactPhone} from 'react-native-select-contact';
+import {select} from 'async';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             webViewUrl:
-                // 'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
-                'http://172.16.21.133:8080/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+                'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
+                // 'http://172.16.21.133:8080/osiris/.development/appIndex.html?mode=devMode&telNum=010-5060-3160#',
             webViewLoaded: false,
             visible: false,
             text: '',
@@ -38,6 +47,7 @@ export default class MainWebView extends React.Component {
         this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
+        this.invoke.define('getContact', this.requestContactPermission);
     }
 
     // 이벤트 해제
@@ -61,6 +71,7 @@ export default class MainWebView extends React.Component {
                     ref={webView => {
                         this.webView = webView;
                     }}
+                    cacheEnabled={false}
                     originWhitelist={['*']}
                     javaScriptEnabled={true}
                     onLoadEnd={this.onLoadWebViewEnd}
@@ -242,5 +253,37 @@ export default class MainWebView extends React.Component {
         } catch (error) {
             console.log(error.message);
         }
+    };
+
+    requestContactPermission = async () => {
+        if (Platform.OS === 'android') {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+            );
+
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                return this.getContact();
+            } else {
+                alert(
+                    '주소록 접근 권한을 거부하셨습니다. [설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                );
+            }
+        } else {
+            // TODO ios 연락처 접근권한 체크?
+            return this.getContact();
+        }
+    };
+
+    getContact = async () => {
+        return selectContactPhone().then(selection => {
+            if (!selection) {
+                return null;
+            }
+            let {contact, selectedPhone} = selection;
+            console.log(
+                `Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
+            );
+            return selectedPhone.number;
+        });
     };
 }

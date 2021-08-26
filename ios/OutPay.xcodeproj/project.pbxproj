@@ -14,6 +14,7 @@
 		661F99227DF0A097CC5F46C1 /* libPods-OutPay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 098FBC6E0CA459C2F7741F05 /* libPods-OutPay.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A6860E7CB6D15E8D27FAF114 /* libPods-OutPay-OutPayTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC5EEE3C3EBDDCCB7A30643D /* libPods-OutPay-OutPayTests.a */; };
+		BA1A61C026D632BB00EC5566 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = BA1A61BF26D632BB00EC5566 /* Fonts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		61B934882027418161CF9D1E /* Pods-OutPay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay.release.xcconfig"; path = "Target Support Files/Pods-OutPay/Pods-OutPay.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = OutPay/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		850F3817BFA5FD59B42C484E /* Pods-OutPay-OutPayTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OutPay-OutPayTests.release.xcconfig"; path = "Target Support Files/Pods-OutPay-OutPayTests/Pods-OutPay-OutPayTests.release.xcconfig"; sourceTree = "<group>"; };
+		BA1A61BF26D632BB00EC5566 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		EC5EEE3C3EBDDCCB7A30643D /* libPods-OutPay-OutPayTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OutPay-OutPayTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -127,6 +129,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BA1A61BF26D632BB00EC5566 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* OutPay */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* OutPayTests */,
@@ -242,6 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA1A61C026D632BB00EC5566 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
