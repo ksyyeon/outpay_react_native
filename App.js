@@ -83,7 +83,7 @@ export default class App extends React.Component {
     };
 
     checkAutoLogin = async () => {
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        const userInfo = await AsyncStorage.getItem('@AppConfig');
         const json = JSON.parse(userInfo);
         return json['autoLogin'];
     };

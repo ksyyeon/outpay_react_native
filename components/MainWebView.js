@@ -45,6 +45,10 @@ export default class MainWebView extends React.Component {
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('getContact', this.requestContactPermission);
+        this.invoke.define('setAppInfo', LocalStorage.setAppInfo);
+        this.invoke.define('getAppInfo', LocalStorage.getAppInfo);
+        this.invoke.define('setAppInfoValue', LocalStorage.setAppInfoValue);
+        this.invoke.define('getAppInfoValue', LocalStorage.getAppInfoValue);
     }
 
     // 이벤트 해제
