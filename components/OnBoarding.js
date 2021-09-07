@@ -1,83 +1,105 @@
 import React from 'react';
-import {StyleSheet, View, Button, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View, Text, Image, Button} from 'react-native';
 import * as LocalStorage from './LocalStorage';
+import CustomButton from './CustomButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class OnBoarding extends React.Component {
+    _onPress = async () => {
+        LocalStorage.setUserInfo({
+            name: '주신탁',
+            telNum: '010-5060-3160',
+            email: '',
+            blackList: ['010-4022-3839'],
+        });
+
+        LocalStorage.setAppInfo({
+            autoLogin: false,
+            push: false,
+            denialPopupNotiDate: '',
+        });
+
+        // LocalStorage.getAppInfo().then(result => {
+        //     console.log('appInfo: ', result);
+        // });
+
+        // LocalStorage.getUserInfo().then(result => {
+        //     console.log('userInfo: ', result);
+        // });
+
+        // LocalStorage.getUserInfoValue('telNum').then(result => {
+        //     console.log('telNum: ', result);
+        //     this.props.navigation.navigate('MainWebView', {
+        //         telNum: result,
+        //     });
+        // });
+
+        const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        const json = JSON.parse(userInfo);
+        this.props.navigation.navigate('MainWebView', {
+            telNum: json['telNum'],
+        });
+
+        // this.props.navigation.navigate('MainWebView', {
+        //     telNum: LocalStorage.getUserInfoValue('telNum'),
+        // });
+    };
+
     render() {
         return (
-            <View style={[styles.slide, {backgroundColor: '#ffff'}]}>
-                <Text style={styles.text}>
-                    아웃페이로 결제를 주고받아 보세요!
-                </Text>
-                <TouchableOpacity>
-                    <View style={styles.button}>
-                        <Text style={styles.button_text}>시작하기</Text>
-                    </View>
-                </TouchableOpacity>
-                {/* title="시작하기"
-                    onPress={() => {
-                        LocalStorage.setUserInfo({
-                            name: '주신탁',
-                            telNum: '010-5060-3160',
-                            email: '',
-                            blackList: [],
-                        });
+            <View style={styles.container}>
+                <View style={styles.content}>
+                    <Image
+                        style={styles.image}
+                        source={require('../assets/images/1.png')}
+                    />
+                    <Text style={styles.text}>
+                        지금 아웃페이로 결제를 주고받아보세요.
+                    </Text>
+                </View>
 
-                        LocalStorage.setAppInfo({
-                            autoLogin: false,
-                            push: false,
-                        });
-
-                        LocalStorage.getUserInfo().then(result => {
-                            console.log('userInfo: ', result);
-                        });
-
-                        LocalStorage.getAppInfo().then(result => {
-                            console.log('appInfo: ', result);
-                        });
-
-                        // this.props.navigation.navigate('MainWebView', {
-                        //     telNum: LocalStorage.getUserInfoValue('telNum'),
-                        // });
-                    }} */}
+                <View style={styles.footer}>
+                    <CustomButton
+                        buttonColor={'#ff6801'}
+                        title={'시작하기'}
+                        onPress={this._onPress}
+                    />
+                </View>
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    // Slide styles
-    slide: {
-        flex: 1, // Take up all screen
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center', // Center horizontally
+    container: {
+        flex: 1,
+        padding: 20,
     },
-    // Header styles
-    header: {
-        color: '#FFFFFF',
-        fontFamily: 'NanumSquareB',
-        fontSize: 30,
-        marginVertical: 15,
+    image: {
+        height: 150,
+        resizeMode: 'contain',
     },
-    // Text below header
     text: {
-        color: '#FFFFFF',
-        fontFamily: 'NanumSquareR',
-        fontSize: 18,
-        marginHorizontal: 40,
-        textAlign: 'center',
-    },
-    //Button conatiner
-    button: {
-        borderRadius: 50, // Rounded border
-        borderWidth: 2, // 2 point border widht
-        borderColor: '#FFFFFF', // White colored border
-        paddingHorizontal: 50, // Horizontal padding
-        paddingVertical: 10, // Vertical padding
-    },
-    //Button text
-    button_text: {
-        color: '#FFFFFF',
+        marginTop: 25,
         fontFamily: 'NanumSquareB',
+        fontSize: 14,
+        color: '#f3985a',
+    },
+    header: {
+        width: '100%',
+        height: '20%',
+        backgroundColor: '#ff9a9a',
+        justifyContent: 'flex-end',
+        paddingLeft: 10,
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: '#d6ca1a',
+    },
+    footer: {
+        width: '100%',
+        height: '8%',
     },
 });

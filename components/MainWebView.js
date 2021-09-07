@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
@@ -49,6 +48,7 @@ export default class MainWebView extends React.Component {
         this.invoke.define('getAppInfo', LocalStorage.getAppInfo);
         this.invoke.define('setAppInfoValue', LocalStorage.setAppInfoValue);
         this.invoke.define('getAppInfoValue', LocalStorage.getAppInfoValue);
+        this.invoke.define('addBlackList', LocalStorage.addBlackList);
     }
 
     // 이벤트 해제
@@ -145,28 +145,6 @@ export default class MainWebView extends React.Component {
     toast = msg => {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
     };
-
-    // getUserInfo = async () => {
-    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
-    //     return userInfo;
-    // };
-
-    // setUserInfo = async item => {
-    //     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(item));
-    // };
-
-    // getUserInfoValue = async key => {
-    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
-    //     const json = JSON.parse(userInfo);
-    //     return json[key];
-    // };
-
-    // setUserInfoValue = async (key, value) => {
-    //     const userInfo = await AsyncStorage.getItem('@OutpayCert');
-    //     const json = JSON.parse(userInfo);
-    //     json[key] = value;
-    //     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
-    // };
 
     openSubWebView = url => {
         this.props.navigation.navigate('SubWebView', {uri: url});

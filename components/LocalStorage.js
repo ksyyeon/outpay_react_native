@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// UserInfo: name, telNum, email, blackList ...
 export async function getUserInfo() {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
@@ -13,6 +14,7 @@ export async function setUserInfo(item) {
 export async function getUserInfoValue(key) {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
+    // return json[key];
     return JSON.stringify(json[key]);
 }
 
@@ -23,6 +25,16 @@ export async function setUserInfoValue(key, value) {
     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
 }
 
+// export async function addBlackList(telNum) {
+//     const userInfo = await AsyncStorage.getItem('@OutpayCert');
+//     const json = JSON.parse(userInfo);
+//     const blackList = JSON.parse(json['blackList']);
+//     blackList.push[telNum];
+//     json['blackList'] = JSON.stringify(blackList);
+//     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
+// }
+
+// AppInfo: autoLogin, push ...
 export async function getAppInfo() {
     const userInfo = await AsyncStorage.getItem('@AppConfig');
     return userInfo;
