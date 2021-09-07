@@ -15,6 +15,10 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {selectContactPhone} from 'react-native-select-contact';
 import * as LocalStorage from './LocalStorage';
+import Snackbar from 'react-native-snackbar';
+import SplashScreen from 'react-native-splash-screen';
+import {selectContact, selectContactPhone} from 'react-native-select-contact';
+import {select} from 'async';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -143,7 +147,11 @@ export default class MainWebView extends React.Component {
     };
 
     toast = msg => {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
+        if (Platform.OS === 'android' ){
+            ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else{
+            Snackbar.show({text:msg, duration:Snackbar.LENGTH_SHORT});
+        }
     };
 
     openSubWebView = url => {
@@ -182,15 +190,12 @@ export default class MainWebView extends React.Component {
             );
         } else {
             // TODO ios 테스트 필요
-            Share.share({
-                message: url,
+            Share.open({
+                title: 'Welcome',
+                // message: 'get your first tickest here',
+                url: url
             })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            .catch((err) => console.log('user did not share or ' + err));
         }
     };
 
