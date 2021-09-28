@@ -10,39 +10,23 @@ export default class OnBoarding extends React.Component {
             name: '주신탁',
             telNum: '010-5060-3160',
             email: '',
-            blackList: ['010-4022-3839'],
         });
 
-        LocalStorage.setAppInfo({
-            autoLogin: false,
-            push: false,
+        LocalStorage.setBlockList([]);
+
+        LocalStorage.setAppConfig({
+            payReqPush: false,
+            expReqPush: false,
+            appLock: true,
+            payReqLock: true,
             denialPopupNotiDate: '',
         });
-
-        // LocalStorage.getAppInfo().then(result => {
-        //     console.log('appInfo: ', result);
-        // });
-
-        // LocalStorage.getUserInfo().then(result => {
-        //     console.log('userInfo: ', result);
-        // });
-
-        // LocalStorage.getUserInfoValue('telNum').then(result => {
-        //     console.log('telNum: ', result);
-        //     this.props.navigation.navigate('MainWebView', {
-        //         telNum: result,
-        //     });
-        // });
 
         const userInfo = await AsyncStorage.getItem('@OutpayCert');
         const json = JSON.parse(userInfo);
         this.props.navigation.navigate('MainWebView', {
             telNum: json['telNum'],
         });
-
-        // this.props.navigation.navigate('MainWebView', {
-        //     telNum: LocalStorage.getUserInfoValue('telNum'),
-        // });
     };
 
     render() {

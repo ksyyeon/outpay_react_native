@@ -13,19 +13,16 @@ import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {selectContactPhone} from 'react-native-select-contact';
 import * as LocalStorage from './LocalStorage';
 import Snackbar from 'react-native-snackbar';
-import SplashScreen from 'react-native-splash-screen';
-import {selectContact, selectContactPhone} from 'react-native-select-contact';
-import {select} from 'async';
+import {selectContactPhone} from 'react-native-select-contact';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             webViewUrl:
-                'http://172.16.21.112/osiris/.development/appIndex.html?mode=devMode&telNum=',
+                'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=',
             webViewLoaded: false,
             visible: false,
             text: '',
@@ -48,11 +45,13 @@ export default class MainWebView extends React.Component {
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('getContact', this.requestContactPermission);
-        this.invoke.define('setAppInfo', LocalStorage.setAppInfo);
-        this.invoke.define('getAppInfo', LocalStorage.getAppInfo);
-        this.invoke.define('setAppInfoValue', LocalStorage.setAppInfoValue);
-        this.invoke.define('getAppInfoValue', LocalStorage.getAppInfoValue);
-        this.invoke.define('addBlackList', LocalStorage.addBlackList);
+        this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
+        this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
+        this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
+        this.invoke.define('getAppConfigValue', LocalStorage.getAppConfigValue);
+        this.invoke.define('getBlockList', LocalStorage.getBlockList);
+        this.invoke.define('setBlockList', LocalStorage.setBlockList);
+        this.invoke.define('clearStorage', LocalStorage.clearStorage);
     }
 
     // 이벤트 해제
@@ -147,10 +146,10 @@ export default class MainWebView extends React.Component {
     };
 
     toast = msg => {
-        if (Platform.OS === 'android' ){
+        if (Platform.OS === 'android') {
             ToastAndroid.show(msg, ToastAndroid.SHORT);
-        } else{
-            Snackbar.show({text:msg, duration:Snackbar.LENGTH_SHORT});
+        } else {
+            Snackbar.show({text: msg, duration: Snackbar.LENGTH_SHORT});
         }
     };
 
@@ -193,9 +192,8 @@ export default class MainWebView extends React.Component {
             Share.open({
                 title: 'Welcome',
                 // message: 'get your first tickest here',
-                url: url
-            })
-            .catch((err) => console.log('user did not share or ' + err));
+                url: url,
+            }).catch(err => console.log('user did not share or ' + err));
         }
     };
 

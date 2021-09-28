@@ -64,6 +64,7 @@ export default class App extends React.Component {
 
     checkUserSignedIn = async () => {
         const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        console.log('userInfo: ', userInfo);
         if (userInfo != null) {
             // TODO 자동로그인 여부 체크
             // this.checkAutoLogin(result => {
