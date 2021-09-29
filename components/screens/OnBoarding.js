@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, Button} from 'react-native';
-import * as LocalStorage from './LocalStorage';
-import CustomButton from './CustomButton';
+import * as LocalStorage from '../LocalStorage';
+import CustomButton from '../CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class OnBoarding extends React.Component {
@@ -31,7 +31,7 @@ export default class OnBoarding extends React.Component {
                 <View style={styles.content}>
                     <Image
                         style={styles.image}
-                        source={require('../assets/images/1.png')}
+                        source={require('../../assets/images/1.png')}
                     />
                     <Text style={styles.text}>
                         지금 아웃페이로 결제를 주고받아보세요.

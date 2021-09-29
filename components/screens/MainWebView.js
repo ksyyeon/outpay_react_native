@@ -13,7 +13,7 @@ import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
-import * as LocalStorage from './LocalStorage';
+import * as LocalStorage from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 
@@ -23,6 +23,7 @@ export default class MainWebView extends React.Component {
         this.state = {
             webViewUrl:
                 'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=',
+            telNum: null,
             webViewLoaded: false,
             visible: false,
             text: '',
@@ -30,7 +31,10 @@ export default class MainWebView extends React.Component {
         this.invoke = createInvoke(() => this.webView);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const result = await LocalStorage.getUserInfoValue('telNum');
+        this.setState({telNum: JSON.parse(result)});
+
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
         this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
@@ -70,9 +74,7 @@ export default class MainWebView extends React.Component {
                 <WebView
                     sytle={{flex: 1}}
                     source={{
-                        uri:
-                            this.state.webViewUrl +
-                            LocalStorage.getUserInfoValue('telNum'),
+                        uri: this.state.webViewUrl + this.state.telNum,
                     }}
                     ref={webView => {
                         this.webView = webView;
