@@ -72,7 +72,7 @@ export default class MainWebView extends React.Component {
                     source={{
                         uri:
                             this.state.webViewUrl +
-                            this.props.route.params.telNum,
+                            LocalStorage.getUserInfoValue('telNum'),
                     }}
                     ref={webView => {
                         this.webView = webView;
@@ -99,6 +99,7 @@ export default class MainWebView extends React.Component {
     };
 
     onShouldStartLoadWithRequest = event => {
+        // TODO 웹뷰에서 앱카드 실행 처리
         if (
             event.url.startsWith('http://') ||
             event.url.startsWith('https://') ||

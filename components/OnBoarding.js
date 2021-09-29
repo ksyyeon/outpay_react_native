@@ -22,11 +22,7 @@ export default class OnBoarding extends React.Component {
             denialPopupNotiDate: '',
         });
 
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
-        const json = JSON.parse(userInfo);
-        this.props.navigation.navigate('MainWebView', {
-            telNum: json['telNum'],
-        });
+        this.props.navigation.navigate('MainWebView', null);
     };
 
     render() {
