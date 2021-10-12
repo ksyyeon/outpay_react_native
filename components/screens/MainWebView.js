@@ -25,15 +25,15 @@ export default class MainWebView extends React.Component {
                 'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=',
             telNum: null,
             webViewLoaded: false,
-            visible: false,
+            spinnerVisible: false,
             text: '',
         };
         this.invoke = createInvoke(() => this.webView);
     }
 
     async componentDidMount() {
-        const result = await LocalStorage.getUserInfoValue('telNum');
-        this.setState({telNum: JSON.parse(result)});
+        const telNum = await LocalStorage.getUserInfoValue('telNum');
+        this.setState({telNum: JSON.parse(telNum)});
 
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
@@ -56,6 +56,8 @@ export default class MainWebView extends React.Component {
         this.invoke.define('getBlockList', LocalStorage.getBlockList);
         this.invoke.define('setBlockList', LocalStorage.setBlockList);
         this.invoke.define('clearStorage', LocalStorage.clearStorage);
+
+        this.props.navigation.navigate('AccessModal');
     }
 
     // 이벤트 해제
@@ -67,7 +69,7 @@ export default class MainWebView extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <Spinner
-                    visible={this.state.visible}
+                    visible={this.state.spinnerVisible}
                     color={'#ff6801'}
                     textContent={this.state.text}
                 />
@@ -137,11 +139,11 @@ export default class MainWebView extends React.Component {
     };
 
     showSpinner = msg => {
-        this.setState({visible: true, text: msg});
+        this.setState({spinnerVisible: true, text: msg});
     };
 
     hideSpinner = () => {
-        this.setState({visible: false});
+        this.setState({spinnerVisible: false});
     };
 
     exitApp = () => {

@@ -5,6 +5,7 @@ import * as RootNavigation from './components/RootNavigation';
 import {AppScreens} from './components/AppStack';
 import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
+import SetPinCode from './components/screens/SetPinCode';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -51,7 +52,8 @@ export default class App extends React.Component {
 
         return (
             <NavigationContainer ref={RootNavigation.navigationRef}>
-                {this.state.isSignedIn ? <AppScreens /> : <SignInScreens />}
+                {/* {this.state.isSignedIn ? <AppScreens /> : <SignInScreens />} */}
+                <SetPinCode />
             </NavigationContainer>
         );
     }
