@@ -1,35 +1,34 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from './components/RootNavigation';
 import {AppScreens} from './components/AppStack';
 import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
+import * as LocalStorage from './components/LocalStorage';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isSignedIn: false,
+            autoLogin: null,
             isLoading: true,
         };
-
-        // this.checkUserSignedIn();
     }
 
     checkUserSignedIn = async () => {
-        const userInfo = await AsyncStorage.getItem('@OutpayCert');
-        const appConfig = await AsyncStorage.getItem('@AppConfig');
+        const userInfo = await LocalStorage.getUserInfo();
+        const appConfig = await LocalStorage.getAppConfig();
         console.log('userInfo: ', userInfo);
         console.log('appConfig: ', appConfig);
-        if (userInfo != null) {
+        if (userInfo != null && appConfig != null) {
             console.log('등록회원');
-            return true;
+            return {signedIn: true, autoLogin: JSON.parse(appConfig).autoLogin};
             // const json = JSON.parse(userInfo);
             // RootNavigation.navigate('MainWebView', {telNum: json['telNum']});
         } else {
             console.log('미등록회원');
-            return false;
+            return {signedIn: true, autoLogin: null};
             // RootNavigation.navigate('OnBoarding', null);
         }
     };
@@ -40,7 +39,12 @@ export default class App extends React.Component {
         // TODO: ios에서 default 스플래시 비활성화
         const result = await this.checkUserSignedIn();
         setTimeout(
-            () => this.setState({isSignedIn: result, isLoading: false}),
+            () =>
+                this.setState({
+                    isSignedIn: result.signedIn,
+                    autoLogin: result.autoLogin,
+                    isLoading: false,
+                }),
             2000,
         );
     }
@@ -53,7 +57,11 @@ export default class App extends React.Component {
 
         return (
             <NavigationContainer ref={RootNavigation.navigationRef}>
-                {this.state.isSignedIn ? <AppScreens /> : <SignInScreens />}
+                {this.state.isSignedIn ? (
+                    AppScreens(this.state.autoLogin)
+                ) : (
+                    <SignInScreens />
+                )}
             </NavigationContainer>
         );
     }

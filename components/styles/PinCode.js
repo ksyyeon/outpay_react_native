@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
     wrapper2: {
         justifyContent: 'center',
         alignItems: 'center',
-        opacity: 0,
     },
     footer: {
         width: '100%',
@@ -60,6 +59,7 @@ export const styles = StyleSheet.create({
 
     btn_reset: {
         marginBottom: 10,
+        opacity: 0,
     },
 
     circles: {

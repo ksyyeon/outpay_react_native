@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, View, Text, Image, Button} from 'react-native';
 import * as LocalStorage from '../LocalStorage';
 import CustomButton from '../CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class OnBoarding extends React.Component {
     _onPress = async () => {
@@ -18,7 +17,7 @@ export default class OnBoarding extends React.Component {
         LocalStorage.setAppConfig({
             payReqPush: false,
             expReqPush: false,
-            appLock: true,
+            autoLogin: true,
             payReqLock: true,
             denialPopupNotiDate: '',
             accessAgree: false,

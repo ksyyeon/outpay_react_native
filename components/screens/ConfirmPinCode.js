@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    Modal,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 import * as LocalStorage from '../LocalStorage';

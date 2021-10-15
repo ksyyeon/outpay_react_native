@@ -21,6 +21,7 @@ const numbers = [
 const circles = ['0', '1', '2', '3', '4', '5'];
 let passWord = '';
 let maxLength = 6;
+let wrongCount = 0;
 
 export default class LoginPinCode extends React.Component {
     constructor() {
@@ -31,12 +32,12 @@ export default class LoginPinCode extends React.Component {
             pwdLength: 0,
             numPadHeight: 0,
             circleColor: '#ddd',
-            isModalVisible: false,
             correctPassword: null,
         };
 
         this.circleRefs = {};
         this.wrongNoteRef = null;
+        this.forgetNoteRef = null;
     }
 
     async componentDidMount() {
@@ -85,7 +86,11 @@ export default class LoginPinCode extends React.Component {
                         </View>
                     </View>
                     <View style={styles.wrapper2}>
-                        <TouchableOpacity style={styles.btn_reset}>
+                        <TouchableOpacity
+                            ref={btn => {
+                                this.forgetNoteRef = btn;
+                            }}
+                            style={styles.btn_reset}>
                             <Text
                                 style={{
                                     color: 'gray',
@@ -234,6 +239,13 @@ export default class LoginPinCode extends React.Component {
                 });
 
                 if (this.state.correctPassword !== passWord) {
+                    wrongCount++;
+                    console.log('wrongCount:', wrongCount);
+                    if (wrongCount >= 5) {
+                        this.forgetNoteRef.setNativeProps({
+                            style: {opacity: 100},
+                        });
+                    }
                     this.wrongNoteRef.setNativeProps({
                         style: {opacity: 100},
                     });
