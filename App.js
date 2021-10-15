@@ -5,7 +5,6 @@ import * as RootNavigation from './components/RootNavigation';
 import {AppScreens} from './components/AppStack';
 import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
-import SetPinCode from './components/screens/SetPinCode';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -20,7 +19,9 @@ export default class App extends React.Component {
 
     checkUserSignedIn = async () => {
         const userInfo = await AsyncStorage.getItem('@OutpayCert');
+        const appConfig = await AsyncStorage.getItem('@AppConfig');
         console.log('userInfo: ', userInfo);
+        console.log('appConfig: ', appConfig);
         if (userInfo != null) {
             console.log('등록회원');
             return true;
@@ -36,7 +37,7 @@ export default class App extends React.Component {
     // 이벤트 동작
     async componentDidMount() {
         // setTimeout(() => SplashScreen.hide(), 2000);
-        // TODO ios에서 스플래시 비활성화
+        // TODO: ios에서 default 스플래시 비활성화
         const result = await this.checkUserSignedIn();
         setTimeout(
             () => this.setState({isSignedIn: result, isLoading: false}),
@@ -52,8 +53,7 @@ export default class App extends React.Component {
 
         return (
             <NavigationContainer ref={RootNavigation.navigationRef}>
-                {/* {this.state.isSignedIn ? <AppScreens /> : <SignInScreens />} */}
-                <SetPinCode />
+                {this.state.isSignedIn ? <AppScreens /> : <SignInScreens />}
             </NavigationContainer>
         );
     }

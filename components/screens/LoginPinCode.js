@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    Modal,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 import * as LocalStorage from '../LocalStorage';
-import CommonDialog from './CommonDialog.js';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -30,7 +22,7 @@ const circles = ['0', '1', '2', '3', '4', '5'];
 let passWord = '';
 let maxLength = 6;
 
-export default class ConfirmPinCode extends React.Component {
+export default class LoginPinCode extends React.Component {
     constructor() {
         super();
 
@@ -40,50 +32,27 @@ export default class ConfirmPinCode extends React.Component {
             numPadHeight: 0,
             circleColor: '#ddd',
             isModalVisible: false,
+            correctPassword: null,
         };
 
         this.circleRefs = {};
         this.wrongNoteRef = null;
     }
 
+    async componentDidMount() {
+        const correctPassword = await LocalStorage.getUserInfoValue('password');
+        this.setState({correctPassword: JSON.parse(correctPassword)});
+    }
+
     render() {
         this.shuffleNums(numbers);
         return (
             <View style={styles.container}>
-                <CommonDialog
-                    visible={this.state.isModalVisible}
-                    titleDisplay={'none'}
-                    content={
-                        '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
-                    }
-                    cancelDisplay={'flex'}
-                    confirmClicked={() => {
-                        this.setState({isModalVisible: false});
-                        this.props.navigation.reset({
-                            routes: [{name: 'OnBoarding', params: null}],
-                        });
-                    }}
-                    cancelClicked={() => {
-                        this.setState({isModalVisible: false});
-                    }}
-                />
-                <View style={styles.actionBar}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.setState({isModalVisible: true});
-                        }}>
-                        <Image
-                            source={require('../../assets/images/icon_left.png')}
-                            style={{
-                                width: 25,
-                                height: 25,
-                                resizeMode: 'contain',
-                            }}
-                        />
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.actionBar}></View>
                 <View style={styles.header}>
-                    <Text style={styles.title}>다시한번 입력해주세요.</Text>
+                    <Text style={styles.title}>
+                        비밀번호 6자리를 입력해주세요.
+                    </Text>
                 </View>
                 <View style={styles.content}>
                     <View style={styles.wrapper1}>
@@ -187,7 +156,6 @@ export default class ConfirmPinCode extends React.Component {
                 passWord += item.id;
                 console.log('password:', passWord);
                 console.log('password Length:', passWord.length);
-                // this.state.currentColor = 'black';
             }
         }
         this.onPwdLengthChange();
@@ -265,7 +233,7 @@ export default class ConfirmPinCode extends React.Component {
                     style: {backgroundColor: '#ff6801'},
                 });
 
-                if (this.props.route.params.password !== passWord) {
+                if (this.state.correctPassword !== passWord) {
                     this.wrongNoteRef.setNativeProps({
                         style: {opacity: 100},
                     });
@@ -279,8 +247,6 @@ export default class ConfirmPinCode extends React.Component {
                     this.props.navigation.reset({
                         routes: [{name: 'MainWebView', params: null}],
                     });
-                    LocalStorage.setUserInfoValue('password', passWord);
-                    // this.props.navigation.navigate('MainWebView', null);
                 }
                 break;
         }

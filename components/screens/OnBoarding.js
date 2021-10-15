@@ -10,6 +10,7 @@ export default class OnBoarding extends React.Component {
             name: '주신탁',
             telNum: '010-5060-3160',
             email: '',
+            password: '',
         });
 
         LocalStorage.setBlockList([]);
@@ -20,9 +21,10 @@ export default class OnBoarding extends React.Component {
             appLock: true,
             payReqLock: true,
             denialPopupNotiDate: '',
+            accessAgree: false,
         });
 
-        this.props.navigation.navigate('MainWebView', null);
+        this.props.navigation.navigate('SetPinCode', null);
     };
 
     render() {

@@ -18,9 +18,7 @@ const numbers = [
     {src: require('../../assets/images/icon_delete.png'), id: 'delete'},
 ];
 const circles = ['0', '1', '2', '3', '4', '5'];
-const padColumns = 3;
 let passWord = '';
-let passWord2 = '';
 let maxLength = 6;
 
 export default class SetPinCode extends React.Component {
@@ -37,10 +35,28 @@ export default class SetPinCode extends React.Component {
         this.circleRefs = {};
     }
 
+    componentDidMount() {
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            passWord = '';
+            for (let i = 0; i < 6; i++) {
+                this.circleRefs[i].setNativeProps({
+                    style: {backgroundColor: '#ddd'},
+                });
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.focusListener != null && this.focusListener.remove) {
+            this.focusListener.remove();
+        }
+    }
+
     render() {
         this.shuffleNums(numbers);
         return (
             <View style={styles.container}>
+                <View style={styles.actionBar}></View>
                 <View style={styles.header}>
                     <Text style={styles.title}>
                         비밀번호 6자리를 입력하세요.
@@ -142,7 +158,6 @@ export default class SetPinCode extends React.Component {
                 passWord += item.id;
                 console.log('password:', passWord);
                 console.log('password Length:', passWord.length);
-                // this.state.currentColor = 'black';
             }
         }
         this.onPwdLengthChange();
@@ -218,6 +233,9 @@ export default class SetPinCode extends React.Component {
             case 6:
                 this.circleRefs[5].setNativeProps({
                     style: {backgroundColor: '#ff6801'},
+                });
+                this.props.navigation.navigate('ConfirmPinCode', {
+                    password: passWord,
                 });
                 break;
         }

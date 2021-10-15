@@ -5,6 +5,8 @@ import SubWebView from './screens/SubWebView';
 import OnBoarding from './screens/OnBoarding';
 import PushModal from './screens/PushModal';
 import AccessModal from './screens/AccessModal';
+import SetPinCode from './screens/SetPinCode';
+import ConfirmPinCode from './screens/ConfirmPinCode';
 
 // TODO 화면추가: 본인인증, 비밀번호설정 ...
 const SignInStack = createStackNavigator();
@@ -16,6 +18,20 @@ export const SignInScreens = () => {
                 <SignInStack.Screen
                     name="OnBoarding"
                     component={OnBoarding}
+                    options={() => ({
+                        headerShown: false,
+                    })}
+                />
+                <SignInStack.Screen
+                    name="SetPinCode"
+                    component={SetPinCode}
+                    options={() => ({
+                        headerShown: false,
+                    })}
+                />
+                <SignInStack.Screen
+                    name="ConfirmPinCode"
+                    component={ConfirmPinCode}
                     options={() => ({
                         headerShown: false,
                     })}
@@ -41,22 +57,8 @@ export const SignInScreens = () => {
                 />
             </SignInStack.Group>
 
-            <SignInStack.Group screenOptions={{presentation: 'modal'}}>
-                <SignInStack.Screen
-                    name="PushModal"
-                    component={PushModal}
-                    options={() => ({
-                        headerShown: false,
-                    })}
-                />
-                <SignInStack.Screen
-                    name="AccessModal"
-                    component={AccessModal}
-                    options={() => ({
-                        headerShown: false,
-                    })}
-                />
-            </SignInStack.Group>
+            <SignInStack.Group
+                screenOptions={{presentation: 'modal'}}></SignInStack.Group>
         </SignInStack.Navigator>
     );
 };

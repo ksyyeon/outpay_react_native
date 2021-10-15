@@ -6,9 +6,14 @@ export const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#ffff',
     },
+    actionBar: {
+        width: '100%',
+        height: 60,
+        // backgroundColor: '#d6ca1a',
+    },
     header: {
         width: '100%',
-        height: '20%',
+        height: '10%',
         backgroundColor: '#ffff',
         justifyContent: 'flex-end',
         alignItems: 'center',

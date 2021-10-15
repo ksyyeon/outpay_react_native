@@ -16,6 +16,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as LocalStorage from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
+import AccessModal from './AccessModal';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -27,6 +28,7 @@ export default class MainWebView extends React.Component {
             webViewLoaded: false,
             spinnerVisible: false,
             text: '',
+            isModalVisible: false,
         };
         this.invoke = createInvoke(() => this.webView);
     }
@@ -57,7 +59,10 @@ export default class MainWebView extends React.Component {
         this.invoke.define('setBlockList', LocalStorage.setBlockList);
         this.invoke.define('clearStorage', LocalStorage.clearStorage);
 
-        this.props.navigation.navigate('AccessModal');
+        const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
+        if (accessAgree) {
+            this.setState({isModalVisible: false});
+        }
     }
 
     // 이벤트 해제
@@ -68,6 +73,12 @@ export default class MainWebView extends React.Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                <AccessModal
+                    visible={this.state.isModalVisible}
+                    confirmClicked={() => {
+                        this.setState({isModalVisible: false});
+                    }}
+                />
                 <Spinner
                     visible={this.state.spinnerVisible}
                     color={'#ff6801'}
@@ -133,6 +144,7 @@ export default class MainWebView extends React.Component {
 
     onBackPress = () => {
         //TODO OS별 showBackView 호출
+        //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
         const showBackView = `ifs.jsIF.showBackView()`;
         this.webView.injectJavaScript(showBackView);
         return true;
