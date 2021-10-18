@@ -8,7 +8,7 @@ import AccessModal from './screens/AccessModal';
 import SetPinCode from './screens/SetPinCode';
 import ConfirmPinCode from './screens/ConfirmPinCode';
 
-// TODO 화면추가: 본인인증, 비밀번호설정 ...
+// TODO 화면추가: 본인인증 ...
 const SignInStack = createStackNavigator();
 export const SignInScreens = () => {
     console.log('SignInScrenns created');

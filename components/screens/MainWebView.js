@@ -30,7 +30,8 @@ export default class MainWebView extends React.Component {
             text: '',
             isModalVisible: false,
         };
-        this.invoke = createInvoke(() => this.webView);
+        this.webViewRef = null;
+        this.invoke = createInvoke(() => this.webViewRef);
     }
 
     async componentDidMount() {
@@ -90,16 +91,18 @@ export default class MainWebView extends React.Component {
                         uri: this.state.webViewUrl + this.state.telNum,
                     }}
                     ref={webView => {
-                        this.webView = webView;
+                        this.webViewRef = webView;
                     }}
                     cacheEnabled={false}
                     originWhitelist={['*']}
                     javaScriptEnabled={true}
-                    onLoadEnd={this.onLoadWebViewEnd}
+                    onLoadStart={() => this.showSpinner('')}
+                    onLoad={() => this.hideSpinner()}
+                    onLoadEnd={() => this.onLoadWebViewEnd()}
                     onMessage={this.invoke.listener}
-                    onShouldStartLoadWithRequest={event => {
-                        return this.onShouldStartLoadWithRequest(event);
-                    }}
+                    onShouldStartLoadWithRequest={event =>
+                        this.onShouldStartLoadWithRequest(event)
+                    }
                 />
             </View>
         );
@@ -109,7 +112,7 @@ export default class MainWebView extends React.Component {
         this.setState({webViewLoaded: true});
         //TODO View 선택해서 로드하기
         const selectView = ``;
-        this.webView.injectJavaScript(selectView);
+        this.webViewRef.injectJavaScript(selectView);
         return true;
     };
 
@@ -146,7 +149,7 @@ export default class MainWebView extends React.Component {
         //TODO OS별 showBackView 호출
         //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
         const showBackView = `ifs.jsIF.showBackView()`;
-        this.webView.injectJavaScript(showBackView);
+        this.webViewRef.injectJavaScript(showBackView);
         return true;
     };
 
