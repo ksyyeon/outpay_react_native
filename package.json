@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.15.5",
     "@react-native-community/cli": "5.0.1",
+    "@react-native-firebase/app": "12.9.2",
+    "@react-native-firebase/messaging": "12.9.2",
     "@react-native-masked-view/masked-view": "0.2.6",
     "@react-navigation/native": "6.0.2",
     "@react-navigation/stack": "6.0.7",
