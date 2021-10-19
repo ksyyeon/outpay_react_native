@@ -33,6 +33,8 @@ export default class CommonDialog extends React.Component {
                                     fontFamily: 'NanumSquareR',
                                     fontSize: 14,
                                     marginTop: 10,
+                                    textAlign: 'center',
+                                    lineHeight: 20,
                                 }}>
                                 {this.props.content}
                             </Text>

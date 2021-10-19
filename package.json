@@ -26,6 +26,7 @@
     "react-native-linear-gradient": "2.5.6",
     "react-native-loading-spinner-overlay": "2.0.0",
     "react-native-modal": "13.0.0",
+    "react-native-push-notification": "8.1.1",
     "react-native-safe-area-context": "3.3.0",
     "react-native-select-contact": "^1.6.3",
     "react-native-send-intent": "1.2.3",
