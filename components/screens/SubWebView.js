@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {BackHandler, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -7,18 +7,32 @@ export default class SubWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false,
-            text: '',
+            spinnerVisible: false,
+            spinnerMsg: '',
         };
+        this.webViewRef = null;
+        this.backHandler = null;
+    }
+
+    componentDidMount() {
+        if (this.backHandler) this.backHandler.remove();
+        this.backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress.bind(this),
+        );
+    }
+
+    componentWillUnmount() {
+        if (this.backHandler) this.backHandler.remove();
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
                 <Spinner
-                    visible={this.state.visible}
+                    visible={this.state.spinnerVisible}
                     color={'#ff6801'}
-                    textContent={this.state.text}
+                    textContent={this.state.spinnerMsg}
                 />
                 <WebView
                     sytle={{flex: 1}}
@@ -26,7 +40,7 @@ export default class SubWebView extends React.Component {
                         uri: this.props.route.params.uri,
                     }}
                     ref={webView => {
-                        this.webView = webView;
+                        this.webViewRef = webView;
                     }}
                     cacheEnabled={false}
                     originWhitelist={['*']}
@@ -35,4 +49,9 @@ export default class SubWebView extends React.Component {
             </View>
         );
     }
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        return true;
+    };
 }

@@ -32,7 +32,7 @@ export default class ConfirmPinCode extends React.Component {
             pwdLength: 0,
             numPadHeight: 0,
             circleColor: '#ddd',
-            isModalVisible: false,
+            isDialogVisible: false,
         };
 
         this.circleRefs = {};
@@ -44,26 +44,26 @@ export default class ConfirmPinCode extends React.Component {
         return (
             <View style={styles.container}>
                 <CommonDialog
-                    visible={this.state.isModalVisible}
+                    visible={this.state.isDialogVisible}
                     titleDisplay={'none'}
                     content={
                         '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({isDialogVisible: false});
                         this.props.navigation.reset({
                             routes: [{name: 'OnBoarding', params: null}],
                         });
                     }}
                     cancelClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({isDialogVisible: false});
                     }}
                 />
                 <View style={styles.actionBar}>
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({isModalVisible: true});
+                            this.setState({isDialogVisible: true});
                         }}>
                         <Image
                             source={require('../../assets/images/icon_left.png')}

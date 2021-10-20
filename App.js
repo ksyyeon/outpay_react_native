@@ -16,7 +16,7 @@ export default class App extends React.Component {
             isSignedIn: false,
             autoLogin: null,
             isLoading: true,
-            isModalVisible: true,
+            isDialogVisible: false,
         };
     }
 
@@ -44,7 +44,7 @@ export default class App extends React.Component {
         return (
             <NavigationContainer ref={RootNavigation.navigationRef}>
                 <CommonDialog
-                    visible={this.state.isModalVisible}
+                    visible={this.state.isDialogVisible}
                     titleDisplay={'flex'}
                     title={'결제요청 알림'}
                     content={
@@ -52,13 +52,13 @@ export default class App extends React.Component {
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({isDialogVisible: false});
                         RootNavigation.push('MainWebView', {
                             uri: 'https://www.naver.com/',
                         });
                     }}
                     cancelClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({isDialogVisible: false});
                     }}
                 />
                 {this.state.isSignedIn
@@ -134,7 +134,7 @@ export default class App extends React.Component {
             });
 
             // 팝업 형식
-            this.setState({isModalVisible: true});
+            this.setState({isDialogVisible: true});
         });
 
         // 알림창을 클릭한 경우 호출

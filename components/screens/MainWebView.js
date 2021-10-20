@@ -17,6 +17,7 @@ import * as LocalStorage from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
+import CommonDialog from './CommonDialog';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -26,11 +27,14 @@ export default class MainWebView extends React.Component {
             telNum: null,
             webViewLoaded: false,
             spinnerVisible: false,
-            text: '',
+            spinnerMsg: '',
             isModalVisible: false,
+            isDialogVisible: true,
+            dialogContent: null,
         };
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
+        this.backHandler = null;
     }
 
     async componentDidMount() {
@@ -42,27 +46,13 @@ export default class MainWebView extends React.Component {
             telNum: JSON.parse(telNum),
         });
 
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-        this.invoke.define('exitApp', this.exitApp);
-        this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
-        this.invoke.define('getUserInfo', LocalStorage.getUserInfo);
-        this.invoke.define('setUserInfoValue', LocalStorage.setUserInfoValue);
-        this.invoke.define('getUserInfoValue', LocalStorage.getUserInfoValue);
-        this.invoke.define('openBrowser', this.openBrowser);
-        this.invoke.define('openShareChooser', this.openShareChooser);
-        this.invoke.define('toast', this.toast);
-        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
-        this.invoke.define('showSpinner', this.showSpinner);
-        this.invoke.define('hideSpinner', this.hideSpinner);
-        this.invoke.define('openSubWebView', this.openSubWebView);
-        this.invoke.define('getContact', this.requestContactPermission);
-        this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
-        this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
-        this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
-        this.invoke.define('getAppConfigValue', LocalStorage.getAppConfigValue);
-        this.invoke.define('getBlockList', LocalStorage.getBlockList);
-        this.invoke.define('setBlockList', LocalStorage.setBlockList);
-        this.invoke.define('clearStorage', LocalStorage.clearStorage);
+        if (this.backHandler) this.backHandler.remove();
+        this.backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress.bind(this),
+        );
+
+        this.invokeIfs();
 
         const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
         if (accessAgree) {
@@ -71,7 +61,7 @@ export default class MainWebView extends React.Component {
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        if (this.backHandler) this.backHandler.remove();
     }
 
     render() {
@@ -83,16 +73,28 @@ export default class MainWebView extends React.Component {
                         this.setState({isModalVisible: false});
                     }}
                 />
+                {this.state.dialogContent && (
+                    <CommonDialog
+                        visible={this.state.isDialogVisible}
+                        titleDisplay={'none'}
+                        content={this.state.dialogContent}
+                        cancelDisplay={'none'}
+                        confirmClicked={() => {
+                            this.setState({isDialogVisible: false});
+                        }}
+                    />
+                )}
                 <Spinner
                     visible={this.state.spinnerVisible}
                     color={'#ff6801'}
-                    textContent={this.state.text}
+                    textContent={this.state.spinnerMsg}
                 />
                 <WebView
                     sytle={{flex: 1}}
                     source={
-                        // TODO RootNavigation.navigate의 params 가져오는 방법 찾기
-                        typeof this.props.route.params === 'undefined'
+                        // TODO this.props.route.params 초기화 필요?
+                        typeof this.props.route.params === 'undefined' ||
+                        this.props.route.params === null
                             ? {uri: this.state.initialUrl}
                             : {uri: this.props.route.params.uri}
                     }
@@ -116,14 +118,14 @@ export default class MainWebView extends React.Component {
 
     onLoadWebViewEnd = () => {
         this.setState({webViewLoaded: true});
-        //TODO View 선택해서 로드하기
+        // TODO View 선택해서 로드하기
         const selectView = ``;
         this.webViewRef.injectJavaScript(selectView);
         return true;
     };
 
     onShouldStartLoadWithRequest = event => {
-        // TODO 웹뷰에서 앱카드 실행 처리
+        // TODO 앱카드 실행 테스트
         if (
             event.url.startsWith('http://') ||
             event.url.startsWith('https://') ||
@@ -132,10 +134,13 @@ export default class MainWebView extends React.Component {
             return true;
         }
         if (Platform.OS === 'android') {
-            SendIntentAndroid.openAppwithUri(event.url)
+            SendIntentAndroid.openAppWithUri(event.url)
                 .then(isOpened => {
                     if (!isOpened) {
-                        alert('앱 실행이 실패했습니다');
+                        this.setState({
+                            dialogContent:
+                                '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                        });
                     }
                 })
                 .catch(err => {
@@ -143,9 +148,10 @@ export default class MainWebView extends React.Component {
                 });
         } else {
             Linking.openURL(event.url).catch(err => {
-                alert(
-                    '앱 실행에 실패했습니다. 설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
-                );
+                this.setState({
+                    dialogContent:
+                        '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                });
             });
             return false;
         }
@@ -160,7 +166,7 @@ export default class MainWebView extends React.Component {
     };
 
     showSpinner = msg => {
-        this.setState({spinnerVisible: true, text: msg});
+        this.setState({spinnerVisible: true, spinnerMsg: msg});
     };
 
     hideSpinner = () => {
@@ -180,7 +186,9 @@ export default class MainWebView extends React.Component {
     };
 
     openSubWebView = url => {
-        this.props.navigation.navigate('SubWebView', {uri: url});
+        this.props.navigation.navigate('SubWebView', {
+            uri: url,
+        });
     };
 
     openBrowser = url => {
@@ -188,7 +196,10 @@ export default class MainWebView extends React.Component {
             SendIntentAndroid.openChromeIntent(url)
                 .then(isOpened => {
                     if (!isOpened) {
-                        alert('앱 실행이 실패했습니다');
+                        this.setState({
+                            dialogContent:
+                                '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                        });
                     }
                 })
                 .catch(err => {
@@ -197,9 +208,10 @@ export default class MainWebView extends React.Component {
         } else {
             // TODO ios 테스트 필요
             Linking.openURL(url).catch(err => {
-                alert(
-                    '앱 실행이 실패했습니다. 설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
-                );
+                this.setState({
+                    dialogContent:
+                        '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                });
             });
         }
     };
@@ -266,17 +278,17 @@ export default class MainWebView extends React.Component {
 
     requestContactPermission = async () => {
         if (Platform.OS === 'android') {
+            // TODO default 퍼미션 granted -> denied로 변경
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
             );
-
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 return this.getContact();
             } else {
-                //TODO 안내창 커스터마이징
-                alert(
-                    '주소록 접근 권한을 거부하셨습니다. [설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
-                );
+                this.setState({
+                    dialogContent:
+                        '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                });
             }
         } else {
             // TODO ios 연락처 접근권한 체크?
@@ -285,6 +297,7 @@ export default class MainWebView extends React.Component {
     };
 
     getContact = async () => {
+        console.log('getContact is called');
         return selectContactPhone().then(selection => {
             if (!selection) {
                 return null;
@@ -295,5 +308,28 @@ export default class MainWebView extends React.Component {
             );
             return selectedPhone.number;
         });
+    };
+
+    invokeIfs = () => {
+        this.invoke.define('exitApp', this.exitApp);
+        this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
+        this.invoke.define('getUserInfo', LocalStorage.getUserInfo);
+        this.invoke.define('setUserInfoValue', LocalStorage.setUserInfoValue);
+        this.invoke.define('getUserInfoValue', LocalStorage.getUserInfoValue);
+        this.invoke.define('openBrowser', this.openBrowser);
+        this.invoke.define('openShareChooser', this.openShareChooser);
+        this.invoke.define('toast', this.toast);
+        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
+        this.invoke.define('showSpinner', this.showSpinner);
+        this.invoke.define('hideSpinner', this.hideSpinner);
+        this.invoke.define('openSubWebView', this.openSubWebView);
+        this.invoke.define('getContact', this.requestContactPermission);
+        this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
+        this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
+        this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
+        this.invoke.define('getAppConfigValue', LocalStorage.getAppConfigValue);
+        this.invoke.define('getBlockList', LocalStorage.getBlockList);
+        this.invoke.define('setBlockList', LocalStorage.setBlockList);
+        this.invoke.define('clearStorage', LocalStorage.clearStorage);
     };
 }
