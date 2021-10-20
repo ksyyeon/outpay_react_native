@@ -16,7 +16,7 @@ export default class App extends React.Component {
             isSignedIn: false,
             autoLogin: null,
             isLoading: true,
-            isModalVisible: false,
+            isModalVisible: true,
         };
     }
 
@@ -53,6 +53,9 @@ export default class App extends React.Component {
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
                         this.setState({isModalVisible: false});
+                        RootNavigation.push('MainWebView', {
+                            uri: 'https://www.naver.com/',
+                        });
                     }}
                     cancelClicked={() => {
                         this.setState({isModalVisible: false});

@@ -22,8 +22,7 @@ export default class MainWebView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            webViewUrl:
-                'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=',
+            initialUrl: null,
             telNum: null,
             webViewLoaded: false,
             spinnerVisible: false,
@@ -36,7 +35,12 @@ export default class MainWebView extends React.Component {
 
     async componentDidMount() {
         const telNum = await LocalStorage.getUserInfoValue('telNum');
-        this.setState({telNum: JSON.parse(telNum)});
+        this.setState({
+            initialUrl:
+                'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=' +
+                JSON.parse(telNum),
+            telNum: JSON.parse(telNum),
+        });
 
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
         this.invoke.define('exitApp', this.exitApp);
@@ -66,7 +70,6 @@ export default class MainWebView extends React.Component {
         }
     }
 
-    // 이벤트 해제
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
@@ -87,9 +90,12 @@ export default class MainWebView extends React.Component {
                 />
                 <WebView
                     sytle={{flex: 1}}
-                    source={{
-                        uri: this.state.webViewUrl + this.state.telNum,
-                    }}
+                    source={
+                        // TODO RootNavigation.navigate의 params 가져오는 방법 찾기
+                        typeof this.props.route.params === 'undefined'
+                            ? {uri: this.state.initialUrl}
+                            : {uri: this.props.route.params.uri}
+                    }
                     ref={webView => {
                         this.webViewRef = webView;
                     }}
