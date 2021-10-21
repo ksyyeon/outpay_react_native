@@ -134,7 +134,7 @@ export default class MainWebView extends React.Component {
             return true;
         }
         if (Platform.OS === 'android') {
-            SendIntentAndroid.openAppWithUri(event.url)
+            SendIntentAndroid.openAppWithData(event.url)
                 .then(isOpened => {
                     if (!isOpened) {
                         this.setState({
@@ -289,6 +289,7 @@ export default class MainWebView extends React.Component {
                     dialogContent:
                         '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
                 });
+                return null;
             }
         } else {
             // TODO ios 연락처 접근권한 체크?
@@ -309,6 +310,8 @@ export default class MainWebView extends React.Component {
             return selectedPhone.number;
         });
     };
+
+    requestPushPermission = async () => {};
 
     invokeIfs = () => {
         this.invoke.define('exitApp', this.exitApp);
@@ -331,5 +334,6 @@ export default class MainWebView extends React.Component {
         this.invoke.define('getBlockList', LocalStorage.getBlockList);
         this.invoke.define('setBlockList', LocalStorage.setBlockList);
         this.invoke.define('clearStorage', LocalStorage.clearStorage);
+        this.invoke.define('requestPushPermission', this.requestPushPermission);
     };
 }
