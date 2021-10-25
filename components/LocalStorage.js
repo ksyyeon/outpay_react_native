@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// UserInfo: name, telNum, email, blackList ...
+// UserInfo: name, telNum, email ...
 export async function getUserInfo() {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
-    return JSON.stringify(json);
+    // return JSON.stringify(json);
+    return json;
 }
 
 export async function setUserInfo(item) {
@@ -14,8 +15,7 @@ export async function setUserInfo(item) {
 export async function getUserInfoValue(key) {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
-    // return json[key];
-    return JSON.stringify(json[key]);
+    return json[key];
 }
 
 export async function setUserInfoValue(key, value) {
@@ -25,36 +25,44 @@ export async function setUserInfoValue(key, value) {
     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
 }
 
-// export async function addBlackList(telNum) {
-//     const userInfo = await AsyncStorage.getItem('@OutpayCert');
-//     const json = JSON.parse(userInfo);
-//     const blackList = JSON.parse(json['blackList']);
-//     blackList.push[telNum];
-//     json['blackList'] = JSON.stringify(blackList);
-//     await AsyncStorage.setItem('@OutpayCert', JSON.stringify(json));
-// }
-
-// AppInfo: autoLogin, push ...
-export async function getAppInfo() {
-    const userInfo = await AsyncStorage.getItem('@AppConfig');
-    return userInfo;
+// BlackList
+export async function getBlockList() {
+    const blockList = await AsyncStorage.getItem('@BlockList');
+    const json = JSON.parse(blockList);
+    return json;
 }
 
-export async function setAppInfo(item) {
+export async function setBlockList(blockList) {
+    await AsyncStorage.setItem('@BlockList', JSON.stringify(blockList));
+}
+
+// AppConfig: autoLogin, push ...
+export async function getAppConfig() {
+    const appConfig = await AsyncStorage.getItem('@AppConfig');
+    const json = JSON.parse(appConfig);
+    return json;
+}
+
+export async function setAppConfig(item) {
     await AsyncStorage.setItem('@AppConfig', JSON.stringify(item));
 }
 
-export async function getAppInfoValue(key) {
-    const userInfo = await AsyncStorage.getItem('@AppConfig');
-    const json = JSON.parse(userInfo);
-    return JSON.stringify(json[key]);
+export async function getAppConfigValue(key) {
+    const appConfig = await AsyncStorage.getItem('@AppConfig');
+    const json = JSON.parse(appConfig);
+    return json[key];
 }
 
-export async function setAppInfoValue(key, value) {
-    const userInfo = await AsyncStorage.getItem('@AppConfig');
-    const json = JSON.parse(userInfo);
+export async function setAppConfigValue(key, value) {
+    const appConfig = await AsyncStorage.getItem('@AppConfig');
+    const json = JSON.parse(appConfig);
     json[key] = value;
     await AsyncStorage.setItem('@AppConfig', JSON.stringify(json));
 }
 
-//TODO addUserInfo(key, value)
+export async function clearStorage() {
+    // 탈퇴 시 기기에서 회원정보 삭제
+    await AsyncStorage.removeItem('@OutpayCert');
+    await AsyncStorage.removeItem('@AppConfig');
+    await AsyncStorage.removeItem('@BlockList');
+}

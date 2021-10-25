@@ -1,0 +1,30 @@
+{
+    "send body": {
+        "to": "디바이스 토큰",
+        "priority" : "high",
+        "notification" : {
+            "title" : "Postman",
+            "body" : "Hello, World!"
+        },
+        "data": {
+            "js": "ifs.jsIF.showMainView('ops-event')"
+        }
+    },
+
+    "received msg": {
+        "collapseKey": "com.outpay", 
+        "data": { "js": "ifs.jsIF.showMainView('ops-event')" }, 
+        "from": "168473886085", 
+        "messageId": "0:1635130142438063%4262b7a74262b7a7", 
+        "notification": {
+            "android": {}, 
+            "body": "Hello, World!", 
+            "title": "Postman"
+        },
+        "sentTime": 1635130142417, 
+        "ttl": 2419200
+    }
+}
+
+
+
