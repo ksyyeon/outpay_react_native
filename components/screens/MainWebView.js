@@ -54,24 +54,6 @@ export default class MainWebView extends React.Component {
 
         this.invokeIfs();
 
-        console.log(
-            '[MainWebView] this.props.route.params: ',
-            this.props.route.params,
-        );
-        if (
-            typeof this.props.route.params !== 'undefined' &&
-            this.props.route.params !== null
-        ) {
-            // console.log(
-            //     'this.props.route.params.js: ',
-            //     this.props.route.params.js,
-            // );
-            // const js = this.props.route.params.js;
-            this.webViewRef.injectJavaScript(
-                `ifs.jsIF.showMainView('ops-event')`,
-            );
-        }
-
         const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
         if (accessAgree) {
             this.setState({isModalVisible: false});
@@ -124,8 +106,7 @@ export default class MainWebView extends React.Component {
                     originWhitelist={['*']}
                     javaScriptEnabled={true}
                     onLoadStart={() => this.showSpinner('')}
-                    onLoad={() => this.hideSpinner()}
-                    onLoadEnd={() => this.onLoadWebViewEnd()}
+                    onLoad={() => this.onLoadWebViewEnd()}
                     onMessage={this.invoke.listener}
                     onShouldStartLoadWithRequest={event =>
                         this.onShouldStartLoadWithRequest(event)
@@ -137,9 +118,23 @@ export default class MainWebView extends React.Component {
 
     onLoadWebViewEnd = () => {
         this.setState({webViewLoaded: true});
+        this.hideSpinner();
         // TODO View 선택해서 로드하기
-        const selectView = ``;
-        this.webViewRef.injectJavaScript(selectView);
+        console.log(
+            '[MainWebView] this.props.route.params: ',
+            this.props.route.params,
+        );
+        if (
+            typeof this.props.route.params !== 'undefined' &&
+            this.props.route.params !== null
+        ) {
+            console.log(
+                'this.props.route.params.js: ',
+                this.props.route.params.js,
+            );
+            const selectView = this.props.route.params.js;
+            this.webViewRef.injectJavaScript(selectView);
+        }
         return true;
     };
 

@@ -81,7 +81,8 @@ class FCMService {
             );
             if (remoteMessage) {
                 const notification = remoteMessage.notification;
-                onOpenNotification(notification, 'background');
+                const data = remoteMessage.data;
+                onOpenNotification(notification, data);
                 // this.removeDeliveredNotification(notification.notificationId)
             }
         });
@@ -96,7 +97,7 @@ class FCMService {
                 );
                 if (remoteMessage) {
                     const notification = remoteMessage.notification;
-                    onOpenNotification(notification, 'quit');
+                    onOpenNotification(notification);
                     // this.removeDeliveredNotification(notification.notificationId)
                 }
             });
@@ -113,8 +114,9 @@ class FCMService {
                     notification = remoteMessage.data.notification;
                 } else {
                     notification = remoteMessage.notification;
+                    data = remoteMessage.data;
                 }
-                onNotification(notification, 'foreground');
+                onNotification(notification, data);
             }
         });
 

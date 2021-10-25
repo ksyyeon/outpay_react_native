@@ -5,10 +5,7 @@ import {AppScreens} from './components/AppStack';
 import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
 import * as LocalStorage from './components/LocalStorage';
-import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
 import CommonDialog from './components/screens/CommonDialog';
-
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
 
@@ -20,6 +17,7 @@ export default class App extends React.Component {
             autoLogin: null,
             isLoading: true,
             isDialogVisible: false,
+            selectView: null,
         };
     }
 
@@ -49,32 +47,33 @@ export default class App extends React.Component {
         console.log('[App] onRegister : token :', token);
     };
 
-    onNotification = async (notification, state) => {
+    onNotification = async (notification, data) => {
+        // state: foreground
         console.log('[App] onNotification notification: ', notification);
-        console.log('[App] onNotification state: ', state);
+        console.log('[App] onNotification data: ', data);
 
-        if (state === 'foreground') {
-            this.setState({isDialogVisible: true});
-        } else {
-            const options = {
-                soundName: 'default',
-                playSound: true,
-            };
-            localNotificationService.showNotification(
-                0,
-                notification.title,
-                notification.body,
-                notification,
-                options,
-            );
-        }
+        // const options = {
+        //     soundName: 'default',
+        //     playSound: true,
+        // };
+        // localNotificationService.showNotification(
+        //     0,
+        //     notification.title,
+        //     notification.body,
+        //     notification,
+        //     options,
+        // );
+
+        this.setState({isDialogVisible: true, selectView: data.js});
     };
 
-    onOpenNotification = notify => {
-        console.log('[App] onOpenNotification : notify :', notify);
-        // alert('Open Notification : notify.body :' + notify.body);
+    onOpenNotification = (notification, data) => {
+        // state: background & quit
+        console.log('[App] onOpenNotification notification :', notification);
+        console.log('[App] onOpenNotification data :', data);
+
         RootNavigation.push('MainWebView', {
-            js: `ifs.jsIF.showMainView('ops-event')`,
+            js: data.js,
         });
     };
 
@@ -100,7 +99,7 @@ export default class App extends React.Component {
                     confirmClicked={() => {
                         this.setState({isDialogVisible: false});
                         RootNavigation.push('MainWebView', {
-                            js: `ifs.jsIF.showMainView('ops-event')`,
+                            js: this.state.selectView,
                         });
                     }}
                     cancelClicked={() => {
