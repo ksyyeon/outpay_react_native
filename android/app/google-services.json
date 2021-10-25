@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "168473886085",
+    "project_id": "outpay-cf57e",
+    "storage_bucket": "outpay-cf57e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168473886085:android:b3b13c0b67a598441f58ec",
+        "android_client_info": {
+          "package_name": "com.outpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168473886085-u49ajsfqmlidmgsu4l5d5g99h9nml1tm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.outpay",
+            "certificate_hash": "a9947dab1292ac89eaf12e72adb2076a3c1ccca9"
+          }
+        },
+        {
+          "client_id": "168473886085-98pkrvrggb2dgomf3jqvcm79vtvokcho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjtFP7YQX4zuDpxQVQvbp_Zd3crZBygXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168473886085-98pkrvrggb2dgomf3jqvcm79vtvokcho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
