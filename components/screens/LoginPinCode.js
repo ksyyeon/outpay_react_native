@@ -42,7 +42,7 @@ export default class LoginPinCode extends React.Component {
 
     async componentDidMount() {
         const correctPassword = await LocalStorage.getUserInfoValue('password');
-        this.setState({correctPassword: JSON.parse(correctPassword)});
+        this.setState({correctPassword: correctPassword});
     }
 
     render() {

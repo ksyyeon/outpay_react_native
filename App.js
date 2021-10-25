@@ -9,6 +9,9 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import CommonDialog from './components/screens/CommonDialog';
 
+import {fcmService} from './components/FCMService';
+import {localNotificationService} from './components/LocalNotificationService';
+
 export default class App extends React.Component {
     constructor(props) {
         super(props);
@@ -31,13 +34,56 @@ export default class App extends React.Component {
                 autoLogin: result.autoLogin,
                 isLoading: false,
             });
-            this.createPushNotiChannel();
-            this.requestUserPermssionForFcm();
+
+            // this.createPushNotiChannel();
+            fcmService.register(
+                this.onRegister,
+                this.onNotification,
+                this.onOpenNotification,
+            );
+            localNotificationService.configure(this.onOpenNotification);
         }, 2000);
     }
 
+    onRegister = token => {
+        console.log('[App] onRegister : token :', token);
+    };
+
+    onNotification = async (notification, state) => {
+        console.log('[App] onNotification notification: ', notification);
+        console.log('[App] onNotification state: ', state);
+
+        if (state === 'foreground') {
+            this.setState({isDialogVisible: true});
+        } else {
+            const options = {
+                soundName: 'default',
+                playSound: true,
+            };
+            localNotificationService.showNotification(
+                0,
+                notification.title,
+                notification.body,
+                notification,
+                options,
+            );
+        }
+    };
+
+    onOpenNotification = notify => {
+        console.log('[App] onOpenNotification : notify :', notify);
+        // alert('Open Notification : notify.body :' + notify.body);
+        RootNavigation.push('MainWebView', {
+            js: `ifs.jsIF.showMainView('ops-event')`,
+        });
+    };
+
     // 이벤트 해제
-    componentWillUnmount() {}
+    componentWillUnmount() {
+        console.log('[App] unRegister');
+        fcmService.unRegister();
+        localNotificationService.unRegister();
+    }
 
     render() {
         if (this.state.isLoading) return <Splash />;
@@ -54,7 +100,7 @@ export default class App extends React.Component {
                     confirmClicked={() => {
                         this.setState({isDialogVisible: false});
                         RootNavigation.push('MainWebView', {
-                            uri: 'https://www.naver.com/',
+                            js: `ifs.jsIF.showMainView('ops-event')`,
                         });
                     }}
                     cancelClicked={() => {
@@ -71,78 +117,14 @@ export default class App extends React.Component {
     checkUserSignedIn = async () => {
         const userInfo = await LocalStorage.getUserInfo();
         const appConfig = await LocalStorage.getAppConfig();
-        console.log('userInfo: ', userInfo);
-        console.log('appConfig: ', appConfig);
+        console.log('[App] userInfo: ', userInfo);
+        console.log('[App] appConfig: ', appConfig);
         if (userInfo != null && appConfig != null) {
-            console.log('등록회원');
-            return {signedIn: true, autoLogin: JSON.parse(appConfig).autoLogin};
-            // const json = JSON.parse(userInfo);
-            // RootNavigation.navigate('MainWebView', {telNum: json['telNum']});
+            console.log('[App] 등록회원');
+            return {signedIn: true, autoLogin: appConfig.autoLogin};
         } else {
-            console.log('미등록회원');
+            console.log('[App] 미등록회원');
             return {signedIn: false, autoLogin: null};
-            // RootNavigation.navigate('OnBoarding', null);
         }
-    };
-
-    requestUserPermssionForFcm = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            messaging.AuthorizationStatus.PROVISIONAL;
-
-        if (enabled) {
-            const token = await messaging().getToken();
-
-            console.log('fcm token:', token);
-            console.log('Authorization status:', authStatus);
-
-            this.handleFcmMessage();
-        } else {
-            console.log('fcm auth failed!');
-        }
-    };
-
-    createPushNotiChannel = () => {
-        PushNotification.createChannel(
-            {
-                channelId: 'channel-id',
-                channelName: 'ChannelName',
-            },
-            created => console.log(' Channel created: ', created),
-        );
-    };
-
-    handleFcmMessage = () => {
-        //  Foreground 상태에서 FCM 메세지를 받으면 호출
-        messaging().onMessage(async remoteMessage => {
-            console.log('FCM message:', JSON.stringify(remoteMessage));
-
-            // TODO 상황별로 푸시,팝업 보여주기
-            // 푸시 형식
-            PushNotification.localNotification({
-                // Android Only
-                channelId: 'channel-id',
-                showWhen: true,
-                when: remoteMessage.sentTime,
-                color: '#ff6801',
-                largeIcon: '',
-
-                // Android & iOS
-                message: remoteMessage.notification.body,
-                title: remoteMessage.notification.title,
-            });
-
-            // 팝업 형식
-            this.setState({isDialogVisible: true});
-        });
-
-        // 알림창을 클릭한 경우 호출
-        messaging().onNotificationOpenedApp(remoteMessage => {
-            console.log(
-                'Notification caused app to open from background state:',
-                remoteMessage.notification,
-            );
-        });
     };
 }

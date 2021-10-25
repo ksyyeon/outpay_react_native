@@ -42,8 +42,8 @@ export default class MainWebView extends React.Component {
         this.setState({
             initialUrl:
                 'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=' +
-                JSON.parse(telNum),
-            telNum: JSON.parse(telNum),
+                telNum,
+            telNum: telNum,
         });
 
         if (this.backHandler) this.backHandler.remove();
@@ -53,6 +53,24 @@ export default class MainWebView extends React.Component {
         );
 
         this.invokeIfs();
+
+        console.log(
+            '[MainWebView] this.props.route.params: ',
+            this.props.route.params,
+        );
+        if (
+            typeof this.props.route.params !== 'undefined' &&
+            this.props.route.params !== null
+        ) {
+            // console.log(
+            //     'this.props.route.params.js: ',
+            //     this.props.route.params.js,
+            // );
+            // const js = this.props.route.params.js;
+            this.webViewRef.injectJavaScript(
+                `ifs.jsIF.showMainView('ops-event')`,
+            );
+        }
 
         const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
         if (accessAgree) {
@@ -93,10 +111,11 @@ export default class MainWebView extends React.Component {
                     sytle={{flex: 1}}
                     source={
                         // TODO this.props.route.params 초기화 필요?
-                        typeof this.props.route.params === 'undefined' ||
-                        this.props.route.params === null
-                            ? {uri: this.state.initialUrl}
-                            : {uri: this.props.route.params.uri}
+                        // typeof this.props.route.params === 'undefined' ||
+                        // this.props.route.params === null
+                        //     ? {uri: this.state.initialUrl}
+                        //     : {uri: this.props.route.params.uri}
+                        {uri: this.state.initialUrl}
                     }
                     ref={webView => {
                         this.webViewRef = webView;
@@ -231,7 +250,9 @@ export default class MainWebView extends React.Component {
                 title: 'Welcome',
                 // message: 'get your first tickest here',
                 url: url,
-            }).catch(err => console.log('user did not share or ' + err));
+            }).catch(err =>
+                console.log('[MainWebView] user did not share or ' + err),
+            );
         }
     };
 
@@ -267,7 +288,7 @@ export default class MainWebView extends React.Component {
                         endExit: 'slide_out_right',
                     },
                 });
-                console.log(JSON.stringify(result));
+                console.log('[MainWebView]', JSON.stringify(result));
             } else {
                 Linking.openURL(url);
             }
@@ -298,14 +319,14 @@ export default class MainWebView extends React.Component {
     };
 
     getContact = async () => {
-        console.log('getContact is called');
+        console.log('[MainWebView] getContact is called');
         return selectContactPhone().then(selection => {
             if (!selection) {
                 return null;
             }
             let {contact, selectedPhone} = selection;
             console.log(
-                `Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
+                `[MainWebView] Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
             );
             return selectedPhone.number;
         });

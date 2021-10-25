@@ -7,7 +7,7 @@ import LoginPinCode from './screens/LoginPinCode';
 const AppStack = createStackNavigator();
 
 export const AppScreens = autoLogin => {
-    console.log('AppScrenns created');
+    console.log('[AppStack] AppScrenns created');
     return (
         <AppStack.Navigator>
             <AppStack.Group>

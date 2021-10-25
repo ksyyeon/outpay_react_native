@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export async function getUserInfo() {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
-    return JSON.stringify(json);
+    // return JSON.stringify(json);
+    return json;
 }
 
 export async function setUserInfo(item) {
@@ -14,8 +15,7 @@ export async function setUserInfo(item) {
 export async function getUserInfoValue(key) {
     const userInfo = await AsyncStorage.getItem('@OutpayCert');
     const json = JSON.parse(userInfo);
-    // return json[key];
-    return JSON.stringify(json[key]);
+    return json[key];
 }
 
 export async function setUserInfoValue(key, value) {
@@ -29,7 +29,7 @@ export async function setUserInfoValue(key, value) {
 export async function getBlockList() {
     const blockList = await AsyncStorage.getItem('@BlockList');
     const json = JSON.parse(blockList);
-    return JSON.stringify(json);
+    return json;
 }
 
 export async function setBlockList(blockList) {
@@ -39,7 +39,8 @@ export async function setBlockList(blockList) {
 // AppConfig: autoLogin, push ...
 export async function getAppConfig() {
     const appConfig = await AsyncStorage.getItem('@AppConfig');
-    return appConfig;
+    const json = JSON.parse(appConfig);
+    return json;
 }
 
 export async function setAppConfig(item) {
@@ -49,7 +50,7 @@ export async function setAppConfig(item) {
 export async function getAppConfigValue(key) {
     const appConfig = await AsyncStorage.getItem('@AppConfig');
     const json = JSON.parse(appConfig);
-    return JSON.stringify(json[key]);
+    return json[key];
 }
 
 export async function setAppConfigValue(key, value) {

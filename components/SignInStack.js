@@ -11,7 +11,7 @@ import ConfirmPinCode from './screens/ConfirmPinCode';
 // TODO 화면추가: 본인인증 ...
 const SignInStack = createStackNavigator();
 export const SignInScreens = () => {
-    console.log('SignInScrenns created');
+    console.log('[SignInStack] SignInScrenns created');
     return (
         <SignInStack.Navigator>
             <SignInStack.Group>
