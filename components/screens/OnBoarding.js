@@ -32,7 +32,7 @@ export default class OnBoarding extends React.Component {
                 <View style={styles.content}>
                     <Image
                         style={styles.image}
-                        source={require('../../assets/images/logo_image.png')}
+                        source={require('../../assets/images/img_logo.png')}
                     />
                     <Text style={styles.text}>
                         지금 아웃페이로 결제를 주고받아보세요.

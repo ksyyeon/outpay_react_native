@@ -18,6 +18,7 @@ import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
 import CommonDialog from './CommonDialog';
+import Loading from './Loading';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class MainWebView extends React.Component {
         this.state = {
             initialUrl: null,
             telNum: null,
-            webViewLoaded: false,
+            isLoading: true,
             spinnerVisible: false,
             spinnerMsg: '',
             isModalVisible: false,
@@ -84,6 +85,7 @@ export default class MainWebView extends React.Component {
                         }}
                     />
                 )}
+                <Loading visible={this.state.isLoading} />
                 <Spinner
                     visible={this.state.spinnerVisible}
                     color={'#ff6801'}
@@ -91,22 +93,14 @@ export default class MainWebView extends React.Component {
                 />
                 <WebView
                     sytle={{flex: 1}}
-                    source={
-                        // TODO this.props.route.params 초기화 필요?
-                        // typeof this.props.route.params === 'undefined' ||
-                        // this.props.route.params === null
-                        //     ? {uri: this.state.initialUrl}
-                        //     : {uri: this.props.route.params.uri}
-                        {uri: this.state.initialUrl}
-                    }
+                    source={{uri: this.state.initialUrl}}
                     ref={webView => {
                         this.webViewRef = webView;
                     }}
                     cacheEnabled={false}
                     originWhitelist={['*']}
                     javaScriptEnabled={true}
-                    onLoadStart={() => this.showSpinner('')}
-                    onLoad={() => this.onLoadWebViewEnd()}
+                    onLoad={() => this.onLoadEnd()}
                     onMessage={this.invoke.listener}
                     onShouldStartLoadWithRequest={event =>
                         this.onShouldStartLoadWithRequest(event)
@@ -116,9 +110,10 @@ export default class MainWebView extends React.Component {
         );
     }
 
-    onLoadWebViewEnd = () => {
-        this.setState({webViewLoaded: true});
-        this.hideSpinner();
+    onLoadEnd = () => {
+        setTimeout(() => {
+            this.setState({isLoading: false});
+        }, 1000);
         // TODO View 선택해서 로드하기
         console.log(
             '[MainWebView] this.props.route.params: ',
@@ -129,7 +124,7 @@ export default class MainWebView extends React.Component {
             this.props.route.params !== null
         ) {
             console.log(
-                'this.props.route.params.js: ',
+                '[MainWebView] this.props.route.params.js: ',
                 this.props.route.params.js,
             );
             const selectView = this.props.route.params.js;

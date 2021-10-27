@@ -16,7 +16,7 @@ export default class AccessModal extends React.Component {
 
     render() {
         return (
-            <Modal visible={this.props.visible} transparent={false}>
+            <Modal visible={this.props.visible} transparent={true}>
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <Image
