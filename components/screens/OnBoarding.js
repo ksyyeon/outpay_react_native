@@ -17,7 +17,7 @@ export default class OnBoarding extends React.Component {
         LocalStorage.setAppConfig({
             payReqPush: false,
             expReqPush: false,
-            autoLogin: true,
+            autoLogin: false,
             payReqLock: true,
             denialPopupNotiDate: '',
             accessAgree: false,

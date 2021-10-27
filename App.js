@@ -8,6 +8,7 @@ import * as LocalStorage from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
+import Loading from './components/screens/Loading';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -106,9 +107,10 @@ export default class App extends React.Component {
                         this.setState({isDialogVisible: false});
                     }}
                 />
-                {this.state.isSignedIn
+                {/* {this.state.isSignedIn
                     ? AppScreens(this.state.autoLogin)
-                    : SignInScreens()}
+                    : SignInScreens()} */}
+                {this.state.isSignedIn ? <Loading /> : <Loading />}
             </NavigationContainer>
         );
     }
