@@ -8,7 +8,6 @@ import * as LocalStorage from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
-import Loading2 from './components/screens/Loading2';
 
 export default class App extends React.Component {
     constructor(props) {

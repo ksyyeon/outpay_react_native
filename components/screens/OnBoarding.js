@@ -4,7 +4,7 @@ import * as LocalStorage from '../LocalStorage';
 import CustomButton from '../CustomButton';
 
 export default class OnBoarding extends React.Component {
-    _onPress = async () => {
+    onPress = async () => {
         LocalStorage.setUserInfo({
             name: '주신탁',
             telNum: '010-5060-3160',
@@ -43,7 +43,7 @@ export default class OnBoarding extends React.Component {
                     <CustomButton
                         buttonColor={'#ff6801'}
                         title={'시작하기'}
-                        onPress={this._onPress}
+                        onPress={this.onPress}
                     />
                 </View>
             </View>

@@ -19,6 +19,8 @@ import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
 import CommonDialog from './CommonDialog';
 import Loading from './Loading';
+import BottomTabBar from '../BottomTabBar';
+import webViewConsts from '../WebViewConsts';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -41,9 +43,7 @@ export default class MainWebView extends React.Component {
     async componentDidMount() {
         const telNum = await LocalStorage.getUserInfoValue('telNum');
         this.setState({
-            initialUrl:
-                'http://172.16.21.112/osiris/.development/appIndex.html?mode=appMode&telNum=' +
-                telNum,
+            initialUrl: webViewConsts.URL_INDEX + telNum,
             telNum: telNum,
         });
 
@@ -105,6 +105,32 @@ export default class MainWebView extends React.Component {
                     onShouldStartLoadWithRequest={event =>
                         this.onShouldStartLoadWithRequest(event)
                     }
+                />
+                <BottomTabBar
+                    onPress={label => {
+                        switch (label) {
+                            case 'home':
+                                this.webViewRef.injectJavaScript(
+                                    webViewConsts.URL_HOME,
+                                );
+                                break;
+                            case 'rshop':
+                                this.webViewRef.injectJavaScript(
+                                    webViewConsts.URL_RSHOP,
+                                );
+                                break;
+                            case 'event':
+                                this.webViewRef.injectJavaScript(
+                                    webViewConsts.URL_EVENT,
+                                );
+                                break;
+                            case 'settings':
+                                this.webViewRef.injectJavaScript(
+                                    webViewConsts.URL_SETTINGS,
+                                );
+                                break;
+                        }
+                    }}
                 />
             </View>
         );
@@ -169,8 +195,7 @@ export default class MainWebView extends React.Component {
     onBackPress = () => {
         //TODO OS별 showBackView 호출
         //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
-        const showBackView = `ifs.jsIF.showBackView()`;
-        this.webViewRef.injectJavaScript(showBackView);
+        this.webViewRef.injectJavaScript(webViewConsts.URL_BACKVIEW);
         return true;
     };
 
