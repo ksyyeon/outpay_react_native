@@ -5,15 +5,12 @@ export default class BottonTabBar extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            selected: 'home',
-        };
+        this.state = {};
     }
 
     handleBottomTab = label => {
         console.log('press tab: ', label);
         this.setState({selected: label});
-        console.log('selected label:', this.state.selected);
         this.props.onPress(label);
     };
 
@@ -30,14 +27,14 @@ export default class BottonTabBar extends Component {
                         <Image
                             source={require('../assets/images/icon_home.png')}
                             style={
-                                this.state.selected === 'home'
+                                this.props.selected === 'home'
                                     ? styles.selected_image
                                     : styles.image
                             }
                         />
                         <Text
                             style={
-                                this.state.selected === 'home'
+                                this.props.selected === 'home'
                                     ? styles.selected_label
                                     : styles.label
                             }>
@@ -53,14 +50,14 @@ export default class BottonTabBar extends Component {
                         <Image
                             source={require('../assets/images/icon_heart.png')}
                             style={
-                                this.state.selected === 'rshop'
+                                this.props.selected === 'rshop'
                                     ? styles.selected_image
                                     : styles.image
                             }
                         />
                         <Text
                             style={
-                                this.state.selected === 'rshop'
+                                this.props.selected === 'rshop'
                                     ? styles.selected_label
                                     : styles.label
                             }>
@@ -76,14 +73,14 @@ export default class BottonTabBar extends Component {
                         <Image
                             source={require('../assets/images/icon_gift.png')}
                             style={
-                                this.state.selected === 'event'
+                                this.props.selected === 'event'
                                     ? styles.selected_image
                                     : styles.image
                             }
                         />
                         <Text
                             style={
-                                this.state.selected === 'event'
+                                this.props.selected === 'event'
                                     ? styles.selected_label
                                     : styles.label
                             }>
@@ -99,14 +96,14 @@ export default class BottonTabBar extends Component {
                         <Image
                             source={require('../assets/images/icon_settings.png')}
                             style={
-                                this.state.selected === 'settings'
+                                this.props.selected === 'settings'
                                     ? styles.selected_image
                                     : styles.image
                             }
                         />
                         <Text
                             style={
-                                this.state.selected === 'settings'
+                                this.props.selected === 'settings'
                                     ? styles.selected_label
                                     : styles.label
                             }>

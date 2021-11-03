@@ -35,7 +35,9 @@ export default class MainWebView extends React.Component {
             isDialogVisible: true,
             dialogContent: null,
             isNBVisible: false,
+            selectedNB: 'home',
         };
+        this.mainWebViewRef = React.createRef();
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
         this.backHandler = null;
@@ -109,7 +111,9 @@ export default class MainWebView extends React.Component {
                 />
                 <BottomTabBar
                     visible={this.state.isNBVisible}
+                    selected={this.state.selectedNB}
                     onPress={label => {
+                        this.setState({selectedNB: label});
                         switch (label) {
                             case 'home':
                                 this.webViewRef.injectJavaScript(
@@ -209,12 +213,19 @@ export default class MainWebView extends React.Component {
         this.setState({isSpinnerVisible: false});
     };
 
-    showNB = () => {
+    showNB = label => {
         this.setState({isNBVisible: true});
+        console.log('setSelectedNB label: ', label);
+        this.setState({selectedNB: label});
     };
 
     hideNB = () => {
         this.setState({isNBVisible: false});
+    };
+
+    setSelectedNB = label => {
+        console.log('setSelectedNB label: ', label);
+        this.setState({selectedNB: label});
     };
 
     exitApp = () => {
@@ -371,6 +382,7 @@ export default class MainWebView extends React.Component {
         this.invoke.define('openInAppBrowser', this.openInAppBrowser);
         this.invoke.define('showNB', this.showNB);
         this.invoke.define('hideNB', this.hideNB);
+        this.invoke.define('setSelectedNB', this.setSelectedNB);
         this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
