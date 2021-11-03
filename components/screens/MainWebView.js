@@ -29,11 +29,12 @@ export default class MainWebView extends React.Component {
             initialUrl: null,
             telNum: null,
             isLoading: true,
-            spinnerVisible: false,
+            isSpinnerVisible: false,
             spinnerMsg: '',
             isModalVisible: false,
             isDialogVisible: true,
             dialogContent: null,
+            isNBVisible: false,
         };
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
@@ -87,7 +88,7 @@ export default class MainWebView extends React.Component {
                 )}
                 <Loading visible={this.state.isLoading} />
                 <Spinner
-                    visible={this.state.spinnerVisible}
+                    visible={this.state.isSpinnerVisible}
                     color={'#ff6801'}
                     textContent={this.state.spinnerMsg}
                 />
@@ -107,6 +108,7 @@ export default class MainWebView extends React.Component {
                     }
                 />
                 <BottomTabBar
+                    visible={this.state.isNBVisible}
                     onPress={label => {
                         switch (label) {
                             case 'home':
@@ -200,11 +202,19 @@ export default class MainWebView extends React.Component {
     };
 
     showSpinner = msg => {
-        this.setState({spinnerVisible: true, spinnerMsg: msg});
+        this.setState({isSpinnerVisible: true, spinnerMsg: msg});
     };
 
     hideSpinner = () => {
-        this.setState({spinnerVisible: false});
+        this.setState({isSpinnerVisible: false});
+    };
+
+    showNB = () => {
+        this.setState({isNBVisible: true});
+    };
+
+    hideNB = () => {
+        this.setState({isNBVisible: false});
     };
 
     exitApp = () => {
@@ -359,6 +369,8 @@ export default class MainWebView extends React.Component {
         this.invoke.define('openShareChooser', this.openShareChooser);
         this.invoke.define('toast', this.toast);
         this.invoke.define('openInAppBrowser', this.openInAppBrowser);
+        this.invoke.define('showNB', this.showNB);
+        this.invoke.define('hideNB', this.hideNB);
         this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);

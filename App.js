@@ -8,6 +8,8 @@ import * as LocalStorage from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
+import {Platform} from 'react-native';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -127,4 +129,6 @@ export default class App extends React.Component {
             return {signedIn: false, autoLogin: null};
         }
     };
+
+    checkNetworkConnected = () => {};
 }

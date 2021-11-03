@@ -13,108 +13,108 @@ export default class BottonTabBar extends Component {
     handleBottomTab = label => {
         console.log('press tab: ', label);
         this.setState({selected: label});
+        console.log('selected label:', this.state.selected);
+        this.props.onPress(label);
     };
 
     render() {
         return (
-            <View style={styles.container}>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.tab}
-                    onPress={() => {
-                        this.handleBottomTab('home');
-                        this.props.onPress('home');
-                    }}>
-                    <Image
-                        source={require('../assets/images/icon_home.png')}
-                        style={
-                            this.state.selected === 'home'
-                                ? styles.selected_image
-                                : styles.image
-                        }
-                    />
-                    <Text
-                        style={
-                            this.state.selected === 'home'
-                                ? styles.selected_label
-                                : styles.label
-                        }>
-                        홈
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.tab}
-                    onPress={() => {
-                        this.handleBottomTab('rshop');
-                        this.props.onPress('rshop');
-                    }}>
-                    <Image
-                        source={require('../assets/images/icon_heart.png')}
-                        style={
-                            this.state.selected === 'rshop'
-                                ? styles.selected_image
-                                : styles.image
-                        }
-                    />
-                    <Text
-                        style={
-                            this.state.selected === 'rshop'
-                                ? styles.selected_label
-                                : styles.label
-                        }>
-                        추천쇼핑
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.tab}
-                    onPress={() => {
-                        this.handleBottomTab('event');
-                        this.props.onPress('event');
-                    }}>
-                    <Image
-                        source={require('../assets/images/icon_gift.png')}
-                        style={
-                            this.state.selected === 'event'
-                                ? styles.selected_image
-                                : styles.image
-                        }
-                    />
-                    <Text
-                        style={
-                            this.state.selected === 'event'
-                                ? styles.selected_label
-                                : styles.label
-                        }>
-                        이벤트
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.tab}
-                    onPress={() => {
-                        this.handleBottomTab('settings');
-                        this.props.onPress('settings');
-                    }}>
-                    <Image
-                        source={require('../assets/images/icon_settings.png')}
-                        style={
-                            this.state.selected === 'settings'
-                                ? styles.selected_image
-                                : styles.image
-                        }
-                    />
-                    <Text
-                        style={
-                            this.state.selected === 'settings'
-                                ? styles.selected_label
-                                : styles.label
-                        }>
-                        설정
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            this.props.visible && (
+                <View style={styles.container}>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.tab}
+                        onPress={() => {
+                            this.handleBottomTab('home');
+                        }}>
+                        <Image
+                            source={require('../assets/images/icon_home.png')}
+                            style={
+                                this.state.selected === 'home'
+                                    ? styles.selected_image
+                                    : styles.image
+                            }
+                        />
+                        <Text
+                            style={
+                                this.state.selected === 'home'
+                                    ? styles.selected_label
+                                    : styles.label
+                            }>
+                            홈
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.tab}
+                        onPress={() => {
+                            this.handleBottomTab('rshop');
+                        }}>
+                        <Image
+                            source={require('../assets/images/icon_heart.png')}
+                            style={
+                                this.state.selected === 'rshop'
+                                    ? styles.selected_image
+                                    : styles.image
+                            }
+                        />
+                        <Text
+                            style={
+                                this.state.selected === 'rshop'
+                                    ? styles.selected_label
+                                    : styles.label
+                            }>
+                            추천쇼핑
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.tab}
+                        onPress={() => {
+                            this.handleBottomTab('event');
+                        }}>
+                        <Image
+                            source={require('../assets/images/icon_gift.png')}
+                            style={
+                                this.state.selected === 'event'
+                                    ? styles.selected_image
+                                    : styles.image
+                            }
+                        />
+                        <Text
+                            style={
+                                this.state.selected === 'event'
+                                    ? styles.selected_label
+                                    : styles.label
+                            }>
+                            이벤트
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.tab}
+                        onPress={() => {
+                            this.handleBottomTab('settings');
+                        }}>
+                        <Image
+                            source={require('../assets/images/icon_settings.png')}
+                            style={
+                                this.state.selected === 'settings'
+                                    ? styles.selected_image
+                                    : styles.image
+                            }
+                        />
+                        <Text
+                            style={
+                                this.state.selected === 'settings'
+                                    ? styles.selected_label
+                                    : styles.label
+                            }>
+                            설정
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            )
         );
     }
 }
