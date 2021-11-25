@@ -8,8 +8,8 @@ import * as LocalStorage from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
-import {Platform} from 'react-native';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
+import NetworkFail from './components/screens/NetworkFail';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -20,29 +20,36 @@ export default class App extends React.Component {
             isLoading: true,
             isDialogVisible: false,
             selectView: null,
+            networkUnsubscribe: null,
+            networkConnected: false,
         };
     }
 
     // 이벤트 동작
-    async componentDidMount() {
+    componentDidMount() {
         // setTimeout(() => SplashScreen.hide(), 2000);
         // TODO: iOS에서 default 스플래시 비활성화
-        const result = await this.checkUserSignedIn();
         setTimeout(() => {
-            this.setState({
-                isSignedIn: result.signedIn,
-                autoLogin: result.autoLogin,
-                isLoading: false,
-            });
-
             // this.createPushNotiChannel();
             fcmService.register(
                 this.onRegister,
                 this.onNotification,
                 this.onOpenNotification,
             );
+
             localNotificationService.configure(this.onOpenNotification);
+
+            this.checkNetworkConnected();
         }, 2000);
+    }
+
+    // 이벤트 해제
+    componentWillUnmount() {
+        // networkUnsubscribe();
+
+        console.log('[App] unRegister');
+        fcmService.unRegister();
+        localNotificationService.unRegister();
     }
 
     onRegister = token => {
@@ -79,13 +86,6 @@ export default class App extends React.Component {
         });
     };
 
-    // 이벤트 해제
-    componentWillUnmount() {
-        console.log('[App] unRegister');
-        fcmService.unRegister();
-        localNotificationService.unRegister();
-    }
-
     render() {
         if (this.state.isLoading) return <Splash />;
         return (
@@ -108,10 +108,15 @@ export default class App extends React.Component {
                         this.setState({isDialogVisible: false});
                     }}
                 />
-                {this.state.isSignedIn
-                    ? AppScreens(this.state.autoLogin)
-                    : SignInScreens()}
-                {/* {this.state.isSignedIn ? <Loading /> : <Loading />} */}
+                {this.state.networkConnected ? (
+                    this.state.isSignedIn ? (
+                        AppScreens(this.state.autoLogin)
+                    ) : (
+                        SignInScreens()
+                    )
+                ) : (
+                    <NetworkFail />
+                )}
             </NavigationContainer>
         );
     }
@@ -130,5 +135,17 @@ export default class App extends React.Component {
         }
     };
 
-    checkNetworkConnected = () => {};
+    checkNetworkConnected = () => {
+        NetInfo.fetch().then(async state => {
+            const result = await this.checkUserSignedIn();
+            console.log('[App] Connection type', state.type);
+            console.log('[App] Is connected?', state.isConnected);
+            this.setState({
+                isSignedIn: result.signedIn,
+                autoLogin: result.autoLogin,
+                isLoading: false,
+                networkConnected: state.isConnected,
+            });
+        });
+    };
 }

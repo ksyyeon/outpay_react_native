@@ -3,8 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import MainWebView from './screens/MainWebView';
 import SubWebView from './screens/SubWebView';
 import OnBoarding from './screens/OnBoarding';
-import PushModal from './screens/PushModal';
-import AccessModal from './screens/AccessModal';
 import SetPinCode from './screens/SetPinCode';
 import ConfirmPinCode from './screens/ConfirmPinCode';
 
@@ -53,6 +51,30 @@ export const SignInScreens = () => {
                             fontFamily: 'NanumSquareB',
                             fontSize: 18,
                         },
+                    })}
+                />
+                <AppStack.Screen
+                    name="SelfAuth"
+                    component={SelfAuth}
+                    options={() => ({
+                        headerShown: true,
+                        headerTitle: '',
+                        headerLeft: () => null,
+                        headerRight: () => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    alert('dismiss button');
+                                }}>
+                                <Image
+                                    style={{
+                                        width: 15,
+                                        height: 15,
+                                        marginRight: 20,
+                                    }}
+                                    source={require('../assets/images/icon_close1.png')}
+                                />
+                            </TouchableOpacity>
+                        ),
                     })}
                 />
             </SignInStack.Group>

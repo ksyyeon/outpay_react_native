@@ -246,6 +246,10 @@ export default class MainWebView extends React.Component {
         });
     };
 
+    openSelfAuth = () => {
+        this.props.navigation.navigate('SelfAuth', null);
+    };
+
     openBrowser = url => {
         if (Platform.OS === 'android') {
             SendIntentAndroid.openChromeIntent(url)
@@ -386,6 +390,7 @@ export default class MainWebView extends React.Component {
         this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
+        this.invoke.define('openSelfAuth', this.openSelfAuth);
         this.invoke.define('getContact', this.requestContactPermission);
         this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
         this.invoke.define('getAppConfig', LocalStorage.getAppConfig);

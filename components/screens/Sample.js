@@ -5,12 +5,24 @@ export default class Sample extends React.Component {
     render() {
         return (
             <View
-                style={{
+                syle={{
                     flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
                 }}>
-                <Text>Sample Screen</Text>
+                <Image
+                    source={require('../../assets/images/icon_wifi.png')}
+                    style={{
+                        resizeMode: 'contain',
+                        height: 70,
+                        width: 70,
+                        marginBottom: 30,
+                    }}
+                />
+                <Text
+                    style={{
+                        fontFamily: 'NanumSquareB',
+                    }}>
+                    네트워크가 연결되지 않았습니다.
+                </Text>
             </View>
         );
     }
