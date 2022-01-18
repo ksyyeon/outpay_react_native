@@ -20,7 +20,7 @@ import AccessModal from './AccessModal';
 import CommonDialog from './CommonDialog';
 import Loading from './Loading';
 import BottomTabBar from '../BottomTabBar';
-import webViewConsts from '../WebViewConsts';
+import appConsts from '../AppConsts';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -41,12 +41,13 @@ export default class MainWebView extends React.Component {
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
         this.backHandler = null;
+        this.urlConsts = appConsts.urlConsts;
     }
 
     async componentDidMount() {
         const telNum = await LocalStorage.getUserInfoValue('telNum');
         this.setState({
-            initialUrl: webViewConsts.URL_INDEX + telNum,
+            initialUrl: this.urlConsts.URL_INDEX + telNum,
             telNum: telNum,
         });
 
@@ -101,7 +102,7 @@ export default class MainWebView extends React.Component {
                         this.webViewRef = webView;
                     }}
                     cacheEnabled={false}
-                    originWhitelist={['*']}
+                    originWhitelist={['http://*', 'https://*', 'intent://*']}
                     javaScriptEnabled={true}
                     onLoad={() => this.onLoadEnd()}
                     onMessage={this.invoke.listener}
@@ -117,22 +118,22 @@ export default class MainWebView extends React.Component {
                         switch (label) {
                             case 'home':
                                 this.webViewRef.injectJavaScript(
-                                    webViewConsts.URL_HOME,
+                                    this.urlConsts.URL_HOME,
                                 );
                                 break;
                             case 'rshop':
                                 this.webViewRef.injectJavaScript(
-                                    webViewConsts.URL_RSHOP,
+                                    this.urlConsts.URL_RSHOP,
                                 );
                                 break;
                             case 'event':
                                 this.webViewRef.injectJavaScript(
-                                    webViewConsts.URL_EVENT,
+                                    this.urlConsts.URL_EVENT,
                                 );
                                 break;
                             case 'settings':
                                 this.webViewRef.injectJavaScript(
-                                    webViewConsts.URL_SETTINGS,
+                                    this.urlConsts.URL_SETTINGS,
                                 );
                                 break;
                         }
@@ -166,16 +167,13 @@ export default class MainWebView extends React.Component {
     };
 
     onShouldStartLoadWithRequest = event => {
-        // TODO 앱카드 실행 테스트
-        if (
-            event.url.startsWith('http://') ||
-            event.url.startsWith('https://') ||
-            event.url.startsWith('about:blank')
-        ) {
-            return true;
+        console.log('onShouldStart called: ', event.url);
+        if (event.url.startsWith('http')) {
+            // Linking.openURL(event.url);
+            this.setState({initialUrl: event.url});
         }
-        if (Platform.OS === 'android') {
-            SendIntentAndroid.openAppWithData(event.url)
+        if (Platform.OS === 'android' && event.url.startsWith('intent')) {
+            SendIntentAndroid.openChromeIntent(event.url)
                 .then(isOpened => {
                     if (!isOpened) {
                         this.setState({
@@ -183,25 +181,56 @@ export default class MainWebView extends React.Component {
                                 '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
                         });
                     }
+                    return false;
                 })
                 .catch(err => {
                     console.log(err);
                 });
-        } else {
-            Linking.openURL(event.url).catch(err => {
-                this.setState({
-                    dialogContent:
-                        '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
-                });
-            });
             return false;
         }
+
+        if (Platform.OS === 'ios') {
+            return true;
+        }
+        return true;
+
+        // TODO 앱카드 실행 테스트
+        // if (
+        //     event.url.startsWith('http://') ||
+        //     event.url.startsWith('https://') ||
+        //     event.url.startsWith('about:blank')
+        // ) {
+        //     return true;
+        // }
+        // if (Platform.OS === 'android') {
+        //     console.log('openAppWithUri Called: ', event.url);
+        //     SendIntentAndroid.openAppWithUri(event.url)
+        //         .then(isOpened => {
+        //             if (!isOpened) {
+        //                 this.setState({
+        //                     dialogContent:
+        //                         '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+        //                 });
+        //             }
+        //         })
+        //         .catch(err => {
+        //             console.log(err);
+        //         });
+        // } else {
+        //     Linking.openURL(event.url).catch(err => {
+        //         this.setState({
+        //             dialogContent:
+        //                 '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+        //         });
+        //     });
+        //     return false;
+        // }
     };
 
     onBackPress = () => {
         //TODO OS별 showBackView 호출
         //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
-        this.webViewRef.injectJavaScript(webViewConsts.URL_BACKVIEW);
+        this.webViewRef.injectJavaScript(this.urlConsts.URL_BACKVIEW);
         return true;
     };
 
@@ -215,7 +244,7 @@ export default class MainWebView extends React.Component {
 
     showNB = label => {
         this.setState({isNBVisible: true});
-        console.log('setSelectedNB label: ', label);
+        console.log('[MainWebView] showNB label:', label);
         this.setState({selectedNB: label});
     };
 
@@ -224,7 +253,7 @@ export default class MainWebView extends React.Component {
     };
 
     setSelectedNB = label => {
-        console.log('setSelectedNB label: ', label);
+        console.log('[MainWebView] setSelectedNB label:', label);
         this.setState({selectedNB: label});
     };
 
@@ -246,11 +275,12 @@ export default class MainWebView extends React.Component {
         });
     };
 
-    openSelfAuth = () => {
-        this.props.navigation.navigate('SelfAuth', null);
+    openSelfAuth = param => {
+        this.props.navigation.navigate('SelfAuth', {param: param});
     };
 
     openBrowser = url => {
+        console.log('opnBrowser Called: ', url);
         if (Platform.OS === 'android') {
             SendIntentAndroid.openChromeIntent(url)
                 .then(isOpened => {
@@ -374,6 +404,11 @@ export default class MainWebView extends React.Component {
 
     requestPushPermission = async () => {};
 
+    navigateNext = (screen, param) => {
+        // 화면이동 호출
+        this.props.navigation.navigate(screen, param);
+    };
+
     invokeIfs = () => {
         this.invoke.define('exitApp', this.exitApp);
         this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
@@ -400,5 +435,6 @@ export default class MainWebView extends React.Component {
         this.invoke.define('setBlockList', LocalStorage.setBlockList);
         this.invoke.define('clearStorage', LocalStorage.clearStorage);
         this.invoke.define('requestPushPermission', this.requestPushPermission);
+        this.invoke.define('navigateNext', this.navigateNext);
     };
 }

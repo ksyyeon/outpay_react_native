@@ -9,7 +9,7 @@ export default class BottonTabBar extends Component {
     }
 
     handleBottomTab = label => {
-        console.log('press tab: ', label);
+        console.log('[BottomTabBar] pressed tab:', label);
         this.setState({selected: label});
         this.props.onPress(label);
     };

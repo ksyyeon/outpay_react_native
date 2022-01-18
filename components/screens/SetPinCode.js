@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    BackHandler,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 
@@ -30,12 +37,21 @@ export default class SetPinCode extends React.Component {
             pwdLength: 0,
             numPadHeight: 0,
             circleColor: '#ddd',
+            entryScreen: null,
         };
 
+        this.backHandler = null;
         this.circleRefs = {};
     }
 
     componentDidMount() {
+        // TODO: 화면에 따라서 backHandler 등록
+        if (this.backHandler) this.backHandler.remove();
+        this.backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress.bind(this),
+        );
+
         this.focusListener = this.props.navigation.addListener('focus', () => {
             passWord = '';
             for (let i = 0; i < 6; i++) {
@@ -44,9 +60,20 @@ export default class SetPinCode extends React.Component {
                 });
             }
         });
+
+        console.log(
+            '[SetPinCode] this.props.route.params',
+            this.props.route.params,
+        );
+        this.setState({entryScreen: this.props.route.params.entryScreen});
+        // if (this.props.route.params !== null) {
+        //     this.setState({entryScreen: this.props.route.params.entryScreen});
+        // }
     }
 
     componentWillUnmount() {
+        if (this.backHandler) this.backHandler.remove();
+
         if (this.focusListener != null && this.focusListener.remove) {
             this.focusListener.remove();
         }
@@ -56,7 +83,24 @@ export default class SetPinCode extends React.Component {
         this.shuffleNums(numbers);
         return (
             <View style={styles.container}>
-                <View style={styles.actionBar}></View>
+                <View style={styles.actionBar}>
+                    <View style={styles.actionBar}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                // this.setState({isDialogVisible: true});
+                                this.onBackPress();
+                            }}>
+                            <Image
+                                source={require('../../assets/images/icon_left.png')}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    resizeMode: 'contain',
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 <View style={styles.header}>
                     <Text style={styles.title}>
                         비밀번호 6자리를 입력하세요.
@@ -234,10 +278,20 @@ export default class SetPinCode extends React.Component {
                 this.circleRefs[5].setNativeProps({
                     style: {backgroundColor: '#ff6801'},
                 });
-                this.props.navigation.navigate('ConfirmPinCode', {
+                // this.props.navigation.navigate('ConfirmPinCode', {
+                //     password: passWord,
+                //     entryScreen: this.props.route.params.entryScreen,
+                // });
+                this.props.navigation.replace('ConfirmPinCode', {
                     password: passWord,
+                    entryScreen: this.state.entryScreen,
                 });
                 break;
         }
+    };
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        return true;
     };
 }

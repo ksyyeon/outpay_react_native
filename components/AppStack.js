@@ -3,11 +3,49 @@ import {createStackNavigator} from '@react-navigation/stack';
 import MainWebView from './screens/MainWebView';
 import SubWebView from './screens/SubWebView';
 import LoginPinCode from './screens/LoginPinCode';
+import SetPinCode from './screens/SetPinCode';
 import SelfAuth from './screens/SelfAuth';
+import ConfirmPinCode from './screens/ConfirmPinCode';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Image} from 'react-native';
 
 const AppStack = createStackNavigator();
+
+const HeaderBackButton = navigation => {
+    return (
+        <TouchableOpacity
+            onPress={() => {
+                navigation.goBack();
+            }}>
+            <Image
+                style={{
+                    width: 25,
+                    height: 25,
+                    marginLeft: 20,
+                }}
+                source={require('../assets/images/icon_left.png')}
+            />
+        </TouchableOpacity>
+    );
+};
+
+const HeaderCloseButton = navigation => {
+    return (
+        <TouchableOpacity
+            onPress={() => {
+                navigation.goBack();
+            }}>
+            <Image
+                style={{
+                    width: 20,
+                    height: 20,
+                    marginRight: 20,
+                }}
+                source={require('../assets/images/icon_close1.png')}
+            />
+        </TouchableOpacity>
+    );
+};
 
 export const AppScreens = autoLogin => {
     console.log('[AppStack] AppScrenns created');
@@ -45,25 +83,25 @@ export const AppScreens = autoLogin => {
                 <AppStack.Screen
                     name="SelfAuth"
                     component={SelfAuth}
-                    options={() => ({
+                    options={({navigation}) => ({
                         headerShown: true,
                         headerTitle: '',
-                        headerLeft: () => null,
-                        headerRight: () => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    alert('dismiss button');
-                                }}>
-                                <Image
-                                    style={{
-                                        width: 15,
-                                        height: 15,
-                                        marginRight: 20,
-                                    }}
-                                    source={require('../assets/images/icon_close1.png')}
-                                />
-                            </TouchableOpacity>
-                        ),
+                        headerLeft: () => HeaderBackButton(navigation),
+                        headerRight: () => null,
+                    })}
+                />
+                <AppStack.Screen
+                    name="SetPinCode"
+                    component={SetPinCode}
+                    options={() => ({
+                        headerShown: false,
+                    })}
+                />
+                <AppStack.Screen
+                    name="ConfirmPinCode"
+                    component={ConfirmPinCode}
+                    options={() => ({
+                        headerShown: false,
                     })}
                 />
             </AppStack.Group>

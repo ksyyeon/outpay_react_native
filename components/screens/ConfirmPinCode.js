@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 import * as LocalStorage from '../LocalStorage';
@@ -33,10 +33,42 @@ export default class ConfirmPinCode extends React.Component {
             numPadHeight: 0,
             circleColor: '#ddd',
             isDialogVisible: false,
+            entryScreen: null,
         };
 
         this.circleRefs = {};
         this.wrongNoteRef = null;
+    }
+
+    componentDidMount() {
+        // TODO: 화면에 따라서 backHandler 등록
+        if (this.backHandler) this.backHandler.remove();
+        this.backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress.bind(this),
+        );
+
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            passWord = '';
+            for (let i = 0; i < 6; i++) {
+                this.circleRefs[i].setNativeProps({
+                    style: {backgroundColor: '#ddd'},
+                });
+            }
+        });
+
+        console.log(
+            '[ConfirmPinCode] this.props.route.params',
+            this.props.route.params,
+        );
+        this.setState({entryScreen: this.props.route.params.entryScreen});
+    }
+
+    componentWillUnmount() {
+        if (this.backHandler) this.backHandler.remove();
+        if (this.focusListener != null && this.focusListener.remove) {
+            this.focusListener.remove();
+        }
     }
 
     render() {
@@ -47,14 +79,17 @@ export default class ConfirmPinCode extends React.Component {
                     visible={this.state.isDialogVisible}
                     titleDisplay={'none'}
                     content={
-                        '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
+                        this.state.entryScreen === 'OnBoarding'
+                            ? '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
+                            : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다. 뒤로 가시겠습니까?'
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
+                        // this.props.navigation.reset({
+                        //     routes: [{name: 'OnBoarding', params: null}],
+                        // });
                         this.setState({isDialogVisible: false});
-                        this.props.navigation.reset({
-                            routes: [{name: 'OnBoarding', params: null}],
-                        });
+                        this.onBackPress();
                     }}
                     cancelClicked={() => {
                         this.setState({isDialogVisible: false});
@@ -68,8 +103,8 @@ export default class ConfirmPinCode extends React.Component {
                         <Image
                             source={require('../../assets/images/icon_left.png')}
                             style={{
-                                width: 25,
-                                height: 25,
+                                width: 30,
+                                height: 30,
                                 resizeMode: 'contain',
                             }}
                         />
@@ -269,13 +304,27 @@ export default class ConfirmPinCode extends React.Component {
                         });
                     }
                 } else {
-                    this.props.navigation.reset({
-                        routes: [{name: 'MainWebView', params: null}],
-                    });
-                    LocalStorage.setUserInfoValue('password', passWord);
-                    // this.props.navigation.navigate('MainWebView', null);
+                    // 비밀번호 설정 완료
+                    if (this.state.entryScreen === 'MainWebView') {
+                        // 비밀번호 재설정에서 진입
+                        LocalStorage.setUserInfoValue('password', passWord);
+                        this.props.navigation.goBack();
+                    } else if (this.state.entryScreen === 'OnBoarding') {
+                        // 앱 가입과정에서 진입
+                        LocalStorage.setUserInfoValue('password', passWord);
+                        this.props.navigation.reset({
+                            routes: [{name: 'MainWebView', params: null}],
+                        });
+                    } else {
+                        console.log('[ConfirmPinCode] unknown entryScreen!!');
+                    }
                 }
                 break;
         }
+    };
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        return true;
     };
 }

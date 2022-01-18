@@ -23,7 +23,9 @@ export default class OnBoarding extends React.Component {
             accessAgree: false,
         });
 
-        this.props.navigation.navigate('SetPinCode', null);
+        this.props.navigation.navigate('SetPinCode', {
+            entryScreen: 'OnBoarding',
+        });
     };
 
     render() {
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        backgroundColor: '#ffff',
     },
     image: {
         height: 150,
