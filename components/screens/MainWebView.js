@@ -116,7 +116,7 @@ export default class MainWebView extends React.Component {
                     onPress={label => {
                         this.setState({selectedNB: label});
                         switch (label) {
-                            case 'home':
+                            case 'payreqs':
                                 this.webViewRef.injectJavaScript(
                                     this.urlConsts.URL_HOME,
                                 );

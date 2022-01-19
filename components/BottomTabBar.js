@@ -22,19 +22,19 @@ export default class BottonTabBar extends Component {
                         activeOpacity={0.5}
                         style={styles.tab}
                         onPress={() => {
-                            this.handleBottomTab('home');
+                            this.handleBottomTab('payreqs');
                         }}>
                         <Image
                             source={require('../assets/images/icon_home.png')}
                             style={
-                                this.props.selected === 'home'
+                                this.props.selected === 'payreqs'
                                     ? styles.selected_image
                                     : styles.image
                             }
                         />
                         <Text
                             style={
-                                this.props.selected === 'home'
+                                this.props.selected === 'payreqs'
                                     ? styles.selected_label
                                     : styles.label
                             }>

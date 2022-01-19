@@ -3,7 +3,7 @@ const appConsts = {
         HOST: 'http://192.168.0.34',
 
         URL_INDEX: `http://192.168.0.34/osiris/.development/appIndex.html?telNum=`,
-        URL_HOME: 'ifs.jsIF.showMainView("ops-home")',
+        URL_HOME: 'ifs.jsIF.showMainView("ops-payreqs")',
         URL_RSHOP: 'ifs.jsIF.showMainView("ops-rshop")',
         URL_EVENT: 'ifs.jsIF.showMainView("ops-event")',
         URL_SETTINGS: 'ifs.jsIF.showMainView("ops-settings")',
