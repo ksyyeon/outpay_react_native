@@ -4,6 +4,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 import * as LocalStorage from '../LocalStorage';
 import CommonDialog from './CommonDialog.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -74,7 +75,7 @@ export default class ConfirmPinCode extends React.Component {
     render() {
         this.shuffleNums(numbers);
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <CommonDialog
                     visible={this.state.isDialogVisible}
                     titleDisplay={'none'}
@@ -189,7 +190,7 @@ export default class ConfirmPinCode extends React.Component {
                         />
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

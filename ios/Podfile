@@ -17,6 +17,10 @@ target 'OutPay' do
 
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
 
+  # firebase
+  pod 'Firebase/Analytics' # Google Analytics
+
+
   target 'OutPayTests' do
     inherit! :complete
     # Pods for testing

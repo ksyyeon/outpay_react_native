@@ -3,6 +3,7 @@ import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
 import * as LocalStorage from '../LocalStorage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -48,7 +49,7 @@ export default class LoginPinCode extends React.Component {
     render() {
         this.shuffleNums(numbers);
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={styles.actionBar}></View>
                 <View style={styles.header}>
                     <Text style={styles.title}>
@@ -135,7 +136,7 @@ export default class LoginPinCode extends React.Component {
                         />
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

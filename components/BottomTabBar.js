@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default class BottonTabBar extends Component {
     constructor(props) {
@@ -17,7 +18,9 @@ export default class BottonTabBar extends Component {
     render() {
         return (
             this.props.visible && (
-                <View style={styles.container}>
+                <SafeAreaView 
+                    edges = {['bottom']}
+                    style={styles.container}>
                     <TouchableOpacity
                         activeOpacity={0.5}
                         style={styles.tab}
@@ -110,7 +113,7 @@ export default class BottonTabBar extends Component {
                             설정
                         </Text>
                     </TouchableOpacity>
-                </View>
+                </SafeAreaView>
             )
         );
     }

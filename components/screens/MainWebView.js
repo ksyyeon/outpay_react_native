@@ -101,7 +101,6 @@ export default class MainWebView extends React.Component {
                     ref={webView => {
                         this.webViewRef = webView;
                     }}
-                    cacheEnabled={false}
                     originWhitelist={['http://*', 'https://*', 'intent://*']}
                     javaScriptEnabled={true}
                     onLoad={() => this.onLoadEnd()}
@@ -109,6 +108,9 @@ export default class MainWebView extends React.Component {
                     onShouldStartLoadWithRequest={event =>
                         this.onShouldStartLoadWithRequest(event)
                     }
+                    cacheEnabled={false}
+                    cacheMode={'LOAD_NO_CACHE'}
+                    incognito={true}
                 />
                 <BottomTabBar
                     visible={this.state.isNBVisible}
@@ -167,11 +169,11 @@ export default class MainWebView extends React.Component {
     };
 
     onShouldStartLoadWithRequest = event => {
-        console.log('onShouldStart called: ', event.url);
-        if (event.url.startsWith('http')) {
-            // Linking.openURL(event.url);
-            this.setState({initialUrl: event.url});
-        }
+        // console.log('onShouldStart called: ', event.url);
+        // if (event.url.startsWith('http')) {
+        //     // Linking.openURL(event.url);
+        //     this.setState({initialUrl: event.url});
+        // }
         if (Platform.OS === 'android' && event.url.startsWith('intent')) {
             SendIntentAndroid.openChromeIntent(event.url)
                 .then(isOpened => {
