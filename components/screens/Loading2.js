@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Image, Modal} from 'react-native';
-// import AnimatedLottieView from 'lottie-react-native';
+import AnimatedLottieView from 'lottie-react-native';
 
 export default class Loading2 extends React.Component {
     constructor(props) {
@@ -43,14 +43,14 @@ export default class Loading2 extends React.Component {
                                 // justifyContent: 'flex-end',
                                 // alignItems: 'center',
                             }}>
-                            {/* <AnimatedLottieView
+                            <AnimatedLottieView
                                 source={require('../../assets/animations/loading2.json')}
                                 style={{
                                     marginTop: 50,
                                 }}
                                 autoPlay
                                 loop
-                            /> */}
+                            />
                         </View>
                         <View
                             syle={{
