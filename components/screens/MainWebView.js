@@ -21,6 +21,7 @@ import CommonDialog from './CommonDialog';
 import Loading from './Loading';
 import BottomTabBar from '../BottomTabBar';
 import appConsts from '../AppConsts';
+import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -369,25 +370,57 @@ export default class MainWebView extends React.Component {
         }
     };
 
-    requestContactPermission = async () => {
+    requestContactPermission = () => {
         if (Platform.OS === 'android') {
-            // TODO default 퍼미션 granted -> denied로 변경
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                return this.getContact();
-            } else {
-                this.setState({
-                    dialogContent:
-                        '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
-                });
-                return null;
-            }
+            check(PERMISSIONS.ANDROID.CONTACTS)
+            .then((result) => {
+                switch (result) {
+                    case RESULTS.DENIED:
+                        request(PERMISSIONS.ANDROID.CONTACTS)
+                        .then((granted) => {
+                            console.log('[MainWebView] ANDROID Permission Contacts:', granted);
+                            if (granted === RESULTS.GRANTED){
+                                return this.getContact();
+                            } else {
+                                this.setState({
+                                    dialogContent:
+                                    '연락처 접근 권한을 거부하셨습니다.\n설정에서 권한을 허용할 수 있습니다.',
+                                });
+                                return null;
+                            }
+                        });
+                }
+            });
         } else {
-            // TODO ios 연락처 접근권한 체크?
-            return this.getContact();
+            check(PERMISSIONS.IOS.CONTACTS)
+            .then((result) => {
+                switch (result) {
+                    case RESULTS.DENIED:
+                        request(PERMISSIONS.IOS.CONTACTS)
+                        .then((granted) => {
+                            console.log('[MainWebView] IOS Permission Contacts:', granted);
+                            if (granted === RESULTS.GRANTED){
+                                return this.getContact();
+                            } else {
+                                this.setState({
+                                    dialogContent:
+                                    '연락처 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                                });
+                                return null;
+                            }
+                        });
+                    case RESULTS.GRANTED:
+                        return this.getContact();
+                    case RESULTS.BLOCKED:
+                        this.setState({
+                            dialogContent:
+                            '연락처 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                        });
+                        return null;
+                }
+            });
         }
+        
     };
 
     getContact = async () => {

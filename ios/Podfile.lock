@@ -115,6 +115,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - Permission-Contacts (3.2.0):
+    - RNPermissions
   - PromisesObjC (2.0.0)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
@@ -402,6 +404,8 @@ PODS:
     - React-Core
   - RNInAppBrowser (3.6.3):
     - React-Core
+  - RNPermissions (3.2.0):
+    - React-Core
   - RNShare (7.0.0):
     - React-Core
   - RNSnackbar (2.4.0):
@@ -416,6 +420,7 @@ DEPENDENCIES:
   - Firebase/Analytics
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -454,6 +459,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNSnackbar (from `../node_modules/react-native-snackbar`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -487,6 +493,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
+  Permission-Contacts:
+    :path: "../node_modules/react-native-permissions/ios/Contacts"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -559,6 +567,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNInAppBrowser:
     :path: "../node_modules/react-native-inappbrowser-reborn"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSnackbar:
@@ -585,6 +595,7 @@ SPEC CHECKSUMS:
   lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
   lottie-react-native: a029a86e1689c86a07169c520ae770e84348cd20
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  Permission-Contacts: 3919ddcaa62d6dc4320d41a27883b6f734a76fa4
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
@@ -622,10 +633,11 @@ SPEC CHECKSUMS:
   RNFBMessaging: 79910a2eb2fa5955f38259367b14431bd78bef19
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNInAppBrowser: 3ff3a3b8f458aaf25aaee879d057352862edf357
+  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNShare: 00e7409201e3cab13e0febc41fd4465a83ae8225
   RNSnackbar: be3333a21a453ccc272f41a8add5a71f7d44dfcd
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: b30f3303a17b595814d37406fbadf814c2d09bf7
+PODFILE CHECKSUM: c17af2c090a79f74967c790eb1bc407cff683dcb
 
 COCOAPODS: 1.10.2

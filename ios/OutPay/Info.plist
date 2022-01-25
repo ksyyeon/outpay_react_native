@@ -62,5 +62,7 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSContactsUsageDescription</key>
+  	<string>YOUR TEXT</string>
 </dict>
 </plist>

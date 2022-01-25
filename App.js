@@ -31,6 +31,7 @@ export default class App extends React.Component {
         // TODO: iOS에서 default 스플래시 비활성화
         setTimeout(() => {
             // this.createPushNotiChannel();
+            fcmService.registerAppWithFCM();
             fcmService.register(
                 this.onRegister,
                 this.onNotification,

@@ -11,6 +11,13 @@ class FCMService {
         );
     };
 
+    registerAppWithFCM = async () => {
+        if (Platform.OS === 'ios') {
+            // await messaging().registerDeviceForRemoteMessages();
+            await messaging().setAutoInitEnabled(true);
+        }
+    };
+
     checkPermission = onRegister => {
         messaging()
             .hasPermission()
@@ -52,13 +59,6 @@ class FCMService {
             .catch(error => {
                 console.log('[FCMService] getToken rejected', error);
             });
-    };
-
-    registerAppWithFCM = async () => {
-        if (Platform.OS === 'ios') {
-            // await messaging().registerDeviceForRemoteMessages();
-            await messaging().setAutoInitEnabled(true);
-        }
     };
 
     deleteToken = () => {

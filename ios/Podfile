@@ -20,6 +20,9 @@ target 'OutPay' do
   # firebase
   pod 'Firebase/Analytics' # Google Analytics
 
+  # Permissions
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts"
 
   target 'OutPayTests' do
     inherit! :complete
