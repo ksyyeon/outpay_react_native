@@ -370,55 +370,55 @@ export default class MainWebView extends React.Component {
         }
     };
 
-    requestContactPermission = () => {
+    requestContactPermission = async () => {
         if (Platform.OS === 'android') {
-            check(PERMISSIONS.ANDROID.CONTACTS)
-            .then((result) => {
-                switch (result) {
-                    case RESULTS.DENIED:
-                        request(PERMISSIONS.ANDROID.CONTACTS)
-                        .then((granted) => {
-                            console.log('[MainWebView] ANDROID Permission Contacts:', granted);
-                            if (granted === RESULTS.GRANTED){
-                                return this.getContact();
-                            } else {
-                                this.setState({
-                                    dialogContent:
-                                    '연락처 접근 권한을 거부하셨습니다.\n설정에서 권한을 허용할 수 있습니다.',
-                                });
-                                return null;
-                            }
-                        });
-                }
-            });
-        } else {
-            check(PERMISSIONS.IOS.CONTACTS)
-            .then((result) => {
-                switch (result) {
-                    case RESULTS.DENIED:
-                        request(PERMISSIONS.IOS.CONTACTS)
-                        .then((granted) => {
-                            console.log('[MainWebView] IOS Permission Contacts:', granted);
-                            if (granted === RESULTS.GRANTED){
-                                return this.getContact();
-                            } else {
-                                this.setState({
-                                    dialogContent:
-                                    '연락처 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
-                                });
-                                return null;
-                            }
-                        });
-                    case RESULTS.GRANTED:
+            const granted = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
+            console.log('[MainWebView] IOS Permission Contacts:', granted);
+            switch (granted) {
+                case RESULTS.GRANTED:
+                    return this.getContact();
+                case RESULTS.DENIED:
+                    const result = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+                    if (result === RESULTS.GRANTED) {
                         return this.getContact();
-                    case RESULTS.BLOCKED:
+                    } else {
                         this.setState({
                             dialogContent:
-                            '연락처 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                                '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
                         });
                         return null;
-                }
-            });
+                    }
+                case RESULTS.BLOCKED:
+                    this.setState({
+                        dialogContent:
+                            '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                    });
+                    return null;
+            }
+        } else {
+            const granted = await check(PERMISSIONS.IOS.CONTACTS);
+            console.log('[MainWebView] IOS Permission Contacts:', granted);
+            switch (granted) {
+                case RESULTS.GRANTED:
+                    return this.getContact();
+                case RESULTS.DENIED:
+                    const result = await request(PERMISSIONS.IOS.CONTACTS);
+                    if (result === RESULTS.GRANTED) {
+                        return this.getContact();
+                    } else {
+                        this.setState({
+                            dialogContent:
+                                '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                        });
+                        return null;
+                    }
+                case RESULTS.BLOCKED:
+                    this.setState({
+                        dialogContent:
+                            '주소록 접근 권한을 거부하셨습니다.\n[설정] > [애플리케이션] 에서 권한을 허용할 수 있습니다.',
+                    });
+                    return null;
+            }
         }
         
     };
@@ -461,7 +461,7 @@ export default class MainWebView extends React.Component {
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('openSelfAuth', this.openSelfAuth);
-        this.invoke.define('getContact', this.requestContactPermission);
+        this.invoke.define('requestContactPermission', this.requestContactPermission);
         this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
         this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
         this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
