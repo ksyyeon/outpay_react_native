@@ -43,14 +43,15 @@ export default class AccessModal extends React.Component {
                             </Text>
                             <Text style={styles.desc_text}>
                                 결제요청 수신 차단할 연락처 가져오기
+                                결제를 부탁할 사람의 연락처 가져오기
                             </Text>
                         </View>
                         <View style={styles.content_item}>
                             <Text style={styles.title_text}>
-                                · 휴대전화 (선택)
+                                · 푸시 알림 (선택)
                             </Text>
                             <Text style={styles.desc_text}>
-                                푸시 알림 서비스 제공
+                                결제요청 수신 알림
                             </Text>
                         </View>
                         <Text style={styles.note_text}>

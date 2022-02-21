@@ -437,7 +437,6 @@ export default class MainWebView extends React.Component {
         });
     };
 
-    requestPushPermission = async () => {};
 
     navigateNext = (screen, param) => {
         // 화면이동 호출
