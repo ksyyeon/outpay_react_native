@@ -1,20 +1,22 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, Button} from 'react-native';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 import CustomButton from '../CustomButton';
 
 export default class OnBoarding extends React.Component {
     onPress = async () => {
-        LocalStorage.setUserInfo({
+        localStorage.setUserInfo({
             name: '주신탁',
             telNum: '010-5060-3160',
             email: '',
             password: '',
         });
 
-        LocalStorage.setBlockList([]);
+        localStorage.setRecentHistory([]);
 
-        LocalStorage.setAppConfig({
+        localStorage.setBlockList([]);
+
+        localStorage.setAppConfig({
             payReqPush: false,
             expReqPush: false,
             autoLogin: false,

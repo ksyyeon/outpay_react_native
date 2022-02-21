@@ -7,7 +7,7 @@ import {
     Modal,
     TouchableOpacity,
 } from 'react-native';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 
 export default class AccessModal extends React.Component {
     constructor(props) {
@@ -62,7 +62,7 @@ export default class AccessModal extends React.Component {
                         style={styles.footer}
                         onPress={() => {
                             this.props.confirmClicked();
-                            LocalStorage.setAppConfigValue('accessAgree', true);
+                            localStorage.setAppConfigValue('accessAgree', true);
                         }}>
                         <Text style={styles.btn_text}>
                             위의 내용을 확인했습니다.

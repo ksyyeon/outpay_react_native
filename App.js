@@ -4,7 +4,7 @@ import * as RootNavigation from './components/RootNavigation';
 import {AppScreens} from './components/AppStack';
 import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
-import * as LocalStorage from './components/LocalStorage';
+import {localStorage} from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
@@ -123,8 +123,8 @@ export default class App extends React.Component {
     }
 
     checkUserSignedIn = async () => {
-        const userInfo = await LocalStorage.getUserInfo();
-        const appConfig = await LocalStorage.getAppConfig();
+        const userInfo = await localStorage.getUserInfo();
+        const appConfig = await localStorage.getAppConfig();
         console.log('[App] userInfo: ', userInfo);
         console.log('[App] appConfig: ', appConfig);
         if (userInfo != null && appConfig != null) {

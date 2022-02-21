@@ -2,9 +2,9 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 import CommonDialog from './CommonDialog.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -308,11 +308,11 @@ export default class ConfirmPinCode extends React.Component {
                     // 비밀번호 설정 완료
                     if (this.state.entryScreen === 'MainWebView') {
                         // 비밀번호 재설정에서 진입
-                        LocalStorage.setUserInfoValue('password', passWord);
+                        localStorage.setUserInfoValue('password', passWord);
                         this.props.navigation.goBack();
                     } else if (this.state.entryScreen === 'OnBoarding') {
                         // 앱 가입과정에서 진입
-                        LocalStorage.setUserInfoValue('password', passWord);
+                        localStorage.setUserInfoValue('password', passWord);
                         this.props.navigation.reset({
                             routes: [{name: 'MainWebView', params: null}],
                         });

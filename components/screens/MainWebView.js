@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-    BackHandler,
-    Linking,
-    PermissionsAndroid,
-    Platform,
-    ToastAndroid,
-    View,
-} from 'react-native';
+import {BackHandler, Linking, Platform, ToastAndroid, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
 import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
@@ -46,7 +39,7 @@ export default class MainWebView extends React.Component {
     }
 
     async componentDidMount() {
-        const telNum = await LocalStorage.getUserInfoValue('telNum');
+        const telNum = await localStorage.getUserInfoValue('telNum');
         this.setState({
             initialUrl: this.urlConsts.URL_INDEX + telNum,
             telNum: telNum,
@@ -60,7 +53,7 @@ export default class MainWebView extends React.Component {
 
         this.invokeIfs();
 
-        const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
+        const accessAgree = await localStorage.getAppConfigValue('accessAgree');
         if (accessAgree) {
             this.setState({isModalVisible: false});
         }
@@ -247,7 +240,6 @@ export default class MainWebView extends React.Component {
 
     showNB = label => {
         this.setState({isNBVisible: true});
-        console.log('[MainWebView] showNB label:', label);
         this.setState({selectedNB: label});
     };
 
@@ -373,12 +365,14 @@ export default class MainWebView extends React.Component {
     requestContactPermission = async () => {
         if (Platform.OS === 'android') {
             const granted = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
-            console.log('[MainWebView] IOS Permission Contacts:', granted);
+            console.log('[MainWebView] Android Permission Contacts:', granted);
             switch (granted) {
                 case RESULTS.GRANTED:
                     return this.getContact();
                 case RESULTS.DENIED:
-                    const result = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+                    const result = await request(
+                        PERMISSIONS.ANDROID.READ_CONTACTS,
+                    );
                     if (result === RESULTS.GRANTED) {
                         return this.getContact();
                     } else {
@@ -420,7 +414,6 @@ export default class MainWebView extends React.Component {
                     return null;
             }
         }
-        
     };
 
     getContact = async () => {
@@ -433,23 +426,40 @@ export default class MainWebView extends React.Component {
             console.log(
                 `[MainWebView] Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
             );
-            return selectedPhone.number;
+            return {
+                acqName: contact.name,
+                acqTelNum: selectedPhone.number,
+            };
         });
     };
 
-    requestPushPermission = async () => {};
-
-    navigateNext = (screen, param) => {
+    navigateNext = async (screen, param) => {
         // 화면이동 호출
         this.props.navigation.navigate(screen, param);
     };
 
+    openSms = body => {
+        // 문자 or 카카오톡 선택
+        // 수신인 선택
+        const SMSDivider = Platform.OS === 'android' ? '?' : '&';
+        Linking.openURL(`sms:${SMSDivider}body=${body}`);
+    };
+
     invokeIfs = () => {
         this.invoke.define('exitApp', this.exitApp);
-        this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
-        this.invoke.define('getUserInfo', LocalStorage.getUserInfo);
-        this.invoke.define('setUserInfoValue', LocalStorage.setUserInfoValue);
-        this.invoke.define('getUserInfoValue', LocalStorage.getUserInfoValue);
+        this.invoke.define('setUserInfo', localStorage.setUserInfo);
+        this.invoke.define('getUserInfo', localStorage.getUserInfo);
+        this.invoke.define('setUserInfoValue', localStorage.setUserInfoValue);
+        this.invoke.define('getUserInfoValue', localStorage.getUserInfoValue);
+        this.invoke.define('setAppConfig', localStorage.setAppConfig);
+        this.invoke.define('getAppConfig', localStorage.getAppConfig);
+        this.invoke.define('setAppConfigValue', localStorage.setAppConfigValue);
+        this.invoke.define('getAppConfigValue', localStorage.getAppConfigValue);
+        this.invoke.define('getBlockList', localStorage.getBlockList);
+        this.invoke.define('setBlockList', localStorage.setBlockList);
+        this.invoke.define('getRecentHistory', localStorage.getRecentHistory);
+        this.invoke.define('setRecentHistory', localStorage.setRecentHistory);
+        this.invoke.define('clearStorage', localStorage.clearStorage);
         this.invoke.define('openBrowser', this.openBrowser);
         this.invoke.define('openShareChooser', this.openShareChooser);
         this.invoke.define('toast', this.toast);
@@ -461,15 +471,11 @@ export default class MainWebView extends React.Component {
         this.invoke.define('hideSpinner', this.hideSpinner);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('openSelfAuth', this.openSelfAuth);
-        this.invoke.define('requestContactPermission', this.requestContactPermission);
-        this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
-        this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
-        this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
-        this.invoke.define('getAppConfigValue', LocalStorage.getAppConfigValue);
-        this.invoke.define('getBlockList', LocalStorage.getBlockList);
-        this.invoke.define('setBlockList', LocalStorage.setBlockList);
-        this.invoke.define('clearStorage', LocalStorage.clearStorage);
-        this.invoke.define('requestPushPermission', this.requestPushPermission);
+        this.invoke.define(
+            'requestContactPermission',
+            this.requestContactPermission,
+        );
         this.invoke.define('navigateNext', this.navigateNext);
+        this.invoke.define('openSms', this.openSms);
     };
 }
