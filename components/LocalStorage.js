@@ -27,17 +27,22 @@ class LocalStorage {
 
     // ====================== UserInfo ======================
     getUserInfo = async () => {
-        const userInfo = await AsyncStorage.getItem('UserInfo');
-        return JSON.parse(userInfo);
+        const result = await AsyncStorage.getItem('OutpayCert');
+        const cert = JSON.parse(result);
+        return cert.userInfo;
     };
 
     setUserInfo = async userInfo => {
-        await AsyncStorage.setItem('BlockList', JSON.stringify(userInfo));
+        const result = await AsyncStorage.getItem('OutpayCert');
+        const cert = JSON.parse(result);
+        cert.userInfo = userInfo;
+        await AsyncStorage.setItem('OutpayCert', JSON.stringify(cert));
     };
 
     getUserInfoValue = async key => {
-        const result = await AsyncStorage.getItem('UserInfo');
-        const userInfo = JSON.parse(result);
+        const result = await AsyncStorage.getItem('OutpayCert');
+        const cert = JSON.parse(result);
+        const userInfo = cert.userInfo;
         return userInfo[key];
     };
 
@@ -52,10 +57,12 @@ class LocalStorage {
         //     cert.userInfo = userInfo;
         //     await AsyncStorage.setItem('UserInfo', JSON.stringify(cert));
         // }
-        const result = await AsyncStorage.getItem('UserInfo');
-        const userInfo = JSON.parse(result);
+        const result = await AsyncStorage.getItem('OutpayCert');
+        const cert = JSON.parse(result);
+        const userInfo = cert.userInfo;
         userInfo[key] = value;
-        await AsyncStorage.setItem('UserInfo', JSON.stringify(userInfo));
+        cert.userInfo = userInfo;
+        await AsyncStorage.setItem('OutpayCert', JSON.stringify(cert));
     };
 
     // ====================== RecentHistory ======================

@@ -21,15 +21,6 @@ export default class OnBoarding extends React.Component {
                 }),
             ],
             [
-                'UserInfo',
-                JSON.stringify({
-                    telNum: '010-5060-3160',
-                    name: '주신탁',
-                    email: '',
-                    password: '',
-                }),
-            ],
-            [
                 'OutpayCert',
                 JSON.stringify({
                     atumCert: {
@@ -47,6 +38,12 @@ export default class OnBoarding extends React.Component {
                         userTableName: null,
                         rcvdPayreqsTableName: null,
                         sndablePayreqsTableName: null,
+                    },
+                    userInfo: {
+                        telNum: '010-5060-3160',
+                        name: '주신탁',
+                        email: '',
+                        password: '',
                     },
                 }),
             ],
