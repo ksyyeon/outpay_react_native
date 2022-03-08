@@ -62,7 +62,7 @@ export default class AccessModal extends React.Component {
                         style={styles.footer}
                         onPress={() => {
                             this.props.confirmClicked();
-                            localStorage.setAppConfigValue('accessAgree', true);
+                            localStorage.setUserVarsValue('accessAgree', true);
                         }}>
                         <Text style={styles.btn_text}>
                             위의 내용을 확인했습니다.

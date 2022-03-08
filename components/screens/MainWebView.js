@@ -40,6 +40,11 @@ export default class MainWebView extends React.Component {
 
     async componentDidMount() {
         const telNum = await localStorage.getUserInfoValue('telNum');
+        // const telNum = '010-5060-3160';
+
+        const userInfo = await localStorage.getUserInfo();
+        console.log('testestestset: ', userInfo);
+
         this.setState({
             initialUrl: this.urlConsts.URL_INDEX + telNum,
             telNum: telNum,
@@ -53,7 +58,7 @@ export default class MainWebView extends React.Component {
 
         this.invokeIfs();
 
-        const accessAgree = await localStorage.getAppConfigValue('accessAgree');
+        const accessAgree = await localStorage.getUserVarsValue('accessAgree');
         if (accessAgree) {
             this.setState({isModalVisible: false});
         }
@@ -185,8 +190,14 @@ export default class MainWebView extends React.Component {
             return false;
         }
 
-        if (Platform.OS === 'ios') {
-            return true;
+        if (Platform.OS === 'ios' && event.url.startsWith('intent')) {
+            Linking.openURL(event.url).catch(err => {
+                this.setState({
+                    dialogContent:
+                        '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                });
+            });
+            return false;
         }
         return true;
 
@@ -446,29 +457,34 @@ export default class MainWebView extends React.Component {
     };
 
     invokeIfs = () => {
-        this.invoke.define('exitApp', this.exitApp);
-        this.invoke.define('setUserInfo', localStorage.setUserInfo);
+        this.invoke.define('getAppConfig', localStorage.setAppConfig);
+        this.invoke.define('setAppConfig', localStorage.getAppConfig);
+        this.invoke.define('getAppConfigValue', localStorage.setAppConfigValue);
+        this.invoke.define('setAppConfigValue', localStorage.getAppConfigValue);
         this.invoke.define('getUserInfo', localStorage.getUserInfo);
-        this.invoke.define('setUserInfoValue', localStorage.setUserInfoValue);
+        this.invoke.define('setUserInfo', localStorage.setUserInfo);
         this.invoke.define('getUserInfoValue', localStorage.getUserInfoValue);
-        this.invoke.define('setAppConfig', localStorage.setAppConfig);
-        this.invoke.define('getAppConfig', localStorage.getAppConfig);
-        this.invoke.define('setAppConfigValue', localStorage.setAppConfigValue);
-        this.invoke.define('getAppConfigValue', localStorage.getAppConfigValue);
-        this.invoke.define('getBlockList', localStorage.getBlockList);
-        this.invoke.define('setBlockList', localStorage.setBlockList);
+        this.invoke.define('setUserInfoValue', localStorage.setUserInfoValue);
         this.invoke.define('getRecentHistory', localStorage.getRecentHistory);
         this.invoke.define('setRecentHistory', localStorage.setRecentHistory);
+        this.invoke.define('getBlockList', localStorage.getBlockList);
+        this.invoke.define('setBlockList', localStorage.setBlockList);
+        this.invoke.define('getUserVars', localStorage.getUserVars);
+        this.invoke.define('setUserVars', localStorage.setUserVars);
+        this.invoke.define('getUserVarsValue', localStorage.getUserVarsValue);
+        this.invoke.define('setUserVarsValue', localStorage.setUserVarsValue);
         this.invoke.define('clearStorage', localStorage.clearStorage);
-        this.invoke.define('openBrowser', this.openBrowser);
-        this.invoke.define('openShareChooser', this.openShareChooser);
-        this.invoke.define('toast', this.toast);
-        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
         this.invoke.define('showNB', this.showNB);
         this.invoke.define('hideNB', this.hideNB);
         this.invoke.define('setSelectedNB', this.setSelectedNB);
-        this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
+        this.invoke.define('showSpinner', this.showSpinner);
+        this.invoke.define('exitApp', this.exitApp);
+        this.invoke.define('openBrowser', this.openBrowser);
+        // TODO: copyClipBoard: 링크 클립보드 복사
+        this.invoke.define('openShareChooser', this.openShareChooser);
+        this.invoke.define('toast', this.toast);
+        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('openSelfAuth', this.openSelfAuth);
         this.invoke.define(

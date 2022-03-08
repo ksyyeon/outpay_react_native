@@ -1,29 +1,69 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, Button} from 'react-native';
 import {localStorage} from '../LocalStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../CustomButton';
 
 export default class OnBoarding extends React.Component {
     onPress = async () => {
-        localStorage.setUserInfo({
-            name: '주신탁',
-            telNum: '010-5060-3160',
-            email: '',
-            password: '',
-        });
-
-        localStorage.setRecentHistory([]);
-
-        localStorage.setBlockList([]);
-
-        localStorage.setAppConfig({
-            payReqPush: false,
-            expReqPush: false,
-            autoLogin: false,
-            payReqLock: true,
-            denialPopupNotiDate: '',
-            accessAgree: false,
-        });
+        await AsyncStorage.multiSet([
+            [
+                'AppConfig',
+                JSON.stringify({
+                    opMode: 'prdMode',
+                    pltMode: 'appMode',
+                    atum: {
+                        devSrv: 'https://dev.outpay.co.kr:59090',
+                        prdSrv: 'https://do-outpay.com:9090',
+                        local: 'http://localhost:9090',
+                        host: 'https://do-outpay.com:9090',
+                    },
+                }),
+            ],
+            [
+                'UserInfo',
+                JSON.stringify({
+                    telNum: '010-5060-3160',
+                    name: '주신탁',
+                    email: '',
+                    password: '',
+                }),
+            ],
+            [
+                'OutpayCert',
+                JSON.stringify({
+                    atumCert: {
+                        opsKeySid: 4,
+                        opsPubKey: `-----BEGIN RSA Public Key-----
+                    MIGJAoGBAMrrksgu9TbOvjhC2WT1IS4sMbazcG7UN9C1+Zt2MsEkdAyMSOYXIPHq
+                    wQONjRZVoTKhFxhB8h5/lc27HrNTe7YlIcV+jb4EjAPxAfik2K81Hci2bq9tsscp
+                    rfPRfcHe42ZIOLg8d+8QW83nd/MGifCrv8y6qtKRM5QgjKk/zOvVAgMBAAE=
+                    -----END RSA Public Key-----`,
+                    },
+                    userAuth: {
+                        loginNonce: null,
+                        userOneTimeKey: null,
+                        userSid: null,
+                        userTableName: null,
+                        rcvdPayreqsTableName: null,
+                        sndablePayreqsTableName: null,
+                    },
+                }),
+            ],
+            ['RecentHistory', '[]'],
+            ['BlockList', '[]'],
+            [
+                'UserVars',
+                JSON.stringify({
+                    payReqPush: false,
+                    expReqPush: false,
+                    autoLogin: true,
+                    payReqLock: true,
+                    denialPopupNotiDate: '',
+                    accessAgree: false,
+                }),
+            ],
+        ]);
 
         this.props.navigation.navigate('SetPinCode', {
             entryScreen: 'OnBoarding',

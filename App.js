@@ -10,6 +10,7 @@ import {fcmService} from './components/FCMService';
 import {localNotificationService} from './components/LocalNotificationService';
 import NetInfo from '@react-native-community/netinfo';
 import NetworkFail from './components/screens/NetworkFail';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -123,13 +124,13 @@ export default class App extends React.Component {
     }
 
     checkUserSignedIn = async () => {
-        const userInfo = await localStorage.getUserInfo();
-        const appConfig = await localStorage.getAppConfig();
-        console.log('[App] userInfo: ', userInfo);
-        console.log('[App] appConfig: ', appConfig);
-        if (userInfo != null && appConfig != null) {
+        const cert = await AsyncStorage.getItem('OutpayCert');
+        const userVars = await localStorage.getUserVars();
+        console.log('[App] outpayCert:', cert);
+        console.log('[App] appConfig: ', userVars);
+        if (cert !== null && userVars !== null) {
             console.log('[App] 등록회원');
-            return {signedIn: true, autoLogin: appConfig.autoLogin};
+            return {signedIn: true, autoLogin: userVars.autoLogin};
         } else {
             console.log('[App] 미등록회원');
             return {signedIn: false, autoLogin: null};
