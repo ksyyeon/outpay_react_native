@@ -15,6 +15,8 @@ import Loading from './Loading';
 import BottomTabBar from '../BottomTabBar';
 import appConsts from '../AppConsts';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {fcmService} from '../FCMService';
+import {localNotificationService} from '../LocalNotificationService';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -25,7 +27,7 @@ export default class MainWebView extends React.Component {
             isLoading: true,
             isSpinnerVisible: false,
             spinnerMsg: '',
-            isModalVisible: false,
+            checkAccess: false,
             isDialogVisible: true,
             dialogContent: null,
             isNBVisible: false,
@@ -59,8 +61,8 @@ export default class MainWebView extends React.Component {
         this.invokeIfs();
 
         const accessAgree = await localStorage.getUserVarsValue('accessAgree');
-        if (accessAgree) {
-            this.setState({isModalVisible: false});
+        if (!accessAgree) {
+            this.setState({checkAccess: true});
         }
     }
 
@@ -72,9 +74,19 @@ export default class MainWebView extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <AccessModal
-                    visible={this.state.isModalVisible}
+                    visible={this.state.checkAccess}
                     confirmClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({checkAccess: false});
+                        fcmService.registerAppWithFCM();
+                        fcmService.register(
+                            this.onRegister,
+                            this.onNotification,
+                            this.onOpenNotification,
+                        );
+
+                        localNotificationService.configure(
+                            this.onOpenNotification,
+                        );
                     }}
                 />
                 {this.state.dialogContent && (
@@ -144,6 +156,49 @@ export default class MainWebView extends React.Component {
         );
     }
 
+    onRegister = token => {
+        console.log('[MainWebView] onRegister : token :', token);
+    };
+
+    onNotification = async (notification, data) => {
+        // state: foreground
+        console.log(
+            '[MainWebView] onNotification notification: ',
+            notification,
+        );
+        console.log('[MainWebView] onNotification data: ', data);
+
+        // const options = {
+        //     soundName: 'default',
+        //     playSound: true,
+        // };
+        // localNotificationService.showNotification(
+        //     0,
+        //     notification.title,
+        //     notification.body,
+        //     notification,
+        //     options,
+        // );
+        this.setState({
+            dialogContent:
+                '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?',
+            isDialogVisible: true,
+        });
+    };
+
+    onOpenNotification = (notification, data) => {
+        // state: background & quit
+        console.log(
+            '[MainWebView] onOpenNotification notification :',
+            notification,
+        );
+        console.log('[MainWebView] onOpenNotification data :', data);
+
+        // js: 푸시를 눌렀을 때 View 선택하기
+        if (typeof data !== 'undefined' && data !== null)
+            this.webViewRef.injectJavaScript(data.js);
+    };
+
     onLoadEnd = () => {
         setTimeout(() => {
             this.setState({isLoading: false});
@@ -161,8 +216,8 @@ export default class MainWebView extends React.Component {
                 '[MainWebView] this.props.route.params.js: ',
                 this.props.route.params.js,
             );
-            const selectView = this.props.route.params.js;
-            this.webViewRef.injectJavaScript(selectView);
+            const js = this.props.route.params.js;
+            this.webViewRef.injectJavaScript(js);
         }
         return true;
     };

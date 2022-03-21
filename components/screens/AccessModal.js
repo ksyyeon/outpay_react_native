@@ -42,7 +42,9 @@ export default class AccessModal extends React.Component {
                                 · 주소록 (선택)
                             </Text>
                             <Text style={styles.desc_text}>
-                                결제요청 수신 차단할 연락처 가져오기
+                                결제를 부탁할 대상자 연락처 입력
+                                {'\n'}
+                                수신 차단 연락처 입력
                             </Text>
                         </View>
                         <View style={styles.content_item}>
@@ -54,8 +56,9 @@ export default class AccessModal extends React.Component {
                             </Text>
                         </View>
                         <Text style={styles.note_text}>
-                            선택적 접근권한은 동의하지 않으셔도 앱 이용이
-                            가능하시며, 해당 기능 이용시 동의를 받습니다.
+                            선택적 접근권한은 해당 기능을 사용하실 때 동의를
+                            받으며, 허용하지 않으셔도 아웃페이를 이용하실 수
+                            있습니다.
                         </Text>
                     </View>
                     <TouchableOpacity
@@ -115,20 +118,21 @@ const styles = StyleSheet.create({
     },
     header_text: {
         fontFamily: 'NanumSquareR',
-        fontSize: 18,
+        fontSize: 16,
         color: '#000000',
         lineHeight: 30,
         textAlign: 'center',
     },
     title_text: {
         fontFamily: 'NanumSquareB',
-        fontSize: 16,
+        fontSize: 15,
     },
     desc_text: {
         fontFamily: 'NanumSquareR',
-        fontSize: 14,
+        fontSize: 13,
         padding: 10,
         color: 'gray',
+        lineHeight: 20,
     },
     note_text: {
         fontFamily: 'NanumSquareR',

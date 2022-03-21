@@ -17,12 +17,12 @@ export default class App extends React.Component {
         super(props);
         this.state = {
             isSignedIn: false,
-            autoLogin: null,
             isLoading: true,
             isDialogVisible: false,
-            selectView: null,
+            js: null,
             networkUnsubscribe: null,
             networkConnected: false,
+            userVars: null,
         };
     }
 
@@ -30,16 +30,21 @@ export default class App extends React.Component {
     componentDidMount() {
         // setTimeout(() => SplashScreen.hide(), 2000);
         // TODO: iOS에서 default 스플래시 비활성화
-        setTimeout(() => {
+        setTimeout(async () => {
             // this.createPushNotiChannel();
-            fcmService.registerAppWithFCM();
-            fcmService.register(
-                this.onRegister,
-                this.onNotification,
-                this.onOpenNotification,
-            );
+            this.state.userVars = await localStorage.getUserVars();
+            if (this.state.userVars !== null) {
+                if (this.state.userVars.accessAgree) {
+                    fcmService.registerAppWithFCM();
+                    fcmService.register(
+                        this.onRegister,
+                        this.onNotification,
+                        this.onOpenNotification,
+                    );
 
-            localNotificationService.configure(this.onOpenNotification);
+                    localNotificationService.configure(this.onOpenNotification);
+                }
+            }
 
             this.checkNetworkConnected();
         }, 2000);
@@ -75,7 +80,7 @@ export default class App extends React.Component {
         //     options,
         // );
 
-        this.setState({isDialogVisible: true, selectView: data.js});
+        this.setState({isDialogVisible: true, js: data.js});
     };
 
     onOpenNotification = (notification, data) => {
@@ -83,9 +88,11 @@ export default class App extends React.Component {
         console.log('[App] onOpenNotification notification :', notification);
         console.log('[App] onOpenNotification data :', data);
 
-        RootNavigation.push('MainWebView', {
-            js: data.js,
-        });
+        // js: 푸시를 눌렀을 때 보여줘야 할 뷰로 이동하는 코드
+        if (typeof data !== undefined || data !== null)
+            RootNavigation.push('MainWebView', {
+                js: data.js,
+            });
     };
 
     render() {
@@ -103,7 +110,7 @@ export default class App extends React.Component {
                     confirmClicked={() => {
                         this.setState({isDialogVisible: false});
                         RootNavigation.push('MainWebView', {
-                            js: this.state.selectView,
+                            js: this.state.js,
                         });
                     }}
                     cancelClicked={() => {
@@ -125,12 +132,11 @@ export default class App extends React.Component {
 
     checkUserSignedIn = async () => {
         const cert = await AsyncStorage.getItem('OutpayCert');
-        const userVars = await localStorage.getUserVars();
         console.log('[App] outpayCert:', cert);
-        console.log('[App] appConfig: ', userVars);
-        if (cert !== null && userVars !== null) {
+        console.log('[App] userVars: ', this.state.userVars);
+        if (cert !== null && this.state.userVars !== null) {
             console.log('[App] 등록회원');
-            return {signedIn: true, autoLogin: userVars.autoLogin};
+            return {signedIn: true, autoLogin: this.state.userVars.autoLogin};
         } else {
             console.log('[App] 미등록회원');
             return {signedIn: false, autoLogin: null};
