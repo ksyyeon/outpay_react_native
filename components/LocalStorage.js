@@ -47,22 +47,16 @@ class LocalStorage {
     };
 
     setUserInfoValue = async (key, value) => {
-        // const result = await AsyncStorage.getItem('UserInfo');
-        // const cert = JSON.parse(result);
-        // const userInfo = cert.userInfo;
-        // if (userInfo[key] === null || userInfo[key] === undefined) {
-        //     console.log(`[LocalStorage] No ${key} in userInfo`);
-        // } else {
-        //     userInfo[key] = value;
-        //     cert.userInfo = userInfo;
-        //     await AsyncStorage.setItem('UserInfo', JSON.stringify(cert));
-        // }
         const result = await AsyncStorage.getItem('OutpayCert');
         const cert = JSON.parse(result);
         const userInfo = cert.userInfo;
-        userInfo[key] = value;
-        cert.userInfo = userInfo;
-        await AsyncStorage.setItem('OutpayCert', JSON.stringify(cert));
+        if (userInfo[key] === null || userInfo[key] === undefined) {
+            console.log(`[LocalStorage] No ${key} in userInfo`);
+        } else {
+            userInfo[key] = value;
+            cert.userInfo = userInfo;
+            await AsyncStorage.setItem('OutpayCert', JSON.stringify(cert));
+        }
     };
 
     // ====================== RecentHistory ======================
