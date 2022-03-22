@@ -29,6 +29,8 @@ export default class MainWebView extends React.Component {
             spinnerMsg: '',
             checkAccess: false,
             isDialogVisible: true,
+            isNotiVisible: false,
+            notiJs: null,
             dialogContent: null,
             isNBVisible: false,
             selectedNB: 'home',
@@ -87,6 +89,24 @@ export default class MainWebView extends React.Component {
                         localNotificationService.configure(
                             this.onOpenNotification,
                         );
+                    }}
+                />
+                <CommonDialog
+                    visible={this.state.isNotiVisible}
+                    titleDisplay={'flex'}
+                    title={'결제요청 알림'}
+                    content={
+                        '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?'
+                    }
+                    cancelDisplay={'flex'}
+                    confirmClicked={() => {
+                        // TODO: 새로운 결제요청 상세로 화면 이동
+                        this.setState({isNotiVisible: false});
+                        if (notiJs !== null)
+                            this.webViewRef.injectJavaScript(this.state.notiJs);
+                    }}
+                    cancelClicked={() => {
+                        this.setState({isNotiVisible: false});
                     }}
                 />
                 {this.state.dialogContent && (
@@ -168,6 +188,22 @@ export default class MainWebView extends React.Component {
         );
         console.log('[MainWebView] onNotification data: ', data);
 
+        // "data" : {
+        //     "title" : "title",
+        //     "message" : "message",
+        //     "type" : "payReq, expReq ...",
+        //     "js" : "웹뷰에서 실행 시킬 코드"
+        // }
+
+        // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
+        if (typeof data !== undefined || data !== null)
+            if (data.type === 'payReq') {
+                this.setState({
+                    isNotiVisible: true,
+                    notiJs: data.js,
+                });
+            }
+
         // const options = {
         //     soundName: 'default',
         //     playSound: true,
@@ -179,11 +215,6 @@ export default class MainWebView extends React.Component {
         //     notification,
         //     options,
         // );
-        this.setState({
-            dialogContent:
-                '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?',
-            isDialogVisible: true,
-        });
     };
 
     onOpenNotification = (notification, data) => {
@@ -196,7 +227,7 @@ export default class MainWebView extends React.Component {
 
         // js: 푸시를 눌렀을 때 View 선택하기
         if (typeof data !== 'undefined' && data !== null)
-            this.webViewRef.injectJavaScript(data.js);
+            if (data.js !== null) this.webViewRef.injectJavaScript(data.js);
     };
 
     onLoadEnd = () => {
@@ -217,7 +248,7 @@ export default class MainWebView extends React.Component {
                 this.props.route.params.js,
             );
             const js = this.props.route.params.js;
-            this.webViewRef.injectJavaScript(js);
+            if (js !== null) this.webViewRef.injectJavaScript(js);
         }
         return true;
     };

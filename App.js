@@ -68,6 +68,19 @@ export default class App extends React.Component {
         console.log('[App] onNotification notification: ', notification);
         console.log('[App] onNotification data: ', data);
 
+        // "data" : {
+        //     "title" : "title",
+        //     "message" : "message",
+        //     "type" : "payReq, expReq ...",
+        //     "js" : "웹뷰에서 실행 시킬 코드"
+        // }
+
+        // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
+        if (typeof data !== undefined || data !== null)
+            if (data.type === 'payReq') {
+                this.setState({isDialogVisible: true, js: data.js});
+            }
+
         // const options = {
         //     soundName: 'default',
         //     playSound: true,
@@ -79,8 +92,6 @@ export default class App extends React.Component {
         //     notification,
         //     options,
         // );
-
-        this.setState({isDialogVisible: true, js: data.js});
     };
 
     onOpenNotification = (notification, data) => {
