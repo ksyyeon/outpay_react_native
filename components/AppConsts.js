@@ -1,5 +1,5 @@
 const appConsts = {
-    urlConsts: {
+    URL_CD: {
         HOST: 'http://192.168.0.34',
 
         URL_INDEX: `http://192.168.0.34/osiris/.development/appIndex.html?telNum=`,
@@ -35,10 +35,14 @@ const appConsts = {
             true;
         `,
     },
-    msgConsts: {},
+    MSG_CD: {},
+    FCM_CD: {
+        PAYREQ: '00',
+        EXPREQ: '01',
+    },
 };
-const urlConsts = appConsts.urlConsts;
-const msgConsts = appConsts.msgConsts;
+const URL_CD = appConsts.URL_CD;
+const MSG_CD = appConsts.MSG_CD;
 
-export {urlConsts, msgConsts};
+export {URL_CD, MSG_CD};
 export default appConsts;

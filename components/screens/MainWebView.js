@@ -39,18 +39,14 @@ export default class MainWebView extends React.Component {
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
         this.backHandler = null;
-        this.urlConsts = appConsts.urlConsts;
+        this.URL_CD = appConsts.URL_CD;
     }
 
     async componentDidMount() {
         const telNum = await localStorage.getUserInfoValue('telNum');
-        // const telNum = '010-5060-3160';
-
-        const userInfo = await localStorage.getUserInfo();
-        console.log('testestestset: ', userInfo);
 
         this.setState({
-            initialUrl: this.urlConsts.URL_INDEX + telNum,
+            initialUrl: this.URL_CD.URL_INDEX + telNum,
             telNum: telNum,
         });
 
@@ -65,11 +61,24 @@ export default class MainWebView extends React.Component {
         const accessAgree = await localStorage.getUserVarsValue('accessAgree');
         if (!accessAgree) {
             this.setState({checkAccess: true});
+        } else {
+            fcmService.registerAppWithFCM();
+            fcmService.register(
+                this.onRegister,
+                this.onNotification,
+                this.onOpenNotification,
+            );
+
+            localNotificationService.configure(this.onOpenNotification);
         }
     }
 
     componentWillUnmount() {
         if (this.backHandler) this.backHandler.remove();
+
+        console.log('[MainWebView] unRegister');
+        fcmService.unRegister();
+        localNotificationService.unRegister();
     }
 
     render() {
@@ -89,6 +98,7 @@ export default class MainWebView extends React.Component {
                         localNotificationService.configure(
                             this.onOpenNotification,
                         );
+                        // TODO: FCM Token 서버로 전송
                     }}
                 />
                 <CommonDialog
@@ -100,9 +110,9 @@ export default class MainWebView extends React.Component {
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        // TODO: 새로운 결제요청 상세로 화면 이동
+                        // TODO: 새로운 결제요청 상세로 화면 이동 테스트
                         this.setState({isNotiVisible: false});
-                        if (notiJs !== null)
+                        if (this.state.notiJs !== null)
                             this.webViewRef.injectJavaScript(this.state.notiJs);
                     }}
                     cancelClicked={() => {
@@ -151,22 +161,22 @@ export default class MainWebView extends React.Component {
                         switch (label) {
                             case 'payreqs':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_HOME,
+                                    this.URL_CD.URL_HOME,
                                 );
                                 break;
                             case 'rshop':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_RSHOP,
+                                    this.URL_CD.URL_RSHOP,
                                 );
                                 break;
                             case 'event':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_EVENT,
+                                    this.URL_CD.URL_EVENT,
                                 );
                                 break;
                             case 'settings':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_SETTINGS,
+                                    this.URL_CD.URL_SETTINGS,
                                 );
                                 break;
                         }
@@ -188,16 +198,22 @@ export default class MainWebView extends React.Component {
         );
         console.log('[MainWebView] onNotification data: ', data);
 
-        // "data" : {
-        //     "title" : "title",
-        //     "message" : "message",
-        //     "type" : "payReq, expReq ...",
-        //     "js" : "웹뷰에서 실행 시킬 코드"
+        // {
+        //   "to":"fFZl4rczQJScxVxQKeFooS:APA91bFfoMQCrJWeB4DoTUlZnum3ESXvsMv1eoXyyh6nYIbarTpMj75F02jwLqvSqcAENXMEUlWO6yXdYgXJEuAtpUgWhsKSuMiUOhIyWUArYJ-kizgPg7E1sXmpQsqzR1exR7rrg66Y",
+        //   "collapse_key" : "com.outpay",
+        //   "notification" : {
+        //       "title" : "결제 요청 알림",
+        //       "body" : "새로운 결제 요청이 왔어요",
+        //   },
+        //   "data" : {
+        //     "type" : "00",
+        //     "js" : "ifs.jsIF.showMainView('ops-rshop');"
+        //   }
         // }
 
         // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
         if (typeof data !== undefined || data !== null)
-            if (data.type === 'payReq') {
+            if (data.type === appConsts.FCM_CD.PAYREQ) {
                 this.setState({
                     isNotiVisible: true,
                     notiJs: data.js,
@@ -225,7 +241,6 @@ export default class MainWebView extends React.Component {
         );
         console.log('[MainWebView] onOpenNotification data :', data);
 
-        // js: 푸시를 눌렀을 때 View 선택하기
         if (typeof data !== 'undefined' && data !== null)
             if (data.js !== null) this.webViewRef.injectJavaScript(data.js);
     };
@@ -234,7 +249,7 @@ export default class MainWebView extends React.Component {
         setTimeout(() => {
             this.setState({isLoading: false});
         }, 1000);
-        // TODO View 선택해서 로드하기
+        // TODO View 선택해서 로드하기 테스트
         console.log(
             '[MainWebView] this.props.route.params: ',
             this.props.route.params,
@@ -243,10 +258,6 @@ export default class MainWebView extends React.Component {
             typeof this.props.route.params !== 'undefined' &&
             this.props.route.params !== null
         ) {
-            console.log(
-                '[MainWebView] this.props.route.params.js: ',
-                this.props.route.params.js,
-            );
             const js = this.props.route.params.js;
             if (js !== null) this.webViewRef.injectJavaScript(js);
         }
@@ -323,7 +334,7 @@ export default class MainWebView extends React.Component {
     onBackPress = () => {
         //TODO OS별 showBackView 호출
         //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
-        this.webViewRef.injectJavaScript(this.urlConsts.URL_BACKVIEW);
+        this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
         return true;
     };
 

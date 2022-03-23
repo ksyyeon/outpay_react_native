@@ -6,8 +6,6 @@ import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
 import {localStorage} from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
-import {fcmService} from './components/FCMService';
-import {localNotificationService} from './components/LocalNotificationService';
 import NetInfo from '@react-native-community/netinfo';
 import NetworkFail from './components/screens/NetworkFail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,20 +29,7 @@ export default class App extends React.Component {
         // setTimeout(() => SplashScreen.hide(), 2000);
         // TODO: iOS에서 default 스플래시 비활성화
         setTimeout(async () => {
-            // this.createPushNotiChannel();
             this.state.userVars = await localStorage.getUserVars();
-            if (this.state.userVars !== null) {
-                if (this.state.userVars.accessAgree) {
-                    fcmService.registerAppWithFCM();
-                    fcmService.register(
-                        this.onRegister,
-                        this.onNotification,
-                        this.onOpenNotification,
-                    );
-
-                    localNotificationService.configure(this.onOpenNotification);
-                }
-            }
 
             this.checkNetworkConnected();
         }, 2000);
@@ -53,58 +38,7 @@ export default class App extends React.Component {
     // 이벤트 해제
     componentWillUnmount() {
         // networkUnsubscribe();
-
-        console.log('[App] unRegister');
-        fcmService.unRegister();
-        localNotificationService.unRegister();
     }
-
-    onRegister = token => {
-        console.log('[App] onRegister : token :', token);
-    };
-
-    onNotification = async (notification, data) => {
-        // state: foreground
-        console.log('[App] onNotification notification: ', notification);
-        console.log('[App] onNotification data: ', data);
-
-        // "data" : {
-        //     "title" : "title",
-        //     "message" : "message",
-        //     "type" : "payReq, expReq ...",
-        //     "js" : "웹뷰에서 실행 시킬 코드"
-        // }
-
-        // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
-        if (typeof data !== undefined || data !== null)
-            if (data.type === 'payReq') {
-                this.setState({isDialogVisible: true, js: data.js});
-            }
-
-        // const options = {
-        //     soundName: 'default',
-        //     playSound: true,
-        // };
-        // localNotificationService.showNotification(
-        //     0,
-        //     notification.title,
-        //     notification.body,
-        //     notification,
-        //     options,
-        // );
-    };
-
-    onOpenNotification = (notification, data) => {
-        // state: background & quit
-        console.log('[App] onOpenNotification notification :', notification);
-        console.log('[App] onOpenNotification data :', data);
-
-        // js: 푸시를 눌렀을 때 보여줘야 할 뷰로 이동하는 코드
-        if (typeof data !== undefined || data !== null)
-            RootNavigation.push('MainWebView', {
-                js: data.js,
-            });
-    };
 
     render() {
         if (this.state.isLoading) return <Splash />;
