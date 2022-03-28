@@ -333,8 +333,11 @@ export default class MainWebView extends React.Component {
     };
 
     onBackPress = () => {
-        //TODO OS별 showBackView 호출
-        //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
+        // TODO: OS별 showBackView 호출
+        // TODO: 뷰가 아직 생성 안됐을 때 뒤로가기 누르면 앱 종료
+        // if (this.state.isLoading) BackHandler.exitApp();
+        // else this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
+
         this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
         return true;
     };

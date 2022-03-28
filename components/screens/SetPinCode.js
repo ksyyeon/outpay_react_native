@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -46,7 +46,6 @@ export default class SetPinCode extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: 화면에 따라서 backHandler 등록
         if (this.backHandler) this.backHandler.remove();
         this.backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
@@ -66,10 +65,9 @@ export default class SetPinCode extends React.Component {
             '[SetPinCode] this.props.route.params',
             this.props.route.params,
         );
-        this.setState({entryScreen: this.props.route.params.entryScreen});
-        // if (this.props.route.params !== null) {
-        //     this.setState({entryScreen: this.props.route.params.entryScreen});
-        // }
+        if (this.props.route.params !== null) {
+            this.setState({entryScreen: this.props.route.params.entryScreen});
+        }
     }
 
     componentWillUnmount() {
@@ -79,6 +77,11 @@ export default class SetPinCode extends React.Component {
             this.focusListener.remove();
         }
     }
+
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        return true;
+    };
 
     render() {
         this.shuffleNums(numbers);
@@ -279,20 +282,11 @@ export default class SetPinCode extends React.Component {
                 this.circleRefs[5].setNativeProps({
                     style: {backgroundColor: '#ff6801'},
                 });
-                // this.props.navigation.navigate('ConfirmPinCode', {
-                //     password: passWord,
-                //     entryScreen: this.props.route.params.entryScreen,
-                // });
                 this.props.navigation.replace('ConfirmPinCode', {
                     password: passWord,
                     entryScreen: this.state.entryScreen,
                 });
                 break;
         }
-    };
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        return true;
     };
 }

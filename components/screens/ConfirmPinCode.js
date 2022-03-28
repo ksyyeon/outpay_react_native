@@ -43,7 +43,6 @@ export default class ConfirmPinCode extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: 화면에 따라서 backHandler 등록
         if (this.backHandler) this.backHandler.remove();
         this.backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
@@ -73,6 +72,11 @@ export default class ConfirmPinCode extends React.Component {
         }
     }
 
+    onBackPress = () => {
+        this.setState({isDialogVisible: true});
+        return true;
+    };
+
     render() {
         this.shuffleNums(numbers);
         return (
@@ -87,11 +91,8 @@ export default class ConfirmPinCode extends React.Component {
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        // this.props.navigation.reset({
-                        //     routes: [{name: 'OnBoarding', params: null}],
-                        // });
                         this.setState({isDialogVisible: false});
-                        this.onBackPress();
+                        this.props.navigation.goBack();
                     }}
                     cancelClicked={() => {
                         this.setState({isDialogVisible: false});
@@ -194,11 +195,6 @@ export default class ConfirmPinCode extends React.Component {
             </SafeAreaView>
         );
     }
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        return true;
-    };
 
     onLayout = event => {
         const layout = event.nativeEvent.layout;
