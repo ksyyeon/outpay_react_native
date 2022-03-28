@@ -17,6 +17,7 @@ const appConsts = {
         URL_NETWORK_CONNECT_FAIL: '',
         URL_BLANK: 'about:blank',
         INJECTED_CODE: `
+            HTML5 History API 대응
             (function() {
                 function wrap(fn) {
                     return function wrapper() {

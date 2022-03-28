@@ -198,8 +198,9 @@ export default class MainWebView extends React.Component {
         );
         console.log('[MainWebView] onNotification data: ', data);
 
+        // FCM post body
         // {
-        //   "to":"fFZl4rczQJScxVxQKeFooS:APA91bFfoMQCrJWeB4DoTUlZnum3ESXvsMv1eoXyyh6nYIbarTpMj75F02jwLqvSqcAENXMEUlWO6yXdYgXJEuAtpUgWhsKSuMiUOhIyWUArYJ-kizgPg7E1sXmpQsqzR1exR7rrg66Y",
+        //   "to": FCM 토큰",
         //   "collapse_key" : "com.outpay",
         //   "notification" : {
         //       "title" : "결제 요청 알림",

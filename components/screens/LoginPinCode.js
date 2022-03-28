@@ -91,6 +91,10 @@ export default class LoginPinCode extends React.Component {
                             ref={btn => {
                                 this.forgetNoteRef = btn;
                             }}
+                            onPress={this.props.navigation.navigate(
+                                'SetPinCode',
+                                {entryScreen: 'LoginPinCode'},
+                            )}
                             style={styles.btn_reset}>
                             <Text
                                 style={{

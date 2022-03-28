@@ -195,12 +195,15 @@ export default class ConfirmPinCode extends React.Component {
         );
     }
 
+    onBackPress = () => {
+        this.props.navigation.goBack();
+        return true;
+    };
+
     onLayout = event => {
         const layout = event.nativeEvent.layout;
         this.setState({numPadHeight: layout['height']});
     };
-
-    backClicked = () => {};
 
     numClicked = item => {
         console.log(item.id);
@@ -329,10 +332,5 @@ export default class ConfirmPinCode extends React.Component {
                 }
                 break;
         }
-    };
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        return true;
     };
 }

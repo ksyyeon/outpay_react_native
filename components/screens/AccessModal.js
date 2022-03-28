@@ -63,6 +63,7 @@ export default class AccessModal extends React.Component {
                     </View>
                     <TouchableOpacity
                         style={styles.footer}
+                        activeOpacity={1}
                         onPress={() => {
                             this.props.confirmClicked();
                             localStorage.setUserVarsValue('accessAgree', true);
