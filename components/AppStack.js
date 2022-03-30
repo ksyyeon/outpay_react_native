@@ -8,6 +8,7 @@ import SelfAuth from './screens/SelfAuth';
 import ConfirmPinCode from './screens/ConfirmPinCode';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Image} from 'react-native';
+import DropOutDone from './screens/DropOutDone';
 
 const AppStack = createStackNavigator();
 
@@ -100,6 +101,13 @@ export const AppScreens = autoLogin => {
                 <AppStack.Screen
                     name="ConfirmPinCode"
                     component={ConfirmPinCode}
+                    options={() => ({
+                        headerShown: false,
+                    })}
+                />
+                <AppStack.Screen
+                    name="DropOutDone"
+                    component={DropOutDone}
                     options={() => ({
                         headerShown: false,
                     })}

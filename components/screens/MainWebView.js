@@ -334,10 +334,6 @@ export default class MainWebView extends React.Component {
 
     onBackPress = () => {
         // TODO: OS별 showBackView 호출
-        // TODO: 뷰가 아직 생성 안됐을 때 뒤로가기 누르면 앱 종료
-        // if (this.state.isLoading) BackHandler.exitApp();
-        // else this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
-
         this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
         return true;
     };
@@ -545,8 +541,8 @@ export default class MainWebView extends React.Component {
         });
     };
 
-    navigateNext = async (screen, param) => {
-        // 화면이동 호출
+    navigateScreen = async (screen, param) => {
+        // 화면 이동
         this.props.navigation.navigate(screen, param);
     };
 
@@ -592,7 +588,7 @@ export default class MainWebView extends React.Component {
             'requestContactPermission',
             this.requestContactPermission,
         );
-        this.invoke.define('navigateNext', this.navigateNext);
+        this.invoke.define('navigateScreen', this.navigateScreen);
         this.invoke.define('openSms', this.openSms);
     };
 }

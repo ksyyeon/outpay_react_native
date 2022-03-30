@@ -1,10 +1,29 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, Button} from 'react-native';
-import {localStorage} from '../LocalStorage';
+import {StyleSheet, View, Text, Image, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../CustomButton';
 
 export default class OnBoarding extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        if (this.backHandler) this.backHandler.remove();
+        this.backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.onBackPress.bind(this),
+        );
+    }
+
+    componentWillUnmount() {
+        if (this.backHandler) this.backHandler.remove();
+    }
+
+    onBackPress = () => {
+        BackHandler.exitApp();
+    };
+
     onPress = async () => {
         await AsyncStorage.multiSet([
             [
