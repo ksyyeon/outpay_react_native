@@ -372,8 +372,9 @@ export default class MainWebView extends React.Component {
         }
     };
 
-    openSubWebView = url => {
+    openSubWebView = (url, title) => {
         this.props.navigation.navigate('SubWebView', {
+            name: title,
             uri: url,
         });
     };

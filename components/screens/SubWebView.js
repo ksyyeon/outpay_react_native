@@ -21,6 +21,8 @@ export default class SubWebView extends React.Component {
             'hardwareBackPress',
             this.onBackPress.bind(this),
         );
+
+        this.props.navigation.setOptions({title: this.props.route.params.name});
     }
 
     componentWillUnmount() {
@@ -46,9 +48,11 @@ export default class SubWebView extends React.Component {
                     onNavigationStateChange={navState => {
                         this.state.canGoBack = navState.canGoBack;
                     }}
-                    cacheEnabled={false}
-                    originWhitelist={['*']}
+                    originWhitelist={['http://*', 'https://*', 'intent://*']}
                     javaScriptEnabled={true}
+                    cacheEnabled={false}
+                    cacheMode={'LOAD_NO_CACHE'}
+                    incognito={true}
                 />
             </View>
         );
