@@ -21,7 +21,7 @@ export default class AccessModal extends React.Component {
                     <View style={styles.header}>
                         <Image
                             style={styles.logo_image}
-                            source={require('../../assets/images/4.png')}
+                            source={require('../../assets/images/img_logo3.png')}
                         />
                         <Text style={styles.header_text}>
                             아웃페이에서는{'\n'}아래의 앱 접근권한을 사용하고

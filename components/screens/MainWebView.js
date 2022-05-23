@@ -554,6 +554,10 @@ export default class MainWebView extends React.Component {
         Linking.openURL(`sms:${SMSDivider}body=${body}`);
     };
 
+    openTel = tel => {
+        Linking.openURL(`tel:${tel}`);
+    };
+
     invokeIfs = () => {
         this.invoke.define('getAppConfig', localStorage.setAppConfig);
         this.invoke.define('setAppConfig', localStorage.getAppConfig);
@@ -591,5 +595,6 @@ export default class MainWebView extends React.Component {
         );
         this.invoke.define('navigateScreen', this.navigateScreen);
         this.invoke.define('openSms', this.openSms);
+        this.invoke.define('openTel', this.openTel);
     };
 }
