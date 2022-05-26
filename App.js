@@ -1,9 +1,9 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import * as RootNavigation from './components/RootNavigation';
-import {AppScreens} from './components/AppStack';
-import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
+import AppScreens from './components/AppStack';
+import {SignInScreens} from './components/SignInStack';
 import {localStorage} from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
 import NetInfo from '@react-native-community/netinfo';

@@ -49,7 +49,7 @@ const HeaderCloseButton = navigation => {
     );
 };
 
-export const AppScreens = autoLogin => {
+export default AppScreens = autoLogin => {
     console.log('[AppStack] AppScrenns created');
     return (
         <AppStack.Navigator>

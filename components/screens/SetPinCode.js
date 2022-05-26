@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    BackHandler,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {styles} from '../styles/PinCode.js';
+import styles from '../styles/styles_PinCode.js';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const numbers = [
