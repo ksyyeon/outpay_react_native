@@ -20,7 +20,6 @@ export default styles = StyleSheet.create({
     title: {
         fontFamily: 'NanumSquareB',
         fontSize: 16,
-        display: this.props.titleDisplay,
     },
     content: {
         fontFamily: 'NanumSquareR',
@@ -46,7 +45,6 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#ddd',
         borderRightWidth: 1,
-        display: this.props.cancelDisplay,
     },
     confirm_btn: {
         width: '50%',
