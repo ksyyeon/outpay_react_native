@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {styles} from '../styles/PinCode.js';
-import * as LocalStorage from '../LocalStorage';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import styles from '../styles/styles_PinCode.js';
+import {localStorage} from '../LocalStorage.js';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -42,7 +42,7 @@ export default class LoginPinCode extends React.Component {
     }
 
     async componentDidMount() {
-        const correctPassword = await LocalStorage.getUserInfoValue('password');
+        const correctPassword = await localStorage.getUserInfoValue('password');
         this.setState({correctPassword: correctPassword});
     }
 
@@ -91,6 +91,10 @@ export default class LoginPinCode extends React.Component {
                             ref={btn => {
                                 this.forgetNoteRef = btn;
                             }}
+                            onPress={this.props.navigation.navigate(
+                                'SetPinCode',
+                                {entryScreen: 'LoginPinCode'},
+                            )}
                             style={styles.btn_reset}>
                             <Text
                                 style={{

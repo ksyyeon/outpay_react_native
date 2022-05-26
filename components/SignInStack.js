@@ -8,6 +8,7 @@ import OnBoarding from './screens/OnBoarding';
 import SetPinCode from './screens/SetPinCode';
 import ConfirmPinCode from './screens/ConfirmPinCode';
 import SelfAuth from './screens/SelfAuth';
+import DropOutDone from './screens/DropOutDone';
 
 // TODO 화면추가: 본인인증 ...
 const SignInStack = createStackNavigator();
@@ -101,6 +102,13 @@ export const SignInScreens = () => {
                         headerTitle: '',
                         headerLeft: () => HeaderBackButton(navigation),
                         headerRight: () => null,
+                    })}
+                />
+                <SignInStack.Screen
+                    name="DropOutDone"
+                    component={DropOutDone}
+                    options={() => ({
+                        headerShown: false,
                     })}
                 />
             </SignInStack.Group>

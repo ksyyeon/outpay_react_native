@@ -1,5 +1,5 @@
 const appConsts = {
-    urlConsts: {
+    URL_CD: {
         HOST: 'http://192.168.0.34',
 
         URL_INDEX: `http://192.168.0.34/osiris/.development/appIndex.html?telNum=`,
@@ -16,11 +16,34 @@ const appConsts = {
         URL_CONNECT_FAIL: '',
         URL_NETWORK_CONNECT_FAIL: '',
         URL_BLANK: 'about:blank',
-    },
-    msgConsts: {},
-};
-const urlConsts = appConsts.urlConsts;
-const msgConsts = appConsts.msgConsts;
+        INJECTED_CODE: `
+            HTML5 History API 대응
+            (function() {
+                function wrap(fn) {
+                    return function wrapper() {
+                        var res = fn.apply(this, arguments);
+                        window.ReactNativeWebView.postMessage('navigationStateChange');
+                        return res;
+                    }
+                }
 
-export {urlConsts, msgConsts};
+                history.pushState = wrap(history.pushState);
+                history.replaceState = wrap(history.replaceState);
+                window.addEventListener('popstate', function() {
+                    window.ReactNativeWebView.postMessage('navigationStateChange');
+                });
+            })();
+            true;
+        `,
+    },
+    MSG_CD: {},
+    FCM_CD: {
+        PAYREQ: '00',
+        EXPREQ: '01',
+    },
+};
+const URL_CD = appConsts.URL_CD;
+const MSG_CD = appConsts.MSG_CD;
+
+export {URL_CD, MSG_CD};
 export default appConsts;

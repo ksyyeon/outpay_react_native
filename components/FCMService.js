@@ -19,6 +19,7 @@ class FCMService {
     };
 
     checkPermission = onRegister => {
+        console.log('[FCMService] checkPermission called');
         messaging()
             .hasPermission()
             .then(enabled => {
@@ -34,9 +35,11 @@ class FCMService {
     };
 
     requestPermission = onRegister => {
+        console.log('[FCMService] requestPermission called');
         messaging()
             .requestPermission()
-            .then(() => {
+            .then(enabled => {
+                console.log('[FCMService] requestPermission result', enabled);
                 this.getToken(onRegister);
             })
             .catch(error => {

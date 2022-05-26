@@ -49,8 +49,8 @@ export default class SelfAuth extends React.Component {
                     sytle={{flex: 1}}
                     source={
                         this.state.uriParam === 'private'
-                            ? {uri: appConsts.urlConsts.URL_PRIVATE_AUTH}
-                            : {uri: appConsts.urlConsts.URL_PUBLIC_AUTH}
+                            ? {uri: appConsts.URL_CD.URL_PRIVATE_AUTH}
+                            : {uri: appConsts.URL_CD.URL_PUBLIC_AUTH}
                     }
                     ref={webView => {
                         this.webViewRef = webView;

@@ -2,9 +2,10 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {styles} from '../styles/PinCode.js';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 import CommonDialog from './CommonDialog.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const numbers = [
     {src: require('../../assets/images/icon_zero.png'), id: '0'},
@@ -42,7 +43,6 @@ export default class ConfirmPinCode extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: 화면에 따라서 backHandler 등록
         if (this.backHandler) this.backHandler.remove();
         this.backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
@@ -72,6 +72,11 @@ export default class ConfirmPinCode extends React.Component {
         }
     }
 
+    onBackPress = () => {
+        this.setState({isDialogVisible: true});
+        return true;
+    };
+
     render() {
         this.shuffleNums(numbers);
         return (
@@ -86,11 +91,8 @@ export default class ConfirmPinCode extends React.Component {
                     }
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        // this.props.navigation.reset({
-                        //     routes: [{name: 'OnBoarding', params: null}],
-                        // });
                         this.setState({isDialogVisible: false});
-                        this.onBackPress();
+                        this.props.navigation.goBack();
                     }}
                     cancelClicked={() => {
                         this.setState({isDialogVisible: false});
@@ -199,8 +201,6 @@ export default class ConfirmPinCode extends React.Component {
         this.setState({numPadHeight: layout['height']});
     };
 
-    backClicked = () => {};
-
     numClicked = item => {
         console.log(item.id);
         if (item.id === 'refresh') {
@@ -242,7 +242,7 @@ export default class ConfirmPinCode extends React.Component {
         this.setState({refreshing: true});
     };
 
-    onPwdLengthChange = () => {
+    onPwdLengthChange = async () => {
         switch (passWord.length) {
             case 0:
                 this.circleRefs[0].setNativeProps({
@@ -308,11 +308,17 @@ export default class ConfirmPinCode extends React.Component {
                     // 비밀번호 설정 완료
                     if (this.state.entryScreen === 'MainWebView') {
                         // 비밀번호 재설정에서 진입
-                        LocalStorage.setUserInfoValue('password', passWord);
+                        await localStorage.setUserInfoValue(
+                            'password',
+                            passWord,
+                        );
                         this.props.navigation.goBack();
                     } else if (this.state.entryScreen === 'OnBoarding') {
                         // 앱 가입과정에서 진입
-                        LocalStorage.setUserInfoValue('password', passWord);
+                        await localStorage.setUserInfoValue(
+                            'password',
+                            passWord,
+                        );
                         this.props.navigation.reset({
                             routes: [{name: 'MainWebView', params: null}],
                         });
@@ -322,10 +328,5 @@ export default class ConfirmPinCode extends React.Component {
                 }
                 break;
         }
-    };
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
-        return true;
     };
 }

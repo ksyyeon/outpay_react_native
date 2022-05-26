@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-    BackHandler,
-    Linking,
-    PermissionsAndroid,
-    Platform,
-    ToastAndroid,
-    View,
-} from 'react-native';
+import {BackHandler, Linking, Platform, ToastAndroid, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import createInvoke from 'react-native-webview-invoke/native';
 import SendIntentAndroid from 'react-native-send-intent';
 import Share from 'react-native-share';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Spinner from 'react-native-loading-spinner-overlay';
-import * as LocalStorage from '../LocalStorage';
+import {localStorage} from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
@@ -22,6 +15,8 @@ import Loading from './Loading';
 import BottomTabBar from '../BottomTabBar';
 import appConsts from '../AppConsts';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+import {fcmService} from '../FCMService';
+import {localNotificationService} from '../LocalNotificationService';
 
 export default class MainWebView extends React.Component {
     constructor(props) {
@@ -32,8 +27,10 @@ export default class MainWebView extends React.Component {
             isLoading: true,
             isSpinnerVisible: false,
             spinnerMsg: '',
-            isModalVisible: false,
+            checkAccess: false,
             isDialogVisible: true,
+            isNotiVisible: false,
+            notiJs: null,
             dialogContent: null,
             isNBVisible: false,
             selectedNB: 'home',
@@ -42,13 +39,14 @@ export default class MainWebView extends React.Component {
         this.webViewRef = null;
         this.invoke = createInvoke(() => this.webViewRef);
         this.backHandler = null;
-        this.urlConsts = appConsts.urlConsts;
+        this.URL_CD = appConsts.URL_CD;
     }
 
     async componentDidMount() {
-        const telNum = await LocalStorage.getUserInfoValue('telNum');
+        const telNum = await localStorage.getUserInfoValue('telNum');
+
         this.setState({
-            initialUrl: this.urlConsts.URL_INDEX + telNum,
+            initialUrl: this.URL_CD.URL_INDEX + telNum,
             telNum: telNum,
         });
 
@@ -60,23 +58,65 @@ export default class MainWebView extends React.Component {
 
         this.invokeIfs();
 
-        const accessAgree = await LocalStorage.getAppConfigValue('accessAgree');
-        if (accessAgree) {
-            this.setState({isModalVisible: false});
+        const accessAgree = await localStorage.getUserVarsValue('accessAgree');
+        if (!accessAgree) {
+            this.setState({checkAccess: true});
+        } else {
+            fcmService.registerAppWithFCM();
+            fcmService.register(
+                this.onRegister,
+                this.onNotification,
+                this.onOpenNotification,
+            );
+
+            localNotificationService.configure(this.onOpenNotification);
         }
     }
 
     componentWillUnmount() {
         if (this.backHandler) this.backHandler.remove();
+
+        console.log('[MainWebView] unRegister');
+        fcmService.unRegister();
+        localNotificationService.unRegister();
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
                 <AccessModal
-                    visible={this.state.isModalVisible}
+                    visible={this.state.checkAccess}
                     confirmClicked={() => {
-                        this.setState({isModalVisible: false});
+                        this.setState({checkAccess: false});
+                        fcmService.registerAppWithFCM();
+                        fcmService.register(
+                            this.onRegister,
+                            this.onNotification,
+                            this.onOpenNotification,
+                        );
+
+                        localNotificationService.configure(
+                            this.onOpenNotification,
+                        );
+                        // TODO: FCM Token 서버로 전송
+                    }}
+                />
+                <CommonDialog
+                    visible={this.state.isNotiVisible}
+                    titleDisplay={'flex'}
+                    title={'결제요청 알림'}
+                    content={
+                        '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?'
+                    }
+                    cancelDisplay={'flex'}
+                    confirmClicked={() => {
+                        // TODO: 새로운 결제요청 상세로 화면 이동 테스트
+                        this.setState({isNotiVisible: false});
+                        if (this.state.notiJs !== null)
+                            this.webViewRef.injectJavaScript(this.state.notiJs);
+                    }}
+                    cancelClicked={() => {
+                        this.setState({isNotiVisible: false});
                     }}
                 />
                 {this.state.dialogContent && (
@@ -121,22 +161,22 @@ export default class MainWebView extends React.Component {
                         switch (label) {
                             case 'payreqs':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_HOME,
+                                    this.URL_CD.URL_HOME,
                                 );
                                 break;
                             case 'rshop':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_RSHOP,
+                                    this.URL_CD.URL_RSHOP,
                                 );
                                 break;
                             case 'event':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_EVENT,
+                                    this.URL_CD.URL_EVENT,
                                 );
                                 break;
                             case 'settings':
                                 this.webViewRef.injectJavaScript(
-                                    this.urlConsts.URL_SETTINGS,
+                                    this.URL_CD.URL_SETTINGS,
                                 );
                                 break;
                         }
@@ -146,11 +186,71 @@ export default class MainWebView extends React.Component {
         );
     }
 
+    onRegister = token => {
+        console.log('[MainWebView] onRegister : token :', token);
+    };
+
+    onNotification = async (notification, data) => {
+        // state: foreground
+        console.log(
+            '[MainWebView] onNotification notification: ',
+            notification,
+        );
+        console.log('[MainWebView] onNotification data: ', data);
+
+        // FCM post body
+        // {
+        //   "to": FCM 토큰",
+        //   "collapse_key" : "com.outpay",
+        //   "notification" : {
+        //       "title" : "결제 요청 알림",
+        //       "body" : "새로운 결제 요청이 왔어요",
+        //   },
+        //   "data" : {
+        //     "type" : "00",
+        //     "js" : "ifs.jsIF.showMainView('ops-rshop');"
+        //   }
+        // }
+
+        // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
+        if (typeof data !== undefined || data !== null)
+            if (data.type === appConsts.FCM_CD.PAYREQ) {
+                this.setState({
+                    isNotiVisible: true,
+                    notiJs: data.js,
+                });
+            }
+
+        // const options = {
+        //     soundName: 'default',
+        //     playSound: true,
+        // };
+        // localNotificationService.showNotification(
+        //     0,
+        //     notification.title,
+        //     notification.body,
+        //     notification,
+        //     options,
+        // );
+    };
+
+    onOpenNotification = (notification, data) => {
+        // state: background & quit
+        console.log(
+            '[MainWebView] onOpenNotification notification :',
+            notification,
+        );
+        console.log('[MainWebView] onOpenNotification data :', data);
+
+        if (typeof data !== 'undefined' && data !== null)
+            if (data.js !== null) this.webViewRef.injectJavaScript(data.js);
+    };
+
     onLoadEnd = () => {
         setTimeout(() => {
             this.setState({isLoading: false});
         }, 1000);
-        // TODO View 선택해서 로드하기
+        // TODO View 선택해서 로드하기 테스트
         console.log(
             '[MainWebView] this.props.route.params: ',
             this.props.route.params,
@@ -159,12 +259,8 @@ export default class MainWebView extends React.Component {
             typeof this.props.route.params !== 'undefined' &&
             this.props.route.params !== null
         ) {
-            console.log(
-                '[MainWebView] this.props.route.params.js: ',
-                this.props.route.params.js,
-            );
-            const selectView = this.props.route.params.js;
-            this.webViewRef.injectJavaScript(selectView);
+            const js = this.props.route.params.js;
+            if (js !== null) this.webViewRef.injectJavaScript(js);
         }
         return true;
     };
@@ -192,8 +288,14 @@ export default class MainWebView extends React.Component {
             return false;
         }
 
-        if (Platform.OS === 'ios') {
-            return true;
+        if (Platform.OS === 'ios' && event.url.startsWith('intent')) {
+            Linking.openURL(event.url).catch(err => {
+                this.setState({
+                    dialogContent:
+                        '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
+                });
+            });
+            return false;
         }
         return true;
 
@@ -231,9 +333,8 @@ export default class MainWebView extends React.Component {
     };
 
     onBackPress = () => {
-        //TODO OS별 showBackView 호출
-        //TODO 뷰가 아직 생성 안됐을 때 뒤로가기
-        this.webViewRef.injectJavaScript(this.urlConsts.URL_BACKVIEW);
+        // TODO: OS별 showBackView 호출
+        this.webViewRef.injectJavaScript(this.URL_CD.URL_BACKVIEW);
         return true;
     };
 
@@ -247,7 +348,6 @@ export default class MainWebView extends React.Component {
 
     showNB = label => {
         this.setState({isNBVisible: true});
-        console.log('[MainWebView] showNB label:', label);
         this.setState({selectedNB: label});
     };
 
@@ -272,8 +372,9 @@ export default class MainWebView extends React.Component {
         }
     };
 
-    openSubWebView = url => {
+    openSubWebView = (url, title) => {
         this.props.navigation.navigate('SubWebView', {
+            name: title,
             uri: url,
         });
     };
@@ -373,12 +474,14 @@ export default class MainWebView extends React.Component {
     requestContactPermission = async () => {
         if (Platform.OS === 'android') {
             const granted = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
-            console.log('[MainWebView] IOS Permission Contacts:', granted);
+            console.log('[MainWebView] Android Permission Contacts:', granted);
             switch (granted) {
                 case RESULTS.GRANTED:
                     return this.getContact();
                 case RESULTS.DENIED:
-                    const result = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+                    const result = await request(
+                        PERMISSIONS.ANDROID.READ_CONTACTS,
+                    );
                     if (result === RESULTS.GRANTED) {
                         return this.getContact();
                     } else {
@@ -420,7 +523,6 @@ export default class MainWebView extends React.Component {
                     return null;
             }
         }
-        
     };
 
     getContact = async () => {
@@ -433,43 +535,66 @@ export default class MainWebView extends React.Component {
             console.log(
                 `[MainWebView] Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
             );
-            return selectedPhone.number;
+            return {
+                acqName: contact.name,
+                acqTelNum: selectedPhone.number,
+            };
         });
     };
 
-    requestPushPermission = async () => {};
-
-    navigateNext = (screen, param) => {
-        // 화면이동 호출
+    navigateScreen = async (screen, param) => {
+        // 화면 이동
         this.props.navigation.navigate(screen, param);
     };
 
+    openSms = body => {
+        // 문자 or 카카오톡 선택
+        // 수신인 선택
+        const SMSDivider = Platform.OS === 'android' ? '?' : '&';
+        Linking.openURL(`sms:${SMSDivider}body=${body}`);
+    };
+
+    openTel = tel => {
+        Linking.openURL(`tel:${tel}`);
+    };
+
     invokeIfs = () => {
-        this.invoke.define('exitApp', this.exitApp);
-        this.invoke.define('setUserInfo', LocalStorage.setUserInfo);
-        this.invoke.define('getUserInfo', LocalStorage.getUserInfo);
-        this.invoke.define('setUserInfoValue', LocalStorage.setUserInfoValue);
-        this.invoke.define('getUserInfoValue', LocalStorage.getUserInfoValue);
-        this.invoke.define('openBrowser', this.openBrowser);
-        this.invoke.define('openShareChooser', this.openShareChooser);
-        this.invoke.define('toast', this.toast);
-        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
+        this.invoke.define('getAppConfig', localStorage.setAppConfig);
+        this.invoke.define('setAppConfig', localStorage.getAppConfig);
+        this.invoke.define('getAppConfigValue', localStorage.setAppConfigValue);
+        this.invoke.define('setAppConfigValue', localStorage.getAppConfigValue);
+        this.invoke.define('getUserInfo', localStorage.getUserInfo);
+        this.invoke.define('setUserInfo', localStorage.setUserInfo);
+        this.invoke.define('getUserInfoValue', localStorage.getUserInfoValue);
+        this.invoke.define('setUserInfoValue', localStorage.setUserInfoValue);
+        this.invoke.define('getRecentHistory', localStorage.getRecentHistory);
+        this.invoke.define('setRecentHistory', localStorage.setRecentHistory);
+        this.invoke.define('getBlockList', localStorage.getBlockList);
+        this.invoke.define('setBlockList', localStorage.setBlockList);
+        this.invoke.define('getUserVars', localStorage.getUserVars);
+        this.invoke.define('setUserVars', localStorage.setUserVars);
+        this.invoke.define('getUserVarsValue', localStorage.getUserVarsValue);
+        this.invoke.define('setUserVarsValue', localStorage.setUserVarsValue);
+        this.invoke.define('clearStorage', localStorage.clearStorage);
         this.invoke.define('showNB', this.showNB);
         this.invoke.define('hideNB', this.hideNB);
         this.invoke.define('setSelectedNB', this.setSelectedNB);
-        this.invoke.define('showSpinner', this.showSpinner);
         this.invoke.define('hideSpinner', this.hideSpinner);
+        this.invoke.define('showSpinner', this.showSpinner);
+        this.invoke.define('exitApp', this.exitApp);
+        this.invoke.define('openBrowser', this.openBrowser);
+        // TODO: copyClipBoard: 링크 클립보드 복사
+        this.invoke.define('openShareChooser', this.openShareChooser);
+        this.invoke.define('toast', this.toast);
+        this.invoke.define('openInAppBrowser', this.openInAppBrowser);
         this.invoke.define('openSubWebView', this.openSubWebView);
         this.invoke.define('openSelfAuth', this.openSelfAuth);
-        this.invoke.define('requestContactPermission', this.requestContactPermission);
-        this.invoke.define('setAppConfig', LocalStorage.setAppConfig);
-        this.invoke.define('getAppConfig', LocalStorage.getAppConfig);
-        this.invoke.define('setAppConfigValue', LocalStorage.setAppConfigValue);
-        this.invoke.define('getAppConfigValue', LocalStorage.getAppConfigValue);
-        this.invoke.define('getBlockList', LocalStorage.getBlockList);
-        this.invoke.define('setBlockList', LocalStorage.setBlockList);
-        this.invoke.define('clearStorage', LocalStorage.clearStorage);
-        this.invoke.define('requestPushPermission', this.requestPushPermission);
-        this.invoke.define('navigateNext', this.navigateNext);
+        this.invoke.define(
+            'requestContactPermission',
+            this.requestContactPermission,
+        );
+        this.invoke.define('navigateScreen', this.navigateScreen);
+        this.invoke.define('openSms', this.openSms);
+        this.invoke.define('openTel', this.openTel);
     };
 }

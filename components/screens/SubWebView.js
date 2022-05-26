@@ -9,6 +9,7 @@ export default class SubWebView extends React.Component {
         this.state = {
             spinnerVisible: false,
             spinnerMsg: '',
+            canGoBack: false,
         };
         this.webViewRef = null;
         this.backHandler = null;
@@ -20,6 +21,8 @@ export default class SubWebView extends React.Component {
             'hardwareBackPress',
             this.onBackPress.bind(this),
         );
+
+        this.props.navigation.setOptions({title: this.props.route.params.name});
     }
 
     componentWillUnmount() {
@@ -42,16 +45,25 @@ export default class SubWebView extends React.Component {
                     ref={webView => {
                         this.webViewRef = webView;
                     }}
-                    cacheEnabled={false}
-                    originWhitelist={['*']}
+                    onNavigationStateChange={navState => {
+                        this.state.canGoBack = navState.canGoBack;
+                    }}
+                    originWhitelist={['http://*', 'https://*', 'intent://*']}
                     javaScriptEnabled={true}
+                    cacheEnabled={false}
+                    cacheMode={'LOAD_NO_CACHE'}
+                    incognito={true}
                 />
             </View>
         );
     }
 
     onBackPress = () => {
-        this.props.navigation.goBack();
+        if (this.state.canGoBack && this.webViewRef) {
+            this.webViewRef.goBack();
+        } else {
+            this.props.navigation.goBack();
+        }
         return true;
     };
 }

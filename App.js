@@ -1,27 +1,26 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import * as RootNavigation from './components/RootNavigation';
-import {AppScreens} from './components/AppStack';
-import {SignInScreens} from './components/SignInStack';
 import Splash from './components/screens/Splash';
-import * as LocalStorage from './components/LocalStorage';
+import AppScreens from './components/AppStack';
+import {SignInScreens} from './components/SignInStack';
+import {localStorage} from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
-import {fcmService} from './components/FCMService';
-import {localNotificationService} from './components/LocalNotificationService';
 import NetInfo from '@react-native-community/netinfo';
 import NetworkFail from './components/screens/NetworkFail';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isSignedIn: false,
-            autoLogin: null,
             isLoading: true,
             isDialogVisible: false,
-            selectView: null,
+            js: null,
             networkUnsubscribe: null,
             networkConnected: false,
+            userVars: null,
         };
     }
 
@@ -29,16 +28,8 @@ export default class App extends React.Component {
     componentDidMount() {
         // setTimeout(() => SplashScreen.hide(), 2000);
         // TODO: iOS에서 default 스플래시 비활성화
-        setTimeout(() => {
-            // this.createPushNotiChannel();
-            fcmService.registerAppWithFCM();
-            fcmService.register(
-                this.onRegister,
-                this.onNotification,
-                this.onOpenNotification,
-            );
-
-            localNotificationService.configure(this.onOpenNotification);
+        setTimeout(async () => {
+            this.state.userVars = await localStorage.getUserVars();
 
             this.checkNetworkConnected();
         }, 2000);
@@ -47,45 +38,7 @@ export default class App extends React.Component {
     // 이벤트 해제
     componentWillUnmount() {
         // networkUnsubscribe();
-
-        console.log('[App] unRegister');
-        fcmService.unRegister();
-        localNotificationService.unRegister();
     }
-
-    onRegister = token => {
-        console.log('[App] onRegister : token :', token);
-    };
-
-    onNotification = async (notification, data) => {
-        // state: foreground
-        console.log('[App] onNotification notification: ', notification);
-        console.log('[App] onNotification data: ', data);
-
-        // const options = {
-        //     soundName: 'default',
-        //     playSound: true,
-        // };
-        // localNotificationService.showNotification(
-        //     0,
-        //     notification.title,
-        //     notification.body,
-        //     notification,
-        //     options,
-        // );
-
-        this.setState({isDialogVisible: true, selectView: data.js});
-    };
-
-    onOpenNotification = (notification, data) => {
-        // state: background & quit
-        console.log('[App] onOpenNotification notification :', notification);
-        console.log('[App] onOpenNotification data :', data);
-
-        RootNavigation.push('MainWebView', {
-            js: data.js,
-        });
-    };
 
     render() {
         if (this.state.isLoading) return <Splash />;
@@ -102,7 +55,7 @@ export default class App extends React.Component {
                     confirmClicked={() => {
                         this.setState({isDialogVisible: false});
                         RootNavigation.push('MainWebView', {
-                            js: this.state.selectView,
+                            js: this.state.js,
                         });
                     }}
                     cancelClicked={() => {
@@ -123,13 +76,12 @@ export default class App extends React.Component {
     }
 
     checkUserSignedIn = async () => {
-        const userInfo = await LocalStorage.getUserInfo();
-        const appConfig = await LocalStorage.getAppConfig();
-        console.log('[App] userInfo: ', userInfo);
-        console.log('[App] appConfig: ', appConfig);
-        if (userInfo != null && appConfig != null) {
+        const cert = await AsyncStorage.getItem('OutpayCert');
+        console.log('[App] outpayCert:', cert);
+        console.log('[App] userVars: ', this.state.userVars);
+        if (cert !== null && this.state.userVars !== null) {
             console.log('[App] 등록회원');
-            return {signedIn: true, autoLogin: appConfig.autoLogin};
+            return {signedIn: true, autoLogin: this.state.userVars.autoLogin};
         } else {
             console.log('[App] 미등록회원');
             return {signedIn: false, autoLogin: null};
