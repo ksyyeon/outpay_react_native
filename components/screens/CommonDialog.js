@@ -9,14 +9,23 @@ export default class CommonDialog extends React.Component {
                 <View style={styles.layout}>
                     <View style={styles.dialog}>
                         <View style={styles.text_wrap}>
-                            <Text style={styles.title}>{this.props.title}</Text>
+                            <Text
+                                style={
+                                    (styles.title,
+                                    {display: this.props.titleDisplay})
+                                }>
+                                {this.props.title}
+                            </Text>
                             <Text style={styles.content}>
                                 {this.props.content}
                             </Text>
                         </View>
                         <View style={styles.btn_wrap}>
                             <TouchableOpacity
-                                style={styles.cancel_btn}
+                                style={
+                                    (styles.cancel_btn,
+                                    {display: this.props.cancelDisplay})
+                                }
                                 onPress={this.props.cancelClicked}>
                                 <Text style={styles.btn_text}>취소</Text>
                             </TouchableOpacity>

@@ -2,68 +2,61 @@ import React from 'react';
 import {BackHandler, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {useEffect, useRef} from 'react/cjs/react.development';
+import useState from 'react-usestateref';
 
-export default class SubWebView extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            spinnerVisible: false,
-            spinnerMsg: '',
-            canGoBack: false,
-        };
-        this.webViewRef = null;
-        this.backHandler = null;
-    }
+export default SubWebView = props => {
+    const [spinnerVisible, setSpinnerVisible] = useState(false);
+    const [spinnerMsg, setSpinnerMsg] = useState('');
+    const [canGoBack, setCanGoBack, canGoBackRef] = useState(false);
+    const webViewRef = useRef(null);
 
-    componentDidMount() {
-        if (this.backHandler) this.backHandler.remove();
-        this.backHandler = BackHandler.addEventListener(
+    useEffect(() => {
+        console.log('component mounted');
+        const backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
-            this.onBackPress.bind(this),
+            onBackPress,
         );
+        props.navigation.setOptions({title: props.route.params.name});
 
-        this.props.navigation.setOptions({title: this.props.route.params.name});
-    }
+        return () => {
+            console.log('component will unmount');
+            backHandler.remove();
+        };
+    }, []); // 빈배열 선언 필수!
 
-    componentWillUnmount() {
-        if (this.backHandler) this.backHandler.remove();
-    }
-
-    render() {
-        return (
-            <View style={{flex: 1}}>
-                <Spinner
-                    visible={this.state.spinnerVisible}
-                    color={'#ff6801'}
-                    textContent={this.state.spinnerMsg}
-                />
-                <WebView
-                    sytle={{flex: 1}}
-                    source={{
-                        uri: this.props.route.params.uri,
-                    }}
-                    ref={webView => {
-                        this.webViewRef = webView;
-                    }}
-                    onNavigationStateChange={navState => {
-                        this.state.canGoBack = navState.canGoBack;
-                    }}
-                    originWhitelist={['http://*', 'https://*', 'intent://*']}
-                    javaScriptEnabled={true}
-                    cacheEnabled={false}
-                    cacheMode={'LOAD_NO_CACHE'}
-                    incognito={true}
-                />
-            </View>
-        );
-    }
-
-    onBackPress = () => {
-        if (this.state.canGoBack && this.webViewRef) {
-            this.webViewRef.goBack();
+    const onBackPress = () => {
+        console.log('canGoBackRef current:', canGoBackRef.current);
+        if (canGoBackRef.current && webViewRef) {
+            webViewRef.current.goBack();
         } else {
-            this.props.navigation.goBack();
+            props.navigation.goBack();
         }
         return true;
     };
-}
+
+    return (
+        <View style={{flex: 1}}>
+            <Spinner
+                visible={spinnerVisible}
+                color={'#ff6801'}
+                textContent={spinnerMsg}
+            />
+            <WebView
+                sytle={{flex: 1}}
+                source={{
+                    uri: props.route.params.uri,
+                }}
+                ref={webViewRef}
+                onNavigationStateChange={navState => {
+                    setCanGoBack(navState.canGoBack);
+                }}
+                originWhitelist={['http://*', 'https://*', 'intent://*']}
+                javaScriptEnabled={true}
+                cacheEnabled={false}
+                cacheMode={'LOAD_NO_CACHE'}
+                incognito={true}
+            />
+        </View>
+    );
+};
