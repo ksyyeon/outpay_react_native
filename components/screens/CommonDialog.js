@@ -4,7 +4,7 @@ import {View, Text, Modal, TouchableOpacity} from 'react-native';
 
 export default CommonDialog = props => {
     return (
-        <Modal visible={this.props.visible} transparent={true}>
+        <Modal visible={props.visible} transparent={true}>
             <View style={styles.layout}>
                 <View style={styles.dialog}>
                     <View style={styles.text_wrap}>
@@ -12,7 +12,7 @@ export default CommonDialog = props => {
                             style={
                                 (styles.title, {display: props.titleDisplay})
                             }>
-                            {this.props.title}
+                            {props.title}
                         </Text>
                         <Text style={styles.content}>{props.content}</Text>
                     </View>
@@ -20,14 +20,14 @@ export default CommonDialog = props => {
                         <TouchableOpacity
                             style={
                                 (styles.cancel_btn,
-                                {display: this.props.cancelDisplay})
+                                {display: props.cancelDisplay})
                             }
-                            onPress={this.props.cancelClicked}>
+                            onPress={props.cancelClicked}>
                             <Text style={styles.btn_text}>취소</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.confirm_btn}
-                            onPress={this.props.confirmClicked}>
+                            onPress={props.confirmClicked}>
                             <Text style={styles.btn_text}>확인</Text>
                         </TouchableOpacity>
                     </View>

@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 
 export default Loading = props => {
     return (
-        <Modal visible={this.props.visible} transparent={true}>
+        <Modal visible={props.visible} transparent={true}>
             <View
                 style={{
                     flex: 1,

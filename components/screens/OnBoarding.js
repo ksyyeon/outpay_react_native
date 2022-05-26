@@ -3,6 +3,7 @@ import styles from '../styles/styles_OnBoarding';
 import {View, Text, Image, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../CustomButton';
+import {useEffect} from 'react/cjs/react.development';
 
 export default OnBoarding = props => {
     useEffect(() => {
