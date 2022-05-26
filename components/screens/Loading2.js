@@ -2,81 +2,75 @@ import React from 'react';
 import {View, Text, Image, Modal} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
 
-export default class Loading2 extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <Modal visible={this.props.visible} transparent={false}>
+export default Loading2 = props => {
+    return (
+        <Modal visible={props.visible} transparent={false}>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: '#ffff',
+                }}>
+                <View
+                    style={{
+                        height: 60,
+                        width: '100%',
+                        // backgroundColor: '#D8E2DC',
+                    }}>
+                    <Image
+                        source={require('../../assets/images/img_logo2.png')}
+                        style={{
+                            resizeMode: 'contain',
+                            height: 20,
+                            width: 97,
+                            marginLeft: 20,
+                            marginTop: 20,
+                        }}
+                    />
+                </View>
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#ffff',
                     }}>
                     <View
                         style={{
-                            height: 60,
-                            width: '100%',
-                            // backgroundColor: '#D8E2DC',
+                            height: '35%',
+                            // backgroundColor: '#FFD7BA',
+                            // justifyContent: 'flex-end',
+                            // alignItems: 'center',
                         }}>
-                        <Image
-                            source={require('../../assets/images/img_logo2.png')}
+                        <AnimatedLottieView
+                            source={require('../../assets/animations/loading2.json')}
                             style={{
-                                resizeMode: 'contain',
-                                height: 20,
-                                width: 97,
-                                marginLeft: 20,
-                                marginTop: 20,
+                                marginTop: 50,
                             }}
+                            autoPlay
+                            loop
                         />
                     </View>
                     <View
-                        style={{
+                        syle={{
                             flex: 1,
                         }}>
-                        <View
+                        <Image
+                            source={require('../../assets/images/img_loading.png')}
                             style={{
-                                height: '35%',
-                                // backgroundColor: '#FFD7BA',
-                                // justifyContent: 'flex-end',
-                                // alignItems: 'center',
+                                resizeMode: 'contain',
+                                height: 180,
+                                width: 320,
+                                alignSelf: 'center',
+                            }}
+                        />
+                        <Text
+                            style={{
+                                marginTop: 20,
+                                fontFamily: 'NanumSquareB',
+                                alignSelf: 'center',
                             }}>
-                            <AnimatedLottieView
-                                source={require('../../assets/animations/loading2.json')}
-                                style={{
-                                    marginTop: 50,
-                                }}
-                                autoPlay
-                                loop
-                            />
-                        </View>
-                        <View
-                            syle={{
-                                flex: 1,
-                            }}>
-                            <Image
-                                source={require('../../assets/images/img_loading.png')}
-                                style={{
-                                    resizeMode: 'contain',
-                                    height: 180,
-                                    width: 320,
-                                    alignSelf: 'center',
-                                }}
-                            />
-                            <Text
-                                style={{
-                                    marginTop: 20,
-                                    fontFamily: 'NanumSquareB',
-                                    alignSelf: 'center',
-                                }}>
-                                데이터를 불러오는 중 입니다...
-                            </Text>
-                        </View>
+                            데이터를 불러오는 중 입니다...
+                        </Text>
                     </View>
                 </View>
-            </Modal>
-        );
-    }
-}
+            </View>
+        </Modal>
+    );
+};

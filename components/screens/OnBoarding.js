@@ -4,28 +4,22 @@ import {View, Text, Image, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../CustomButton';
 
-export default class OnBoarding extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-        if (this.backHandler) this.backHandler.remove();
-        this.backHandler = BackHandler.addEventListener(
+export default OnBoarding = props => {
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
-            this.onBackPress.bind(this),
+            onBackPress,
         );
-    }
+        return () => {
+            backHandler.remove();
+        };
+    }, []);
 
-    componentWillUnmount() {
-        if (this.backHandler) this.backHandler.remove();
-    }
-
-    onBackPress = () => {
+    const onBackPress = () => {
         BackHandler.exitApp();
     };
 
-    onPress = async () => {
+    const onPress = async () => {
         await AsyncStorage.multiSet([
             [
                 'AppConfig',
@@ -82,32 +76,30 @@ export default class OnBoarding extends React.Component {
             ],
         ]);
 
-        this.props.navigation.navigate('SetPinCode', {
+        props.navigation.navigate('SetPinCode', {
             entryScreen: 'OnBoarding',
         });
     };
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.content}>
-                    <Image
-                        style={styles.image}
-                        source={require('../../assets/images/img_logo.png')}
-                    />
-                    <Text style={styles.text}>
-                        지금 아웃페이로 결제를 주고받아보세요.
-                    </Text>
-                </View>
-
-                <View style={styles.footer}>
-                    <CustomButton
-                        buttonColor={'#ff6801'}
-                        title={'시작하기'}
-                        onPress={this.onPress}
-                    />
-                </View>
+    return (
+        <View style={styles.container}>
+            <View style={styles.content}>
+                <Image
+                    style={styles.image}
+                    source={require('../../assets/images/img_logo.png')}
+                />
+                <Text style={styles.text}>
+                    지금 아웃페이로 결제를 주고받아보세요.
+                </Text>
             </View>
-        );
-    }
-}
+
+            <View style={styles.footer}>
+                <CustomButton
+                    buttonColor={'#ff6801'}
+                    title={'시작하기'}
+                    onPress={onPress}
+                />
+            </View>
+        </View>
+    );
+};
