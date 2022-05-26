@@ -26,7 +26,7 @@ export default SubWebView = props => {
     }, []); // 빈배열 선언 필수!
 
     const onBackPress = () => {
-        console.log('canGoBackRef current:', canGoBackRef.current);
+        console.log('canGoBack:', canGoBackRef.current);
         if (canGoBackRef.current && webViewRef) {
             webViewRef.current.goBack();
         } else {
