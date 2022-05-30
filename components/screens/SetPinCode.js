@@ -3,193 +3,65 @@ import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from '../styles/styles_PinCode.js';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useState, useEffect, useRef} from 'react/cjs/react.development';
+import PinCodeCommon from '../PinCodeCommon.js';
 
-const numbers = [
-    {src: require('../../assets/images/icon_zero.png'), id: '0'},
-    {src: require('../../assets/images/icon_one.png'), id: '1'},
-    {src: require('../../assets/images/icon_two.png'), id: '2'},
-    {src: require('../../assets/images/icon_three.png'), id: '3'},
-    {src: require('../../assets/images/icon_four.png'), id: '4'},
-    {src: require('../../assets/images/icon_five.png'), id: '5'},
-    {src: require('../../assets/images/icon_six.png'), id: '6'},
-    {src: require('../../assets/images/icon_seven.png'), id: '7'},
-    {src: require('../../assets/images/icon_eight.png'), id: '8'},
-    {src: require('../../assets/images/icon_refresh.png'), id: 'refresh'},
-    {src: require('../../assets/images/icon_nine.png'), id: '9'},
-    {src: require('../../assets/images/icon_delete.png'), id: 'delete'},
-];
-const circles = ['0', '1', '2', '3', '4', '5'];
-let passWord = '';
-let maxLength = 6;
+export default SetPinCode = props => {
+    const numbers = PinCodeCommon.numbers;
+    let passWord = '';
+    let maxLength = 6;
 
-export default class SetPinCode extends React.Component {
-    constructor() {
-        super();
+    const [refreshing, setRefreshing] = useState(false);
+    const [pwdLength, setPwdLength] = useState(0);
+    const [numPadHeight, setNumPadHeight] = useState(0);
+    const [circleColor, setCircleColor] = useState('#ddd');
+    const [entryScreen, setEntryScreen] = useState(null);
 
-        this.state = {
-            refreshing: false,
-            pwdLength: 0,
-            numPadHeight: 0,
-            circleColor: '#ddd',
-            entryScreen: null,
-        };
+    const circleRefs = useRef({});
 
-        this.backHandler = null;
-        this.circleRefs = {};
-    }
-
-    componentDidMount() {
-        if (this.backHandler) this.backHandler.remove();
-        this.backHandler = BackHandler.addEventListener(
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
             'hardwareBackPress',
-            this.onBackPress.bind(this),
+            onBackPress,
         );
 
-        this.focusListener = this.props.navigation.addListener('focus', () => {
+        const focusListener = props.navigation.addListener('focus', () => {
             passWord = '';
             for (let i = 0; i < 6; i++) {
-                this.circleRefs[i].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
+                PinCodeCommon.setBackgroundGray(circleRefs[i]);
+            }
+            console.log('[SetPinCode] props.route.params', props.route.params);
+            if (props.route.params !== null) {
+                setEntryScreen(props.route.params.entryScreen);
             }
         });
 
-        console.log(
-            '[SetPinCode] this.props.route.params',
-            this.props.route.params,
-        );
-        if (this.props.route.params !== null) {
-            this.setState({entryScreen: this.props.route.params.entryScreen});
-        }
-    }
+        PinCodeCommon.shuffleNums(numbers);
 
-    componentWillUnmount() {
-        if (this.backHandler) this.backHandler.remove();
+        return () => {
+            backHandler.remove();
+            if (focusListener != null && focusListener.remove) {
+                focusListener.remove();
+            }
+        };
+    }, []); // 빈배열 선언 필수!
 
-        if (this.focusListener != null && this.focusListener.remove) {
-            this.focusListener.remove();
-        }
-    }
-
-    onBackPress = () => {
-        this.props.navigation.goBack();
+    const onBackPress = () => {
+        props.navigation.goBack();
         return true;
     };
 
-    render() {
-        this.shuffleNums(numbers);
-        return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.actionBar}>
-                    <View style={styles.actionBar}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // this.setState({isDialogVisible: true});
-                                this.onBackPress();
-                            }}>
-                            <Image
-                                source={require('../../assets/images/icon_left.png')}
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    resizeMode: 'contain',
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.header}>
-                    <Text style={styles.title}>
-                        비밀번호 6자리를 입력하세요.
-                    </Text>
-                </View>
-                <View style={styles.content}>
-                    <View style={styles.wrapper1}>
-                        <View>
-                            <Text style={styles.note_wrong}>
-                                입력하신 비밀번호가 다릅니다.
-                            </Text>
-                        </View>
-                        <View style={styles.circles}>
-                            <FlatList
-                                data={circles}
-                                numColumns={6}
-                                renderItem={({item, index}) => {
-                                    return (
-                                        <View
-                                            ref={circle => {
-                                                this.circleRefs[index] = circle;
-                                            }}
-                                            style={styles.item_circle}
-                                        />
-                                    );
-                                }}
-                                keyExtractor={(item, index) => index.toString()}
-                                scrollEnabled={false}
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.wrapper2}>
-                        <TouchableOpacity style={styles.btn_reset}>
-                            <Text
-                                style={{
-                                    color: 'gray',
-                                    fontFamily: 'NanumSquareR',
-                                    textDecorationLine: 'underline',
-                                }}>
-                                비밀번호를 잊으셨나요?
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.footer}>
-                    <View style={styles.numpad} onLayout={this.onLayout}>
-                        <FlatList
-                            data={numbers}
-                            numColumns={3}
-                            scrollEnabled={false}
-                            keyExtractor={(item, index) => index.toString()}
-                            refreshing={this.state.refreshing}
-                            renderItem={({item}) => (
-                                <TouchableOpacity
-                                    onPress={() => this.numClicked(item)}
-                                    style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        flex: 1,
-                                        height: this.state.numPadHeight / 4,
-                                    }}>
-                                    <View>
-                                        <Image
-                                            source={item.src}
-                                            style={
-                                                item.id === 'refresh' ||
-                                                item.id === 'delete'
-                                                    ? styles.item_ctl
-                                                    : styles.item_num
-                                            }
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </View>
-                </View>
-            </SafeAreaView>
-        );
-    }
-
-    onLayout = event => {
+    const onLayout = event => {
         const layout = event.nativeEvent.layout;
-        this.setState({numPadHeight: layout['height']});
+        setNumPadHeight(layout['height']);
     };
 
-    numClicked = item => {
+    const numClicked = item => {
         console.log(item.id);
         if (item.id === 'refresh') {
-            this.shuffleNums(numbers);
-            this.refreshClicked();
-            console.log('circleArray:', this.circleArray);
+            shuffleNums(numbers);
+            refreshClicked();
+            console.log('circleArray:', circleArray);
         } else if (item.id === 'delete') {
             passWord = passWord.slice(0, -1);
             console.log('password:', passWord);
@@ -201,85 +73,124 @@ export default class SetPinCode extends React.Component {
                 console.log('password Length:', passWord.length);
             }
         }
-        this.onPwdLengthChange();
+        onPwdLengthChange();
     };
 
-    shuffleNums = numbers => {
-        let i = numbers.length - 1;
-        let a = 0;
-        for (; i > 0; i--) {
-            if (i !== 9 && i !== 11) {
-                const j = Math.floor(Math.random() * (i + 1));
-                if (j !== 9 && i !== 11) {
-                    const temp = numbers[i];
-                    numbers[i] = numbers[j];
-                    numbers[j] = temp;
-                }
-            }
-        }
-        return numbers;
+    const refreshClicked = () => {
+        setRefreshing(true);
     };
 
-    refreshClicked = () => {
-        this.setState({refreshing: true});
-    };
+    const onPwdLengthChange = () => {
+        if (passWord.length === 0) {
+            PinCodeCommon.setBackgroundGray(circleRefs[0]);
+        } else if (passWord.length === 6) {
+            PinCodeCommon.setBackgroundOrange(circleRefs[5]);
 
-    onPwdLengthChange = () => {
-        switch (passWord.length) {
-            case 0:
-                this.circleRefs[0].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 1:
-                this.circleRefs[0].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.circleRefs[1].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 2:
-                this.circleRefs[1].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.circleRefs[2].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 3:
-                this.circleRefs[2].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.circleRefs[3].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 4:
-                this.circleRefs[3].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.circleRefs[4].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 5:
-                this.circleRefs[4].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.circleRefs[5].setNativeProps({
-                    style: {backgroundColor: '#ddd'},
-                });
-                break;
-            case 6:
-                this.circleRefs[5].setNativeProps({
-                    style: {backgroundColor: '#ff6801'},
-                });
-                this.props.navigation.replace('ConfirmPinCode', {
-                    password: passWord,
-                    entryScreen: this.state.entryScreen,
-                });
-                break;
+            props.navigation.replace('ConfirmPinCode', {
+                password: passWord,
+                entryScreen: entryScreen,
+            });
+        } else {
+            PinCodeCommon.setBackgroundGray(circleRefs[passWord.length]);
+            PinCodeCommon.setBackgroundOrange(circleRefs[passWord.length - 1]);
         }
     };
-}
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.actionBar}>
+                <View style={styles.actionBar}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            // setIsDialogVisible(true);
+                            onBackPress();
+                        }}>
+                        <Image
+                            source={require('../../assets/images/icon_left.png')}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                resizeMode: 'contain',
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.header}>
+                <Text style={styles.title}>비밀번호 6자리를 입력하세요.</Text>
+            </View>
+            <View style={styles.content}>
+                <View style={styles.wrapper1}>
+                    <View>
+                        <Text style={styles.note_wrong}>
+                            입력하신 비밀번호가 다릅니다.
+                        </Text>
+                    </View>
+                    <View style={styles.circles}>
+                        <FlatList
+                            data={PinCodeCommon.circles}
+                            numColumns={6}
+                            renderItem={({item, index}) => {
+                                return (
+                                    <View
+                                        ref={circle => {
+                                            circleRefs[index] = circle;
+                                        }}
+                                        style={styles.item_circle}
+                                    />
+                                );
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                            scrollEnabled={false}
+                        />
+                    </View>
+                </View>
+                <View style={styles.wrapper2}>
+                    <TouchableOpacity style={styles.btn_reset}>
+                        <Text
+                            style={{
+                                color: 'gray',
+                                fontFamily: 'NanumSquareR',
+                                textDecorationLine: 'underline',
+                            }}>
+                            비밀번호를 잊으셨나요?
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.footer}>
+                <View style={styles.numpad} onLayout={onLayout}>
+                    <FlatList
+                        data={numbers}
+                        numColumns={3}
+                        scrollEnabled={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        refreshing={refreshing}
+                        renderItem={({item}) => (
+                            <TouchableOpacity
+                                onPress={() => numClicked(item)}
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flex: 1,
+                                    height: numPadHeight / 4,
+                                }}>
+                                <View>
+                                    <Image
+                                        source={item.src}
+                                        style={
+                                            item.id === 'refresh' ||
+                                            item.id === 'delete'
+                                                ? styles.item_ctl
+                                                : styles.item_num
+                                        }
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+            </View>
+        </SafeAreaView>
+    );
+};
