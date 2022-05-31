@@ -6,7 +6,6 @@ import MainWebView from './screens/MainWebView';
 import SubWebView from './screens/SubWebView';
 import OnBoarding from './screens/OnBoarding';
 import SetPinCode from './screens/SetPinCode';
-import ConfirmPinCode from './screens/ConfirmPinCode';
 import SelfAuth from './screens/SelfAuth';
 import DropOutDone from './screens/DropOutDone';
 
@@ -64,13 +63,6 @@ export const SignInScreens = () => {
                 <SignInStack.Screen
                     name="SetPinCode"
                     component={SetPinCode}
-                    options={() => ({
-                        headerShown: false,
-                    })}
-                />
-                <SignInStack.Screen
-                    name="ConfirmPinCode"
-                    component={ConfirmPinCode}
                     options={() => ({
                         headerShown: false,
                     })}

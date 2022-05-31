@@ -79,6 +79,7 @@ export default OnBoarding = props => {
 
         props.navigation.navigate('SetPinCode', {
             entryScreen: 'OnBoarding',
+            tag: 'SetPinCode',
         });
     };
 
@@ -89,9 +90,7 @@ export default OnBoarding = props => {
                     style={styles.image}
                     source={require('../../assets/images/img_logo.png')}
                 />
-                <Text style={styles.text}>
-                    지금 아웃페이로 결제를 주고받아보세요.
-                </Text>
+                <Text style={styles.text}>지금 아웃페이를 이용해보세요.</Text>
             </View>
 
             <View style={styles.footer}>

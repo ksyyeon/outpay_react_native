@@ -20,7 +20,6 @@ export default (() => {
         circles: ['0', '1', '2', '3', '4', '5'],
         shuffleNums: numbers => {
             let i = numbers.length - 1;
-            let a = 0;
             for (; i > 0; i--) {
                 if (i !== 9 && i !== 11) {
                     const j = Math.floor(Math.random() * (i + 1));

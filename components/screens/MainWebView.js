@@ -104,13 +104,10 @@ export default class MainWebView extends React.Component {
                 <CommonDialog
                     visible={this.state.isNotiVisible}
                     titleDisplay={'flex'}
-                    title={'결제요청 알림'}
-                    content={
-                        '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?'
-                    }
+                    title={'알림'}
+                    content={'새로운 알림이 있습니다.'}
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
-                        // TODO: 새로운 결제요청 상세로 화면 이동 테스트
                         this.setState({isNotiVisible: false});
                         if (this.state.notiJs !== null)
                             this.webViewRef.injectJavaScript(this.state.notiJs);
@@ -198,21 +195,7 @@ export default class MainWebView extends React.Component {
         );
         console.log('[MainWebView] onNotification data: ', data);
 
-        // FCM post body
-        // {
-        //   "to": FCM 토큰",
-        //   "collapse_key" : "com.outpay",
-        //   "notification" : {
-        //       "title" : "결제 요청 알림",
-        //       "body" : "새로운 결제 요청이 왔어요",
-        //   },
-        //   "data" : {
-        //     "type" : "00",
-        //     "js" : "ifs.jsIF.showMainView('ops-rshop');"
-        //   }
-        // }
-
-        // TODO: 푸시메시지의 종류(결제요청 알림, 만료 임박 알림...)에 따라서 처리
+        // TODO: 푸시메시지의 종류에 따라서 처리
         if (typeof data !== undefined || data !== null)
             if (data.type === appConsts.FCM_CD.PAYREQ) {
                 this.setState({

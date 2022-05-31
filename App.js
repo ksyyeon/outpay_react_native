@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import * as RootNavigation from './components/RootNavigation';
 import Splash from './components/screens/Splash';
-import AppScreens from './components/AppStack';
+import AppScreens from './components/LogInStack';
 import {SignInScreens} from './components/SignInStack';
 import {localStorage} from './components/LocalStorage';
 import CommonDialog from './components/screens/CommonDialog';
@@ -47,10 +47,8 @@ export default class App extends React.Component {
                 <CommonDialog
                     visible={this.state.isDialogVisible}
                     titleDisplay={'flex'}
-                    title={'결제요청 알림'}
-                    content={
-                        '새로운 결제요청이 있습니다.\n지금 결제하시겠습니까?'
-                    }
+                    title={'알림'}
+                    content={'새로운 알림이 있습니다'}
                     cancelDisplay={'flex'}
                     confirmClicked={() => {
                         this.setState({isDialogVisible: false});
@@ -80,12 +78,20 @@ export default class App extends React.Component {
         console.log('[App] outpayCert:', cert);
         console.log('[App] userVars: ', this.state.userVars);
         if (cert !== null && this.state.userVars !== null) {
-            console.log('[App] 등록회원');
-            return {signedIn: true, autoLogin: this.state.userVars.autoLogin};
-        } else {
-            console.log('[App] 미등록회원');
-            return {signedIn: false, autoLogin: null};
+            // TODO: 비밀번호 설정 안하고 종료했을 때도 미등록회원으로
+            if (
+                cert.userInfo.password.length < 6 ||
+                cert.userInfo.password === undefined
+            ) {
+                console.log('[App] 등록회원');
+                return {
+                    signedIn: true,
+                    autoLogin: this.state.userVars.autoLogin,
+                };
+            }
         }
+        console.log('[App] 미등록회원');
+        return {signedIn: false, autoLogin: null};
     };
 
     checkNetworkConnected = () => {

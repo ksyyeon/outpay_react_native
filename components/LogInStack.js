@@ -5,13 +5,12 @@ import SubWebView from './screens/SubWebView';
 import LoginPinCode from './screens/LoginPinCode';
 import SetPinCode from './screens/SetPinCode';
 import SelfAuth from './screens/SelfAuth';
-import ConfirmPinCode from './screens/ConfirmPinCode';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Image} from 'react-native';
 import DropOutDone from './screens/DropOutDone';
 import SelectDefault from './screens/SelectDefault';
 
-const AppStack = createStackNavigator();
+const LogInStack = createStackNavigator();
 
 const HeaderBackButton = navigation => {
     return (
@@ -50,11 +49,11 @@ const HeaderCloseButton = navigation => {
 };
 
 export default AppScreens = autoLogin => {
-    console.log('[AppStack] AppScrenns created');
+    console.log('[LogInStack] AppScrenns created');
     return (
-        <AppStack.Navigator>
-            <AppStack.Group>
-                {/* <AppStack.Screen
+        <LogInStack.Navigator>
+            <LogInStack.Group>
+                {/* <LogInStack.Screen
                     name="SelectDefault"
                     component={SelectDefault}
                     options={() => ({
@@ -62,7 +61,7 @@ export default AppScreens = autoLogin => {
                     })}
                 /> */}
                 {autoLogin ? null : (
-                    <AppStack.Screen
+                    <LogInStack.Screen
                         name="LoginPinCode"
                         component={LoginPinCode}
                         options={() => ({
@@ -70,14 +69,14 @@ export default AppScreens = autoLogin => {
                         })}
                     />
                 )}
-                <AppStack.Screen
+                <LogInStack.Screen
                     name="MainWebView"
                     component={MainWebView}
                     options={() => ({
                         headerShown: false,
                     })}
                 />
-                <AppStack.Screen
+                <LogInStack.Screen
                     name="SubWebView"
                     component={SubWebView}
                     options={() => ({
@@ -89,7 +88,7 @@ export default AppScreens = autoLogin => {
                         },
                     })}
                 />
-                <AppStack.Screen
+                <LogInStack.Screen
                     name="SelfAuth"
                     component={SelfAuth}
                     options={({navigation}) => ({
@@ -99,31 +98,24 @@ export default AppScreens = autoLogin => {
                         headerRight: () => null,
                     })}
                 />
-                <AppStack.Screen
+                <LogInStack.Screen
                     name="SetPinCode"
                     component={SetPinCode}
                     options={() => ({
                         headerShown: false,
                     })}
                 />
-                <AppStack.Screen
-                    name="ConfirmPinCode"
-                    component={ConfirmPinCode}
-                    options={() => ({
-                        headerShown: false,
-                    })}
-                />
-                <AppStack.Screen
+                <LogInStack.Screen
                     name="DropOutDone"
                     component={DropOutDone}
                     options={() => ({
                         headerShown: false,
                     })}
                 />
-            </AppStack.Group>
+            </LogInStack.Group>
 
-            <AppStack.Group
-                screenOptions={{presentation: 'modal'}}></AppStack.Group>
-        </AppStack.Navigator>
+            <LogInStack.Group
+                screenOptions={{presentation: 'modal'}}></LogInStack.Group>
+        </LogInStack.Navigator>
     );
 };
