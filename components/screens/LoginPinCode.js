@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from '../styles/styles_PinCode.js';
 import {localStorage} from '../LocalStorage.js';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useEffect} from 'react/cjs/react.production.min';
 import PinCodeCommon from '../PinCodeCommon.js';
 
 export default LoginPinCode = props => {

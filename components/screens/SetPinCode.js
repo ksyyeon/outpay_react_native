@@ -127,9 +127,7 @@ export default SetPinCode = props => {
                                 'password',
                                 passWord,
                             );
-                            props.navigation.replace({
-                                routes: [{name: 'MainWebView', params: null}],
-                            });
+                            props.navigation.replace('MainWebView');
                         } else {
                             console.log(`[${tag}] unknown entryScreen!!`);
                         }

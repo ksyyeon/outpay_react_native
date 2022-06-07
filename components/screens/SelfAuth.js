@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {BackHandler, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Spinner from 'react-native-loading-spinner-overlay';
 import createInvoke from 'react-native-webview-invoke/native';
 import appConsts from '../AppConsts';
-import {useEffect} from 'react/cjs/react.production.min';
 import useState from 'react-usestateref';
 
 // 본인인증 화면

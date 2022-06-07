@@ -74,15 +74,13 @@ export default class App extends React.Component {
     }
 
     checkUserSignedIn = async () => {
-        const cert = await AsyncStorage.getItem('OutpayCert');
+        let cert = await AsyncStorage.getItem('OutpayCert');
+        cert = JSON.parse(cert);
         console.log('[App] outpayCert:', cert);
         console.log('[App] userVars: ', this.state.userVars);
         if (cert !== null && this.state.userVars !== null) {
             // TODO: 비밀번호 설정 안하고 종료했을 때도 미등록회원으로
-            if (
-                cert.userInfo.password.length < 6 ||
-                cert.userInfo.password === undefined
-            ) {
+            if (cert.userInfo.password.length === 6) {
                 console.log('[App] 등록회원');
                 return {
                     signedIn: true,
