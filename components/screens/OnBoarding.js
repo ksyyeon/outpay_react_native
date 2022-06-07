@@ -71,7 +71,7 @@ export default OnBoarding = props => {
                     autoLogin: true,
                     payReqLock: true,
                     denialPopupNotiDate: '',
-                    accessAgree: false,
+                    permissionAgree: false,
                 }),
             ],
         ]);
