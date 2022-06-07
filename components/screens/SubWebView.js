@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {BackHandler, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {useEffect, useRef} from 'react/cjs/react.development';
 import useState from 'react-usestateref';
 
 export default SubWebView = props => {

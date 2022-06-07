@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from '../styles/styles_OnBoarding';
 import {View, Text, Image, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../CustomButton';
-import {useEffect} from 'react/cjs/react.development';
 
 export default OnBoarding = props => {
     useEffect(() => {
@@ -72,7 +71,7 @@ export default OnBoarding = props => {
                     autoLogin: true,
                     payReqLock: true,
                     denialPopupNotiDate: '',
-                    accessAgree: false,
+                    permissionAgree: false,
                 }),
             ],
         ]);

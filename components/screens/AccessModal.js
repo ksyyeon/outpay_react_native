@@ -46,7 +46,7 @@ export default AccessModal = props => {
                     activeOpacity={1}
                     onPress={() => {
                         props.confirmClicked();
-                        localStorage.setUserVarsValue('accessAgree', true);
+                        localStorage.setUserVarsValue('permissionAgree', true);
                     }}>
                     <Text style={styles.btn_text}>
                         위의 내용을 확인했습니다.

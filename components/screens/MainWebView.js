@@ -27,7 +27,7 @@ export default class MainWebView extends React.Component {
             isLoading: true,
             isSpinnerVisible: false,
             spinnerMsg: '',
-            checkAccess: false,
+            checkPermission: false,
             isDialogVisible: true,
             isNotiVisible: false,
             notiJs: null,
@@ -58,9 +58,11 @@ export default class MainWebView extends React.Component {
 
         this.invokeIfs();
 
-        const accessAgree = await localStorage.getUserVarsValue('accessAgree');
-        if (!accessAgree) {
-            this.setState({checkAccess: true});
+        const permissionAgree = await localStorage.getUserVarsValue(
+            'permissionAgree',
+        );
+        if (!permissionAgree) {
+            this.setState({checkPermission: true});
         } else {
             fcmService.registerAppWithFCM();
             fcmService.register(
@@ -85,9 +87,9 @@ export default class MainWebView extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <AccessModal
-                    visible={this.state.checkAccess}
+                    visible={this.state.checkPermission}
                     confirmClicked={() => {
-                        this.setState({checkAccess: false});
+                        this.setState({checkPermission: false});
                         fcmService.registerAppWithFCM();
                         fcmService.register(
                             this.onRegister,
