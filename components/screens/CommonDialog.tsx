@@ -1,33 +1,42 @@
 import React from 'react';
 import styles from '../styles/styles_CommonDialog';
-import {View, Text, Modal, TouchableOpacity} from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleProp, TextStyle, StyleSheet } from 'react-native';
 
-export default CommonDialog = props => {
+interface Props {
+    visible: boolean;
+    titleDisplay?: any;
+    title: string;
+    content: string;
+    cancelDisplay?: any;
+    cancelClicked: () => void;
+    confirmClicked: () => void;
+}
+
+const CommonDialog = ({ visible, titleDisplay, title, content, cancelDisplay, cancelClicked, confirmClicked }: Props) => {
     return (
-        <Modal visible={props.visible} transparent={true}>
+        <Modal visible={visible} transparent={true}>
             <View style={styles.layout}>
                 <View style={styles.dialog}>
                     <View style={styles.text_wrap}>
                         <Text
                             style={
-                                (styles.title, {display: props.titleDisplay})
+                                StyleSheet.flatten([styles.title, { display: titleDisplay }])
                             }>
-                            {props.title}
+                            {title}
                         </Text>
-                        <Text style={styles.content}>{props.content}</Text>
+                        <Text style={styles.content}>{content}</Text>
                     </View>
                     <View style={styles.btn_wrap}>
                         <TouchableOpacity
                             style={
-                                (styles.cancel_btn,
-                                {display: props.cancelDisplay})
+                                StyleSheet.flatten([styles.cancel_btn, { display: cancelDisplay }])
                             }
-                            onPress={props.cancelClicked}>
+                            onPress={cancelClicked}>
                             <Text style={styles.btn_text}>취소</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.confirm_btn}
-                            onPress={props.confirmClicked}>
+                            onPress={confirmClicked}>
                             <Text style={styles.btn_text}>확인</Text>
                         </TouchableOpacity>
                     </View>
@@ -35,4 +44,6 @@ export default CommonDialog = props => {
             </View>
         </Modal>
     );
-};
+}
+
+export default CommonDialog;
