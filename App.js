@@ -1,13 +1,13 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import * as RootNavigation from './components/RootNavigation';
-import Splash from './components/screens/Splash';
-import AppScreens from './components/LogInStack';
-import {SignInScreens} from './components/SignInStack';
-import {localStorage} from './components/LocalStorage';
-import CommonDialog from './components/screens/CommonDialog';
+import * as RootNavigation from './src/components/RootNavigation';
+import Splash from './src/components/screens/Splash';
+import AppScreens from './src/components/LogInStack';
+import {SignInScreens} from './src/components/SignInStack';
+import {localStorage} from './src/components/LocalStorage';
+import CommonDialog from './src/components/screens/CommonDialog';
 import NetInfo from '@react-native-community/netinfo';
-import NetworkFail from './components/screens/NetworkFail';
+import NetworkFail from './src/components/screens/NetworkFail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends React.Component {
