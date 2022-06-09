@@ -4,7 +4,7 @@ import styles from '../styles/style_SelfAuthTermsAgree';
 import CustomButton from '../CustomButton';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import CheckBox from '../CheckBox';
-import UseTerms from '../../assets/text/UseTerms';
+import UseTerms from '../../../assets/text/UseTerms';
 
 export default SelfAuthTermsAgree = props => {
     const [isUseTermsChecked, setIsUseTermsChecked] = useState(false);
