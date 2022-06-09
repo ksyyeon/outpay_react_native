@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../styles/styles_CommonDialog';
-import { View, Text, Modal, TouchableOpacity, StyleProp, TextStyle, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface Props {
     visible: boolean;
