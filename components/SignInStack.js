@@ -8,6 +8,7 @@ import OnBoarding from './screens/OnBoarding';
 import SetPinCode from './screens/SetPinCode';
 import SelfAuth from './screens/SelfAuth';
 import DropOutDone from './screens/DropOutDone';
+import SelfAuthTermsAgree from './screens/SelfAuthTermsAgree';
 
 // TODO 화면추가: 본인인증 ...
 const SignInStack = createStackNavigator();
@@ -53,6 +54,13 @@ export const SignInScreens = () => {
     return (
         <SignInStack.Navigator>
             <SignInStack.Group>
+                <SignInStack.Screen
+                    name="SelfAuthTermsAgree"
+                    component={SelfAuthTermsAgree}
+                    options={() => ({
+                        headerShown: false,
+                    })}
+                />
                 <SignInStack.Screen
                     name="OnBoarding"
                     component={OnBoarding}

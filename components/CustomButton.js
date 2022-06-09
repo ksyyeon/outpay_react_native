@@ -1,4 +1,3 @@
-// CustomButton.js
 import React, {Component} from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
@@ -32,7 +31,7 @@ export default class CustomButton extends Component {
 
 const styles = StyleSheet.create({
     button: {
-        flex: 1,
+        height: 50,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#ff6801',
