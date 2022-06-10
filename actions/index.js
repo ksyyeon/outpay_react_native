@@ -1,3 +1,5 @@
-import * as dialogAction from './dialogAction';
+import * as dialogActions from './dialogActions';
 
-export default ActionCreators = Object.assign({}, dialogAction);
+const ActionCreator = Object.assign({}, dialogActions);
+
+export default ActionCreator;

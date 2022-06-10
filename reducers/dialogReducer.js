@@ -1,4 +1,4 @@
-const defaultState = {
+const initialState = {
     isDialogVisible: false,
     titleDisplay: 'flex',
     title: '',
@@ -8,7 +8,7 @@ const defaultState = {
     cancelclicked: () => {},
 };
 
-export default dialog = (state = defaultState, action) => {
+export default DialogReducer = (state = initialState, action) => {
     switch (action.stype) {
         case types.SHOW_DIALOG:
             return {
