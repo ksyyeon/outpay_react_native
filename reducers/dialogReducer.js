@@ -9,10 +9,8 @@ const initialState = {
 export default DialogReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SHOW_DIALOG':
-            console.log('show dialog called');
-            return {
-                dialogProps: action.payload,
-            };
+            console.log('show dialog called', action.payload.dialogProps);
+            return action.payload.dialogProps;
         case 'HIDE_DIALOG':
             console.log('hide dialog called');
             return state;

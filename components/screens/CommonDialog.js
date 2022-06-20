@@ -14,7 +14,9 @@ const CommonDialog = props => {
                             ])}>
                             {props.dialogProps.title}
                         </Text>
-                        <Text style={styles.content}>{props.content}</Text>
+                        <Text style={styles.content}>
+                            {props.dialogProps.content}
+                        </Text>
                     </View>
                     <View style={styles.btn_wrap}>
                         <TouchableOpacity

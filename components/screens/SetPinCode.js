@@ -6,6 +6,8 @@ import {localStorage} from '../LocalStorage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState, useEffect, useRef} from 'react/cjs/react.development';
 import PinCodeCommon from '../PinCodeCommon.js';
+import {useDispatch} from 'react-redux';
+import {showDialog} from '../../actions/dialogActions.js';
 
 export default SetPinCode = props => {
     let numbers = PinCodeCommon.numbers;
@@ -19,6 +21,8 @@ export default SetPinCode = props => {
 
     const circleRefs = useRef({});
     const wrongNoteRef = useRef(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -52,8 +56,6 @@ export default SetPinCode = props => {
     }, []); // 빈배열 선언 필수!
 
     const onBackPress = () => {
-        console.log('dtesdtwer');
-        dispatch(props.showDialog);
         return true;
     };
 
@@ -163,18 +165,23 @@ export default SetPinCode = props => {
                     onPress={() => {
                         tag === 'SetPinCode'
                             ? onBackPress()
-                            : props.showDialog({
-                                  isVisible: true,
-                                  titleDisplay: 'none',
-                                  title: '',
-                                  content:
-                                      entryScreen === 'OnBoarding'
-                                          ? '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
-                                          : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다. 뒤로 가시겠습니까?',
-                                  cancelDisplay: 'flex',
-                                  confirmClicked: () => {},
-                                  cancelClicked: () => {},
-                              });
+                            : dispatch(
+                                  showDialog({
+                                      type: 'SHOW_DIALOG',
+                                      dialogProps: {
+                                          isVisible: true,
+                                          titleDisplay: 'none',
+                                          title: '',
+                                          content:
+                                              entryScreen === 'OnBoarding'
+                                                  ? '뒤로 가시면 가입과정이 초기화 됩니다.\n뒤로 가시겠습니까?'
+                                                  : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다.\n뒤로 가시겠습니까?',
+                                          cancelDisplay: 'flex',
+                                          //   confirmClicked: () => {},
+                                          //   cancelClicked: () => {},
+                                      },
+                                  }),
+                              );
                     }}>
                     <Image
                         source={require('../../assets/images/icon_left.png')}
