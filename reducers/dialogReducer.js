@@ -1,8 +1,8 @@
 const initialState = {
     isVisible: false,
     titleDisplay: 'flex',
-    title: 'dddd',
-    content: 'dddd',
+    title: '',
+    content: '',
     cancelDisplay: 'flex',
 };
 

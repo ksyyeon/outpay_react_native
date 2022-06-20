@@ -6,8 +6,6 @@ import {localStorage} from '../LocalStorage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState, useEffect, useRef} from 'react/cjs/react.development';
 import PinCodeCommon from '../PinCodeCommon.js';
-import * as dialogActions from '../../actions/dialogActions';
-import {useDispatch} from 'react-redux';
 
 export default SetPinCode = props => {
     let numbers = PinCodeCommon.numbers;
@@ -21,8 +19,6 @@ export default SetPinCode = props => {
 
     const circleRefs = useRef({});
     const wrongNoteRef = useRef(null);
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -167,7 +163,18 @@ export default SetPinCode = props => {
                     onPress={() => {
                         tag === 'SetPinCode'
                             ? onBackPress()
-                            : dispatch(showDialog(props.dialogProps));
+                            : props.showDialog({
+                                  isVisible: true,
+                                  titleDisplay: 'none',
+                                  title: '',
+                                  content:
+                                      entryScreen === 'OnBoarding'
+                                          ? '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
+                                          : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다. 뒤로 가시겠습니까?',
+                                  cancelDisplay: 'flex',
+                                  confirmClicked: () => {},
+                                  cancelClicked: () => {},
+                              });
                     }}>
                     <Image
                         source={require('../../assets/images/icon_left.png')}
