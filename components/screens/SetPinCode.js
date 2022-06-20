@@ -3,10 +3,11 @@ import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import styles from '../styles/styles_PinCode.js';
 import {localStorage} from '../LocalStorage';
-import CommonDialog from './CommonDialog.tsx';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState, useEffect, useRef} from 'react/cjs/react.development';
 import PinCodeCommon from '../PinCodeCommon.js';
+import * as dialogActions from '../../actions/dialogActions';
+import {useDispatch} from 'react-redux';
 
 export default SetPinCode = props => {
     let numbers = PinCodeCommon.numbers;
@@ -17,10 +18,11 @@ export default SetPinCode = props => {
     const [refreshing, setRefreshing] = useState(false);
     const [numPadHeight, setNumPadHeight] = useState(0);
     const [entryScreen, setEntryScreen] = useState(null);
-    const [isDialogVisible, setIsDialogVisible] = useState(false);
 
     const circleRefs = useRef({});
     const wrongNoteRef = useRef(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const backHandler = BackHandler.addEventListener(
@@ -54,7 +56,8 @@ export default SetPinCode = props => {
     }, []); // 빈배열 선언 필수!
 
     const onBackPress = () => {
-        setIsDialogVisible(true);
+        console.log('dtesdtwer');
+        dispatch(props.showDialog);
         return true;
     };
 
@@ -142,7 +145,7 @@ export default SetPinCode = props => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <CommonDialog
+            {/* <CommonDialog
                 visible={isDialogVisible}
                 titleDisplay={'none'}
                 content={
@@ -158,13 +161,13 @@ export default SetPinCode = props => {
                 cancelClicked={() => {
                     setIsDialogVisible(false);
                 }}
-            />
+            /> */}
             <View style={styles.actionBar}>
                 <TouchableOpacity
                     onPress={() => {
                         tag === 'SetPinCode'
                             ? onBackPress()
-                            : setIsDialogVisible(true);
+                            : dispatch(showDialog(props.dialogProps));
                     }}>
                     <Image
                         source={require('../../assets/images/icon_left.png')}

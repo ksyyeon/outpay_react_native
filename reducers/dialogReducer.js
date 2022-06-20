@@ -1,20 +1,20 @@
 const initialState = {
-    isDialogVisible: false,
+    isVisible: false,
     titleDisplay: 'flex',
-    title: '',
-    content: '',
+    title: 'dddd',
+    content: 'dddd',
     cancelDisplay: 'flex',
-    confirmClicked: () => {},
-    cancelclicked: () => {},
 };
 
 export default DialogReducer = (state = initialState, action) => {
-    switch (action.stype) {
-        case types.SHOW_DIALOG:
+    switch (action.type) {
+        case 'SHOW_DIALOG':
+            console.log('show dialog called');
             return {
                 dialogProps: action.payload,
             };
-        case types.HIDE_DIALOG:
+        case 'HIDE_DIALOG':
+            console.log('hide dialog called');
             return state;
         default:
             return state;

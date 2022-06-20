@@ -1,14 +1,17 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import * as RootNavigation from './src/components/RootNavigation';
-import Splash from './src/components/screens/Splash';
-import AppScreens from './src/components/LogInStack';
-import {SignInScreens} from './src/components/SignInStack';
-import {localStorage} from './src/components/LocalStorage';
-import CommonDialog from './src/components/screens/CommonDialog';
+import * as RootNavigation from './components/RootNavigation';
+import Splash from './components/screens/Splash';
+import AppScreens from './components/LogInStack';
+import {SignInScreens} from './components/SignInStack';
+import {localStorage} from './components/LocalStorage';
+import CommonDialog from './components/screens/CommonDialog';
 import NetInfo from '@react-native-community/netinfo';
-import NetworkFail from './src/components/screens/NetworkFail';
+import NetworkFail from './components/screens/NetworkFail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import store from './store';
+import {connect, Provider} from 'react-redux';
+import * as actions from './actions';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -16,12 +19,18 @@ export default class App extends React.Component {
         this.state = {
             isSignedIn: false,
             isLoading: true,
-            isDialogVisible: false,
             js: null,
             networkUnsubscribe: null,
             networkConnected: false,
             userVars: null,
         };
+
+        console.log('dddddddddd', props);
+        mapStateToProps = state => ({
+            dialogProps: state.dialogProps,
+        });
+
+        CommonDialogContainer = connect(mapStateToProps, actions)(CommonDialog);
     }
 
     // 이벤트 동작
@@ -30,7 +39,6 @@ export default class App extends React.Component {
         // TODO: iOS에서 default 스플래시 비활성화
         setTimeout(async () => {
             this.state.userVars = await localStorage.getUserVars();
-
             this.checkNetworkConnected();
         }, 2000);
     }
@@ -43,33 +51,20 @@ export default class App extends React.Component {
     render() {
         if (this.state.isLoading) return <Splash />;
         return (
-            <NavigationContainer ref={RootNavigation.navigationRef}>
-                <CommonDialog
-                    visible={this.state.isDialogVisible}
-                    titleDisplay={'flex'}
-                    title={'알림'}
-                    content={'새로운 알림이 있습니다'}
-                    cancelDisplay={'flex'}
-                    confirmClicked={() => {
-                        this.setState({isDialogVisible: false});
-                        RootNavigation.push('MainWebView', {
-                            js: this.state.js,
-                        });
-                    }}
-                    cancelClicked={() => {
-                        this.setState({isDialogVisible: false});
-                    }}
-                />
-                {this.state.networkConnected ? (
-                    this.state.isSignedIn ? (
-                        AppScreens(this.state.autoLogin)
+            <Provider store={store}>
+                <NavigationContainer ref={RootNavigation.navigationRef}>
+                    <CommonDialogContainer />
+                    {this.state.networkConnected ? (
+                        this.state.isSignedIn ? (
+                            AppScreens(this.state.autoLogin)
+                        ) : (
+                            SignInScreens()
+                        )
                     ) : (
-                        SignInScreens()
-                    )
-                ) : (
-                    <NetworkFail />
-                )}
-            </NavigationContainer>
+                        <NetworkFail />
+                    )}
+                </NavigationContainer>
+            </Provider>
         );
     }
 
