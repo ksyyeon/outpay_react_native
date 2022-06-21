@@ -10,7 +10,6 @@ import {localStorage} from '../LocalStorage';
 import Snackbar from 'react-native-snackbar';
 import {selectContactPhone} from 'react-native-select-contact';
 import AccessModal from './AccessModal';
-import CommonDialog from './CommonDialog';
 import Loading from './Loading';
 import BottomTabBar from '../BottomTabBar';
 import appConsts from '../AppConsts';
@@ -103,7 +102,7 @@ export default class MainWebView extends React.Component {
                         // TODO: FCM Token 서버로 전송
                     }}
                 />
-                <CommonDialog
+                {/* <CommonDialog
                     visible={this.state.isNotiVisible}
                     titleDisplay={'flex'}
                     title={'알림'}
@@ -117,8 +116,8 @@ export default class MainWebView extends React.Component {
                     cancelClicked={() => {
                         this.setState({isNotiVisible: false});
                     }}
-                />
-                {this.state.dialogContent && (
+                /> */}
+                {/* {this.state.dialogContent && (
                     <CommonDialog
                         visible={this.state.isDialogVisible}
                         titleDisplay={'none'}
@@ -128,7 +127,7 @@ export default class MainWebView extends React.Component {
                             this.setState({isDialogVisible: false});
                         }}
                     />
-                )}
+                )} */}
                 <Loading visible={this.state.isLoading} />
                 <Spinner
                     visible={this.state.isSpinnerVisible}
@@ -283,38 +282,6 @@ export default class MainWebView extends React.Component {
             return false;
         }
         return true;
-
-        // TODO 앱카드 실행 테스트
-        // if (
-        //     event.url.startsWith('http://') ||
-        //     event.url.startsWith('https://') ||
-        //     event.url.startsWith('about:blank')
-        // ) {
-        //     return true;
-        // }
-        // if (Platform.OS === 'android') {
-        //     console.log('openAppWithUri Called: ', event.url);
-        //     SendIntentAndroid.openAppWithUri(event.url)
-        //         .then(isOpened => {
-        //             if (!isOpened) {
-        //                 this.setState({
-        //                     dialogContent:
-        //                         '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
-        //                 });
-        //             }
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //         });
-        // } else {
-        //     Linking.openURL(event.url).catch(err => {
-        //         this.setState({
-        //             dialogContent:
-        //                 '앱 실행에 실패했습니다.{\n}설치가 되어있지 않은 경우 설치하기 버튼을 눌러주세요.',
-        //         });
-        //     });
-        //     return false;
-        // }
     };
 
     onBackPress = () => {

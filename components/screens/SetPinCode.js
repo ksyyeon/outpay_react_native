@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState, useEffect, useRef} from 'react/cjs/react.development';
 import PinCodeCommon from '../PinCodeCommon.js';
 import {useDispatch} from 'react-redux';
-import {showDialog} from '../../actions/dialogActions.js';
+import {hideDialog, showDialog} from '../../actions/dialogActions.js';
 
 export default SetPinCode = props => {
     let numbers = PinCodeCommon.numbers;
@@ -143,23 +143,6 @@ export default SetPinCode = props => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <CommonDialog
-                visible={isDialogVisible}
-                titleDisplay={'none'}
-                content={
-                    entryScreen === 'OnBoarding'
-                        ? '뒤로 가시면 가입과정이 초기화 됩니다. 뒤로 가시겠습니까?'
-                        : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다. 뒤로 가시겠습니까?'
-                }
-                cancelDisplay={'flex'}
-                confirmClicked={() => {
-                    setIsDialogVisible(false);
-                    props.navigation.goBack();
-                }}
-                cancelClicked={() => {
-                    setIsDialogVisible(false);
-                }}
-            /> */}
             <View style={styles.actionBar}>
                 <TouchableOpacity
                     onPress={() => {
@@ -168,18 +151,8 @@ export default SetPinCode = props => {
                             : dispatch(
                                   showDialog({
                                       type: 'SHOW_DIALOG',
-                                      dialogProps: {
-                                          isVisible: true,
-                                          titleDisplay: 'none',
-                                          title: '',
-                                          content:
-                                              entryScreen === 'OnBoarding'
-                                                  ? '뒤로 가시면 가입과정이 초기화 됩니다.\n뒤로 가시겠습니까?'
-                                                  : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다.\n뒤로 가시겠습니까?',
-                                          cancelDisplay: 'flex',
-                                          //   confirmClicked: () => {},
-                                          //   cancelClicked: () => {},
-                                      },
+                                      calledBy: 'SetPinCode',
+                                      entryScreen: entryScreen,
                                   }),
                               );
                     }}>

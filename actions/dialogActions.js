@@ -1,7 +1,7 @@
-export const showDialog = dialogProps => {
+export const showDialog = props => {
     return {
         type: 'SHOW_DIALOG',
-        payload: dialogProps,
+        payload: props,
     };
 };
 
