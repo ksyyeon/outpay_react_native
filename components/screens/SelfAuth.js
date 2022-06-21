@@ -13,7 +13,9 @@ export default SelfAuth = () => {
     const [spinnerVisible, setSpinnerVisible] = useState(false);
     const [spinnerMsg, setSpinnerMsg] = useState('');
     const [uriParam, setUriParam] = useState(null);
+
     const webViewRef = useRef(null);
+    const invoke = createInvoke(() => webViewRef.current);
 
     useEffect(() => {
         setUriParam(props.route.params.param);
@@ -21,6 +23,8 @@ export default SelfAuth = () => {
             'hardwareBackPress',
             onBackPress,
         );
+
+        invoke.define('navigateNext', navigateNext);
 
         return () => {
             backHandler.remove();
@@ -31,12 +35,6 @@ export default SelfAuth = () => {
         props.navigation.goBack();
         return true;
     };
-
-    useEffect(() => {
-        console.log('invoke created');
-        const invoke = createInvoke(() => webViewRef);
-        invoke.define('navigateNext', navigateNext);
-    }, [webViewRef]);
 
     const navigateNext = (screen, param) => {
         // 본인인증 결과를 param에 담아서 다음 화면으로 전달
@@ -61,10 +59,10 @@ export default SelfAuth = () => {
                 cacheEnabled={false}
                 originWhitelist={['*']}
                 javaScriptEnabled={true}
-                onMessage={this.invoke.listener}
-                // onLoad={() => {
-                //     this.webViewRef.injectJavaScript('showView("vw")');
-                // }}
+                onMessage={invoke.listener}
+                onLoad={() => {
+                    webViewRef.injectJavaScript('showView("vw")');
+                }}
             />
         </View>
     );

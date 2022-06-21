@@ -23,6 +23,10 @@ const CommonDialog = props => {
             case 'SetPinCode':
                 setDialogProps(SetPinCodeProps(props.dialogProps.entryScreen));
                 break;
+            case 'MainWebView':
+                setDialogProps(MainWebViewProps(props.dialogProps.content));
+            case 'Notification':
+                setDialogProps(NotificationProps(props.dialogProps.js));
             default:
                 break;
         }
@@ -32,15 +36,45 @@ const CommonDialog = props => {
         return {
             isVisible: true,
             titleDisplay: 'none',
-            title: '',
             content:
                 entryScreen === 'OnBoarding'
                     ? '뒤로 가시면 가입과정이 초기화 됩니다.\n뒤로 가시겠습니까?'
-                    : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다.\n뒤로 가시겠습니까?',
+                    : '뒤로 가시면 비밀번호 재설정 과정이 초기화 됩니다. 뒤로 가시겠습니까?',
             cancelDisplay: 'flex',
             confirmClicked: () => {
                 setDialogProps(initialProps);
                 navigation.goBack();
+            },
+            cancelClicked: () => {
+                setDialogProps(initialProps);
+            },
+        };
+    };
+
+    const MainWebViewProps = content => {
+        return {
+            isVisible: true,
+            titleDisplay: 'none',
+            content: content,
+            cancelDisplay: 'none',
+            confirmClicked: () => {
+                setDialogProps(initialProps);
+            },
+        };
+    };
+
+    const NotificationProps = js => {
+        return {
+            isVisible: true,
+            titleDisplay: 'flex',
+            title: '알림',
+            content: '새로운 알림이 있습니다.',
+            cancelDisplay: 'flex',
+            confirmClicked: () => {
+                setDialogProps(initialProps);
+                // if (js !== null)
+                //     webViewRef.injectJavaScript(js);
+                console.log(js);
             },
             cancelClicked: () => {
                 setDialogProps(initialProps);

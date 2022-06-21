@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState, useEffect, useRef} from 'react/cjs/react.development';
 import PinCodeCommon from '../PinCodeCommon.js';
 import {useDispatch} from 'react-redux';
-import {hideDialog, showDialog} from '../../actions/dialogActions.js';
+import {showDialog} from '../../actions/dialogActions.js';
 
 export default SetPinCode = props => {
     let numbers = PinCodeCommon.numbers;
@@ -60,7 +60,7 @@ export default SetPinCode = props => {
             showDialog({
                 type: 'SHOW_DIALOG',
                 calledBy: 'SetPinCode',
-                entryScreen: entryScreen,
+                entryScreen: props.route.params.entryScreen,
             }),
         );
         return true;
@@ -159,7 +159,8 @@ export default SetPinCode = props => {
                                   showDialog({
                                       type: 'SHOW_DIALOG',
                                       calledBy: 'SetPinCode',
-                                      entryScreen: entryScreen,
+                                      entryScreen:
+                                          props.route.params.entryScreen,
                                   }),
                               );
                     }}>
