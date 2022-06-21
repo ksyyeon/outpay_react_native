@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from '../styles/styles_CommonDialog';
 import {View, Text, Modal, TouchableOpacity, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const initialProps = {
     isVisible: false,
@@ -13,9 +14,10 @@ const initialProps = {
 };
 
 const CommonDialog = props => {
-    const [dialogProps, setDialogProps] = useState(initialProps);
-
     console.log(props);
+    const [dialogProps, setDialogProps] = useState(initialProps);
+    const navigation = useNavigation();
+
     useEffect(() => {
         switch (props.dialogProps.calledBy) {
             case 'SetPinCode':
@@ -38,7 +40,7 @@ const CommonDialog = props => {
             cancelDisplay: 'flex',
             confirmClicked: () => {
                 setDialogProps(initialProps);
-                // props.navigation.goBack();
+                navigation.goBack();
             },
             cancelClicked: () => {
                 setDialogProps(initialProps);

@@ -56,6 +56,13 @@ export default SetPinCode = props => {
     }, []); // 빈배열 선언 필수!
 
     const onBackPress = () => {
+        dispatch(
+            showDialog({
+                type: 'SHOW_DIALOG',
+                calledBy: 'SetPinCode',
+                entryScreen: entryScreen,
+            }),
+        );
         return true;
     };
 
