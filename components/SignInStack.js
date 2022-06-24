@@ -54,13 +54,13 @@ export const SignInScreens = () => {
     return (
         <SignInStack.Navigator>
             <SignInStack.Group>
-                {/* <SignInStack.Screen
+                <SignInStack.Screen
                     name="SelfAuthTermsAgree"
                     component={SelfAuthTermsAgree}
                     options={() => ({
                         headerShown: false,
                     })}
-                /> */}
+                />
                 <SignInStack.Screen
                     name="OnBoarding"
                     component={OnBoarding}

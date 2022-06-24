@@ -19,13 +19,11 @@ export default App = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [js, setJs] = useState('');
     const [networkConnected, setNetworkConnected] = useState(null);
-    const [userVars, setUserVars] = useState(null);
 
     useEffect(() => {
         // setTimeout(() => SplashScreen.hide(), 2000);
         // TODO: iOS에서 default 스플래시 비활성화
         setTimeout(async () => {
-            setUserVars(await localStorage.getUserVars());
             checkNetworkConnected();
         }, 2000);
         return () => {
@@ -36,10 +34,12 @@ export default App = () => {
     const checkUserSignedIn = async () => {
         let cert = await AsyncStorage.getItem('OutpayCert');
         cert = JSON.parse(cert);
+        let userVars = null;
+        // let userVars = await AsyncStorage.getItem('UserVars');
+        // userVars = JSON.parse(userVars);
         console.log('[App] outpayCert:', cert);
         console.log('[App] userVars: ', userVars);
         if (cert !== null && userVars !== null) {
-            // TODO: 비밀번호 설정 안하고 종료했을 때도 미등록회원으로
             if (cert.userInfo.password.length === 6) {
                 console.log('[App] 등록회원');
                 return {
